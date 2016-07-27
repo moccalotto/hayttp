@@ -108,11 +108,11 @@ interface Request
     /**
      * Set a XML payload.
      *
-     * @param SimpleXmlElement $xml
+     * @param SimpleXmlElement|string $xml
      *
      * @return Request
      */
-    public function sendsXml(SimpleXmlElement $xml) : Request;
+    public function sendsXml($xml) : Request;
 
     /**
      * Set a URL-encoded payload.

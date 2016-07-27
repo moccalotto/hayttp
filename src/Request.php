@@ -409,7 +409,7 @@ class Request implements RequestContract
     /**
      * Set a JSON payload.
      *
-     * @param array|object $body The body to send - the body will be json encoded.
+     * @param array|object $body The body to send - the body will always be json encoded.
      *
      * @return RequestContract
      */
@@ -424,11 +424,11 @@ class Request implements RequestContract
     /**
      * Set a XML payload.
      *
-     * @param SimpleXmlElement $xml
+     * @param SimpleXmlElement|string $xml
      *
      * @return RequestContract
      */
-    public function sendsXml(SimpleXmlElement $xml) : RequestContract
+    public function sendsXml($xml) : RequestContract
     {
         if ($xml instanceof SimpleXmlElement) {
             $xml = $xml->asXml();
