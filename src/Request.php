@@ -434,7 +434,7 @@ class Request implements RequestContract
             $xml = $xml->asXml();
         }
 
-        return $this->sendsRaw($xml, 'text/xml');
+        return $this->sendsRaw($xml, 'application/xml');
     }
 
     /**
