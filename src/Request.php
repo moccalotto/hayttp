@@ -51,11 +51,6 @@ class Request implements RequestContract
     protected $lockedBody = false;
 
     /**
-     * @var Logger
-     */
-    protected $logging;
-
-    /**
      * @var string|null
      */
     protected $proxy;
@@ -63,22 +58,17 @@ class Request implements RequestContract
     /**
      * @var bool
      */
-    protected $followLocation = true;
+    protected $followLocation = false;
 
     /**
      * @var int
      */
-    protected $maxRedirects = 10;
+    protected $maxRedirects = 0;
 
     /**
      * @var float
      */
     protected $timeout = 5;
-
-    /**
-     * @var string
-     */
-    protected $multipartBoundary;
 
     /**
      * @var array
@@ -89,12 +79,12 @@ class Request implements RequestContract
      * @var array
      */
     protected $cryptoMethodMap = [
-        RequestContract::CRYPTO_ANY        => STREAM_CRYPTO_METHOD_ANY_CLIENT,
-        RequestContract::CRYPTO_SSLV3      => STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
-        RequestContract::CRYPTO_TLS        => STREAM_CRYPTO_METHOD_TLS_CLIENT,
-        RequestContract::CRYPTO_TLS_1_0    => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
-        RequestContract::CRYPTO_TLS_1_1    => STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT,
-        RequestContract::CRYPTO_TLS_1_2    => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
+        RequestContract::CRYPTO_ANY => STREAM_CRYPTO_METHOD_ANY_CLIENT,
+        RequestContract::CRYPTO_SSLV3 => STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
+        RequestContract::CRYPTO_TLS => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+        RequestContract::CRYPTO_TLS_1_0 => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
+        RequestContract::CRYPTO_TLS_1_1 => STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT,
+        RequestContract::CRYPTO_TLS_1_2 => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
     ];
 
     protected function buildContext(Logger $logger = null)
@@ -276,6 +266,7 @@ class Request implements RequestContract
      * A Crypto method can be one of the CRYPTO_* constants
      *
      * @param string
+     *
      * @return RequestContract
      */
     public function withCryptoMethod($cryptoMethod)
@@ -316,18 +307,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Set logging true/false
-     *
-     * @param bool $logging
-     *
-     * @return RequestContract
-     */
-    public function withLogging($logging = true) : RequestContract
-    {
-        return $this->with('logging', $logging);
-    }
-
-    /**
      * Add a header to the request.
      *
      * @param string $name
@@ -345,7 +324,7 @@ class Request implements RequestContract
     }
 
     /**
-     * Set the TLS version
+     * Set the TLS version.
      *
      * @param string $version currently, 1.*, 1.0, 1.1 and 1.2 are supported
      *
@@ -384,6 +363,22 @@ class Request implements RequestContract
     public function withMode($mode) : RequestContract
     {
         return $this->with('mode', $mode);
+    }
+
+    /**
+     * Add a basic authorization (which is actually an authenticaation) header.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return RequestContract
+     */
+    public function withBasicAuth(string $username, string $password): RequestContract
+    {
+        return $this->addHeader(sprintf(
+            'Authorization: Basic %s',
+            base64_encode(sprintf('%s:%s', $username, $password))
+        ));
     }
 
     /**
@@ -532,10 +527,10 @@ class Request implements RequestContract
      *
      * @throws ConnectionException if connection could not be established.
      */
-    public function send() : ResponseContract
+    public function send($logging = false) : ResponseContract
     {
         $clone   = clone $this;
-        $logger = $clone->logging ? new Logger() : null;
+        $logger  = $logging ? new Logger() : null;
         $context = $clone->buildContext($logger);
 
         $clone->lockedBody = true;
@@ -545,10 +540,10 @@ class Request implements RequestContract
         $responseBody = file_get_contents($clone->url, false, $context);
 
         if ($responseBody === false) {
-            $success = false;
+            $success         = false;
             $responseHeaders = [];
         } else {
-            $success = true;
+            $success         = true;
             $responseHeaders = $http_response_header;
         }
 
