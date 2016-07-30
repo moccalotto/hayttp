@@ -24,7 +24,7 @@ class MultipartBody
      */
     public function __construct()
     {
-        $this->boundary = 'httboundary----' . md5(uniqid('', true));
+        $this->boundary = '----HayttpBoundary' . substr(md5(uniqid()), 0, 10);
     }
 
     /**
@@ -66,11 +66,11 @@ class MultipartBody
     public function render() : string
     {
         foreach ($this->entries as $entry) {
-            $lines[] = $this->boundary;
+            $lines[] = '--' . $this->boundary;
             if ($entry['filename']) {
-                $lines[] = sprintf('Content-Disposition: name="%s" filename="%s"', $entry['name'], $entry['filename']);
+                $lines[] = sprintf('Content-Disposition: form-data; name="%s"; filename="%s"', $entry['name'], $entry['filename']);
             } else {
-                $lines[] = sprintf('Content-Disposition: name="%s"', $entry['name']);
+                $lines[] = sprintf('Content-Disposition: form-data; name="%s"', $entry['name']);
             }
 
             if ($entry['contentType']) {
@@ -81,9 +81,9 @@ class MultipartBody
             $lines[] = $entry['data'];
         }
 
-        $lines[] = $this->boundary;
+        $lines[] = '--' . $this->boundary . '--';
 
-        return implode("\r\n", $lines);
+        return implode("\r\n", $lines) . "\r\n";
     }
 
     public function __toString()
