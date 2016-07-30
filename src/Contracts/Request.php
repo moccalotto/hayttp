@@ -16,6 +16,9 @@ interface Request
     const CRYPTO_TLS_1_1 = 'tlsv1.1';
     const CRYPTO_TLS_1_2 = 'tlsv1.2';
 
+    const ENGINE_CURL = 'curl';
+    const ENGINE_STREAM = 'stream';
+
     /**
      * Return the request as a string.
      *
@@ -42,14 +45,6 @@ interface Request
     public function onAfterResponse($callback) : Request;
 
     /**
-     * Publish an event.
-     *
-     * @param string $eventName
-     * @param array  $args
-     */
-    public function publishEvent(string $eventName, array $args = []);
-
-    /**
      * Set all headers.
      *
      * @param array $headers
@@ -68,15 +63,6 @@ interface Request
     public function withProxy($proxy) : Request;
 
     /**
-     * Set logging true/false
-     *
-     * @param bool $logging
-     *
-     * @return RequestContract
-     */
-    public function withLogging($logging = true) : Request;
-
-    /**
      * Add a header to the request.
      *
      * @param string $name
@@ -84,7 +70,7 @@ interface Request
      *
      * @return Request
      */
-    public function addHeader($name, $value) : Request;
+    public function withHeader($name, $value) : Request;
 
     /**
      * Set the raw body of the request.

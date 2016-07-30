@@ -5,6 +5,7 @@ namespace Moccalotto\Hayttp;
 use LogicException;
 use SimpleXmlElement;
 use UnexpectedValueException;
+use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
@@ -16,122 +17,89 @@ class Request implements RequestContract
     use Traits\CreatesRequests;
 
     /**
-     * @var string
+     * Available crypto methods.
+     *
+     * @var array
      */
-    protected $method = 'GET';
+    protected $_cryptoMethodMap = [
+        RequestContract::CRYPTO_ANY => true,
+        RequestContract::CRYPTO_SSLV3 => true,
+        RequestContract::CRYPTO_TLS => true,
+        RequestContract::CRYPTO_TLS_1_0 => true,
+        RequestContract::CRYPTO_TLS_1_1 => true,
+        RequestContract::CRYPTO_TLS_1_2 => true,
+    ];
 
     /**
      * @var string
      */
-    protected $mode = RequestContract::MODE_RAW;
+    protected $_method = 'GET';
 
     /**
-     * @var string
+     * @var EngineContract
      */
-    protected $userAgent = 'Hayttp';
-
-    /**
-     * @var string
-     */
-    protected $url;
+    protected $_engine;
 
     /**
      * @var array
      */
-    protected $headers = [];
+    protected $_events = [];
+
+    /**
+     * @var string
+     */
+    protected $_mode = RequestContract::MODE_RAW;
+
+    /**
+     * @var string
+     */
+    protected $_userAgent = 'Hayttp';
+
+    /**
+     * @var string
+     */
+    protected $_url;
+
+    /**
+     * @var array
+     */
+    protected $_headers = ['Expect:'];
 
     /**
      * @var mixed
      */
-    protected $body;
+    protected $_body;
 
     /**
      * @var bool
      */
-    protected $lockedBody = false;
+    protected $_lockedBody = false;
 
     /**
      * @var string|null
      */
-    protected $proxy;
+    protected $_proxy;
 
     /**
      * @var bool
      */
-    protected $followLocation = false;
-
-    /**
-     * @var int
-     */
-    protected $maxRedirects = 0;
+    protected $_secureSsl = true;
 
     /**
      * @var float
      */
-    protected $timeout = 5;
+    protected $_timeout = 5;
 
     /**
      * @var array
      */
-    protected $cryptoMethod = 'tlsv1.2';
-
-    /**
-     * @var array
-     */
-    protected $cryptoMethodMap = [
-        RequestContract::CRYPTO_ANY => STREAM_CRYPTO_METHOD_ANY_CLIENT,
-        RequestContract::CRYPTO_SSLV3 => STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
-        RequestContract::CRYPTO_TLS => STREAM_CRYPTO_METHOD_TLS_CLIENT,
-        RequestContract::CRYPTO_TLS_1_0 => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
-        RequestContract::CRYPTO_TLS_1_1 => STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT,
-        RequestContract::CRYPTO_TLS_1_2 => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
-    ];
-
-    protected function buildContext(Logger $logger = null)
-    {
-        $cryptoMethodFlag = $this->cryptoMethodMap[$this->cryptoMethod];
-
-        $options = [
-            'http' => [ // http://php.net/manual/en/context.http.php
-                'method' => $this->method,
-                'user_agent' => $this->userAgent,
-                'proxy' => $this->proxy,
-                'follow_location' => $this->followLocation,
-                'max_redirects' => $this->maxRedirects,
-                'timeout' => $this->timeout,
-                'protocol_version' => 1.0,
-                'ignore_errors' => true,
-                'header' => $this->preparedHeaders(),
-                'content' => $this->body,
-            ],
-            'ssl' => [ // http://php.net/manual/en/context.ssl.php
-                'verify_peer' => true,
-                'verify_peer_name' => true,
-                'allow_self_signed' => false,
-                'verify_depth' => 4,
-                'crypto_method' => $cryptoMethodFlag,
-                // disable compression to prevent CRIME attack.
-                // only necessary if an external user can affect
-                // the message (cookie, etc.)
-                'disable_compression' => true,
-
-            ],
-        ];
-
-        if ($logger) {
-            $params = ['notification' => [$logger, 'streamNotificationCallback']];
-        } else {
-            $params = [];
-        }
-
-        return stream_context_create($options, $params);
-    }
+    protected $_cryptoMethod = 'tlsv1.2';
 
     protected function with($property, $value)
     {
         $clone = clone $this;
 
-        $clone->$property = $value;
+        $clone->{'_' . $property} = $value;
 
         return $clone;
     }
@@ -143,7 +111,7 @@ class Request implements RequestContract
      * Only one User Agent header.
      * All other headers are copied verbatim.
      */
-    protected function preparedHeaders()
+    public function preparedHeaders()
     {
         $userAgentHeader = sprintf('User-agent: %s', $this->userAgent);
         $hostHeader      = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
@@ -164,9 +132,28 @@ class Request implements RequestContract
             $preparedHeaders[] = $header;
         }
 
-        array_unshift($preparedHeaders, $hostHeader, $userAgentHeader);
+        array_unshift(
+            $preparedHeaders,
+            $hostHeader,
+            $userAgentHeader
+        );
 
         return $preparedHeaders;
+    }
+
+    /**
+     * Publish an event.
+     *
+     * @param string $eventName
+     * @param array  $args
+     */
+    protected function publishEvent(string $eventName, array $args = [])
+    {
+        $events = $this->_events[$eventName] ?? [];
+
+        foreach ($events as $event) {
+            $event(...$args);
+        }
     }
 
     /**
@@ -177,8 +164,30 @@ class Request implements RequestContract
      */
     public function __construct($method, $url)
     {
-        $this->method = $method;
-        $this->url    = $url;
+        $this->_method = $method;
+        $this->_url    = $url;
+    }
+
+    public function __get($name)
+    {
+        $candidate = '_' . $name;
+
+        if (property_exists($this, $candidate)) {
+            return $this->$candidate;
+        }
+
+        throw new LogicException(sprintf(
+            'Unknown property "%s"',
+            $name
+        ));
+    }
+
+    public function __set($name, $value)
+    {
+        throw new LogicException(sprintf(
+            'Cannot set "%s". This object is immutable',
+            $name
+        ));
     }
 
     /**
@@ -222,7 +231,7 @@ class Request implements RequestContract
      */
     public function onBeforeSend($callback) : RequestContract
     {
-        $events = $this->events;
+        $events = $this->_events;
 
         $events['beforeSend'][] = $callback;
 
@@ -246,21 +255,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Publish an event.
-     *
-     * @param string $eventName
-     * @param array  $args
-     */
-    public function publishEvent(string $eventName, array $args = [])
-    {
-        $events = $this->events[$eventName] ?? [];
-
-        foreach ($events as $event) {
-            $event(...$args);
-        }
-    }
-
-    /**
      * Set the allowed crypto method.
      *
      * A Crypto method can be one of the CRYPTO_* constants
@@ -271,15 +265,27 @@ class Request implements RequestContract
      */
     public function withCryptoMethod($cryptoMethod)
     {
-        if (!isset($this->cryptoMethodMap[$cryptoMethod])) {
+        if (!isset($this->_cryptoMethodMap[$cryptoMethod])) {
             throw new UnexpectedValueException(sprintf(
                 'Crypto methed "%s" is invalid. Must be one of [%s]',
                 $cryptoMethod,
-                implode(', ', array_keys($this->cryptoMethodMap))
+                implode(', ', array_keys($this->_cryptoMethodMap))
             ));
         }
 
         return $this->with('cryptoMethod', $cryptoMethod);
+    }
+
+    /**
+     * Set the transfer engine.
+     *
+     * @param EngineContract $engine
+     *
+     * @return RequestContract
+     */
+    public function withEngine(EngineContract $engine)
+    {
+        return $this->with('engine', $engine);
     }
 
     /**
@@ -314,7 +320,7 @@ class Request implements RequestContract
      *
      * @return RequestContract
      */
-    public function addHeader($name, $value) : RequestContract
+    public function withHeader($name, $value) : RequestContract
     {
         $headers = $this->headers;
 
@@ -375,7 +381,7 @@ class Request implements RequestContract
      */
     public function withBasicAuth(string $username, string $password): RequestContract
     {
-        return $this->addHeader(sprintf(
+        return $this->withHeader(sprintf(
             'Authorization: Basic %s',
             base64_encode(sprintf('%s:%s', $username, $password))
         ));
@@ -396,7 +402,7 @@ class Request implements RequestContract
         }
 
         return $this->withMode(RequestContract::MODE_RAW)
-            ->addHeader('Content-Type', $contentType)
+            ->withHeader('Content-Type', $contentType)
             ->with('lockedBody', true)
             ->with('body', $body);
     }
@@ -457,7 +463,7 @@ class Request implements RequestContract
      *
      * @return RequestContract
      */
-    public function addMultipartField(string $name, string $file, string $filename = null, string $contentType = null) : RequestContract
+    public function addMultipartField(string $name, string $data, string $filename = null, string $contentType = null) : RequestContract
     {
         if ($this->lockedBody && $this->mode !== RequestContract::MODE_MULTIPART) {
             throw new LogicException('The body of this request has been locked. You cannot modify it further.');
@@ -466,7 +472,7 @@ class Request implements RequestContract
         if ($this->body instanceof MultipartBody) {
             $body = $this->body;
 
-            return $this->with('body', $body->withField($name, $file, $filename, $contentType));
+            return $this->with('body', $body->withField($name, $data, $filename, $contentType));
         }
 
         $body    = new MultipartBody();
@@ -475,8 +481,8 @@ class Request implements RequestContract
         return $this
             ->with('lockedBody', true)
             ->withMode(RequestContract::MODE_MULTIPART)
-            ->with('body', $body->withField($name, $file, $filename, $contentType))
-            ->addHeader('Content-Type', sprintf('multipart/form-data; boundary=%s', $body->boundary()));
+            ->with('body', $body->withField($name, $data, $filename, $contentType))
+            ->withHeader('Content-Type', sprintf('multipart/form-data; boundary=%s', $body->boundary()));
     }
 
     /**
@@ -527,32 +533,15 @@ class Request implements RequestContract
      *
      * @throws ConnectionException if connection could not be established.
      */
-    public function send($logging = false) : ResponseContract
+    public function send() : ResponseContract
     {
-        $clone   = clone $this;
-        $logger  = $logging ? new Logger() : null;
-        $context = $clone->buildContext($logger);
-
-        $clone->lockedBody = true;
+        $clone = $this->with('lockedBody', true);
 
         $clone->publishEvent('beforeSend', [$clone]);
 
-        $responseBody = file_get_contents($clone->url, false, $context);
+        $engine = $this->_engine ?: new Engines\NativeEngine;
 
-        if ($responseBody === false) {
-            $success         = false;
-            $responseHeaders = [];
-        } else {
-            $success         = true;
-            $responseHeaders = $http_response_header;
-        }
-
-        $response = new Response(
-            $responseBody,
-            $responseHeaders,
-            $clone,
-            $logger
-        );
+        $response = $engine->send($clone);
 
         $clone->publishEvent('afterResponse', [$response]);
 

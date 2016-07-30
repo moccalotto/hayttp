@@ -25,17 +25,11 @@ class Response implements ResponseContract
      */
     protected $request;
 
-    /**
-     * @var LoggerContract
-     */
-    protected $logger;
-
-    public function __construct(string $body, array $headers, RequestContract $request, LoggerContract $logger = null)
+    public function __construct(string $body, array $headers, RequestContract $request)
     {
         $this->body     = $body;
         $this->headers  = $headers;
         $this->request  = $request;
-        $this->logger   = $logger;
     }
 
     /**
@@ -43,11 +37,23 @@ class Response implements ResponseContract
      */
     public function responseCode()
     {
+        if (empty($this->headers)) {
+            return null;
+        }
+        list($proto, $status, $message) = preg_split('/\s+/', $this->headers[0]);
     }
 
-    public function headers()
+    /**
+     * Get the headers
+     */
+    public function headers() : array
     {
         return $this->headers;
+    }
+
+    public function body() : string
+    {
+        return $this->body;
     }
 
     /**
@@ -76,11 +82,6 @@ class Response implements ResponseContract
         return new SimpleXmlElement($this->body);
     }
 
-    public function logger()
-    {
-        return $this->logger;
-    }
-
     /**
      * Get the entire response, including headers, as a string.
      *
@@ -96,6 +97,11 @@ class Response implements ResponseContract
             . $this->body;
     }
 
+    /**
+     * Cast to string.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->render();
