@@ -31,7 +31,7 @@ abstract class BasePayload implements PayloadContract
     }
 
     /**
-     * Add these strings to the path
+     * Add these strings to the path.
      *
      * @return string[]
      */
@@ -41,7 +41,7 @@ abstract class BasePayload implements PayloadContract
     }
 
     /**
-     * Add these args to the query string
+     * Add these args to the query string.
      *
      * @return array Associative array of args to add.
      */

@@ -25,7 +25,7 @@ class RawPayload extends BasePayload
      */
     public function __construct(string $contents, string $contentType)
     {
-        $this->contents = $contents;
+        $this->contents    = $contents;
         $this->contentType = $contentType;
     }
 

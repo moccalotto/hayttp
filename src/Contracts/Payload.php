@@ -26,15 +26,14 @@ interface Payload
     public function addedHeaders() : array;
 
     /**
-     * Add these strings to the path
+     * Add these strings to the path.
      *
      * @return string[]
      */
     public function addedPath() : array;
 
-
     /**
-     * Add these args to the query string
+     * Add these args to the query string.
      *
      * @return array Associative array of args to add.
      */

@@ -44,9 +44,8 @@ class CurlEngine implements EngineContract
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-
-        $body = (string) $request->body;
-        $headers = $request->preparedHeaders();
+        $body      = (string) $request->body;
+        $headers   = $request->preparedHeaders();
         $headers[] = 'Expect:';
         $headers[] = sprintf('Content-Length: %d', strlen($body));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -90,5 +89,4 @@ class CurlEngine implements EngineContract
 
         return new Response($body, explode("\r\n", $headers), $request);
     }
-
 }

@@ -12,7 +12,6 @@ use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * HTTP Request class.
- *
  */
 class Request implements RequestContract
 {

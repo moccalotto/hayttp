@@ -5,7 +5,7 @@ namespace Moccalotto\Hayttp\Contracts;
 use SimpleXmlElement;
 
 /**
- * Http Request
+ * Http Request.
  *
  * @property PayloadContract $payload
  * @property float $timeout
@@ -22,9 +22,9 @@ use SimpleXmlElement;
  */
 interface Request
 {
-    const CRYPTO_ANY = 'any';
-    const CRYPTO_SSLV3 = 'sslv3';
-    const CRYPTO_TLS   = 'tls';
+    const CRYPTO_ANY     = 'any';
+    const CRYPTO_SSLV3   = 'sslv3';
+    const CRYPTO_TLS     = 'tls';
     const CRYPTO_TLS_1_0 = 'tlsv1.0';
     const CRYPTO_TLS_1_1 = 'tlsv1.1';
     const CRYPTO_TLS_1_2 = 'tlsv1.2';

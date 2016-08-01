@@ -4,7 +4,6 @@ namespace Moccalotto\Hayttp;
 
 use SimpleXmlElement;
 use UnexpectedValueException;
-use Moccalotto\Hayttp\Contracts\Logger as LoggerContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
@@ -27,24 +26,24 @@ class Response implements ResponseContract
 
     public function __construct(string $body, array $headers, RequestContract $request)
     {
-        $this->body     = $body;
-        $this->headers  = $headers;
-        $this->request  = $request;
+        $this->body    = $body;
+        $this->headers = $headers;
+        $this->request = $request;
     }
 
     /**
-     * Get the HTTP Response Code
+     * Get the HTTP Response Code.
      */
     public function responseCode()
     {
         if (empty($this->headers)) {
-            return null;
+            return;
         }
         list($proto, $status, $message) = preg_split('/\s+/', $this->headers[0]);
     }
 
     /**
-     * Get the headers
+     * Get the headers.
      */
     public function headers() : array
     {

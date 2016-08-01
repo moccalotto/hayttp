@@ -76,7 +76,6 @@ trait CreatesRequests
         return new static('PATCH', $url);
     }
 
-
     /**
      * Factory.
      *

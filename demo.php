@@ -32,7 +32,7 @@ require 'vendor/autoload.php';
 // This puts the request into "multipart" mode,
 // but it does not lock the contents for further
 // updates.
-print Hayttp::post('http://eu.httpbin.org/post')
+echo Hayttp::post('http://eu.httpbin.org/post')
 // print Hayttp::post('http://localhost:8000')
     ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
     ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='), 'r.gif', 'image/gif')
