@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp\Payloads;
 
 /**
@@ -24,7 +33,7 @@ class MultipartPayload extends BasePayload
      */
     public function __construct()
     {
-        $this->boundary = '----HayttpBoundary' . substr(md5(uniqid()), 0, 10);
+        $this->boundary = '----HayttpBoundary'.substr(md5(uniqid()), 0, 10);
     }
 
     /**
@@ -49,7 +58,7 @@ class MultipartPayload extends BasePayload
      */
     public function withField(string $name, string $data, $filename, $contentType) : MultipartPayload
     {
-        $clone            = clone $this;
+        $clone = clone $this;
         $clone->entries[] = [
             'name' => $name,
             'data' => $data,
@@ -76,7 +85,7 @@ class MultipartPayload extends BasePayload
     public function render() : string
     {
         foreach ($this->entries as $entry) {
-            $lines[] = '--' . $this->boundary;
+            $lines[] = '--'.$this->boundary;
             if ($entry['filename']) {
                 $lines[] = sprintf('Content-Disposition: form-data; name="%s"; filename="%s"', $entry['name'], $entry['filename']);
             } else {
@@ -91,9 +100,9 @@ class MultipartPayload extends BasePayload
             $lines[] = $entry['data'];
         }
 
-        $lines[] = '--' . $this->boundary . '--';
+        $lines[] = '--'.$this->boundary.'--';
 
-        return implode("\r\n", $lines) . "\r\n";
+        return implode("\r\n", $lines)."\r\n";
     }
 
     /**

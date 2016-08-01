@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp;
 
-use SimpleXmlElement;
-use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use SimpleXmlElement;
+use UnexpectedValueException;
 
 class Response implements ResponseContract
 {
@@ -26,7 +35,7 @@ class Response implements ResponseContract
 
     public function __construct(string $body, array $headers, RequestContract $request)
     {
-        $this->body    = $body;
+        $this->body = $body;
         $this->headers = $headers;
         $this->request = $request;
     }
@@ -91,9 +100,9 @@ class Response implements ResponseContract
         $crlf = "\r\n";
 
         return implode($crlf, $this->headers)
-            . $crlf
-            . $crlf
-            . $this->body;
+            .$crlf
+            .$crlf
+            .$this->body;
     }
 
     /**

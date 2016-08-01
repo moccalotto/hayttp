@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp\Engines;
 
-use Moccalotto\Hayttp\Response as Response;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Moccalotto\Hayttp\Response as Response;
 
 class NativeEngine implements EngineContract
 {
@@ -41,7 +50,7 @@ class NativeEngine implements EngineContract
             'ssl' => [ // http://php.net/manual/en/context.ssl.php
                 'verify_peer' => $request->secureSsl,
                 'verify_peer_name' => $request->secureSsl,
-                'allow_self_signed' => !$request->secureSsl,
+                'allow_self_signed' => ! $request->secureSsl,
                 'verify_depth' => 10,
                 'crypto_method' => $cryptoMethodFlag,
                 // disable compression to prevent CRIME attack.
@@ -67,10 +76,10 @@ class NativeEngine implements EngineContract
         $responseBody = file_get_contents($request->url, false, $this->buildContext($request));
 
         if ($responseBody === false) {
-            $success         = false;
+            $success = false;
             $responseHeaders = [];
         } else {
-            $success         = true;
+            $success = true;
             $responseHeaders = $http_response_header;
         }
 

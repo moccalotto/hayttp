@@ -1,35 +1,32 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp;
 
 use LogicException;
-use SimpleXmlElement;
-use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
+use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use SimpleXmlElement;
 
 /**
  * HTTP Request class.
  */
 class Request implements RequestContract
 {
-    use Traits\CreatesRequests;
-
-    /**
-     * Available crypto methods.
-     *
-     * @var array
-     */
-    protected $cryptoMethodMap = [
-        RequestContract::CRYPTO_ANY => true,
-        RequestContract::CRYPTO_SSLV3 => true,
-        RequestContract::CRYPTO_TLS => true,
-        RequestContract::CRYPTO_TLS_1_0 => true,
-        RequestContract::CRYPTO_TLS_1_1 => true,
-        RequestContract::CRYPTO_TLS_1_2 => true,
-    ];
+    use Traits\HasWithMethods,
+        Traits\CreatesRequests,
+        Traits\ExpectsCommonMimeTypes,
+        Traits\HandlesMultipartPayloads;
 
     /**
      * @var string
@@ -59,7 +56,7 @@ class Request implements RequestContract
     /**
      * @var array
      */
-    protected $_headers = ['Expect:'];
+    protected $_headers = ['Expect' => ''];
 
     /**
      * @var PayloadContract
@@ -86,56 +83,21 @@ class Request implements RequestContract
      */
     protected $_cryptoMethod = 'tlsv1.2';
 
-    protected function with($property, $value)
+    /**
+     * Clone object with a new property value.
+     *
+     * @param string $property
+     * @param mixed  $value
+     *
+     * @return RequestContract
+     */
+    protected function with($property, $value) : RequestContract
     {
         $clone = clone $this;
 
-        $clone->{'_' . $property} = $value;
+        $clone->{'_'.$property} = $value;
 
         return $clone;
-    }
-
-    /**
-     * Format headers.
-     *
-     * Only one hosts header, which must be the first header
-     * Only one User Agent header.
-     * All other headers are copied verbatim.
-     */
-    public function preparedHeaders()
-    {
-        $userAgentHeader   = sprintf('User-agent: %s', $this->userAgent);
-        $hostHeader        = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
-        $contentTypeHeader = sprintf('Content-Type: %s', $this->payload->contentType());
-
-        $preparedHeaders = [];
-
-        foreach ($this->headers as $header) {
-            if (preg_match('/user-agent:/Ai', $header)) {
-                $userAgentHeader = $header;
-                continue;
-            }
-
-            if (preg_match('/host:/Ai', $header)) {
-                $hostHeader = $header;
-                continue;
-            }
-
-            if (preg_match('/content-type:/Ai', $header)) {
-                $contentTypeHeader = $header;
-            }
-
-            $preparedHeaders[] = $header;
-        }
-
-        array_unshift(
-            $preparedHeaders,
-            $hostHeader,
-            $userAgentHeader,
-            $contentTypeHeader
-        );
-
-        return $preparedHeaders;
     }
 
     /**
@@ -148,9 +110,48 @@ class Request implements RequestContract
     {
         $events = $this->_events[$eventName] ?? [];
 
+        /** @var callable $event */
         foreach ($events as $event) {
             $event(...$args);
         }
+    }
+
+    /**
+     * Format headers.
+     *
+     * Only one hosts header, which must be the first header
+     * Only one User Agent header.
+     * All other headers are copied verbatim.
+     *
+     * @return string[]
+     */
+    public function preparedHeaders() : array
+    {
+        $headers = $this->_headers;
+
+        $preparedHeaders = [];
+
+        if (isset($headers['Host'])) {
+            $preparedHeaders[] = sprintf('Host: %s', $headers['Host']);
+            unset($headers['Host']);
+        } else {
+            $preparedHeaders[] = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
+        }
+
+        if (! isset($headers['User-Agent'])) {
+            $preparedHeaders[] = sprintf('User-agent: %s', $this->userAgent);
+        }
+
+        if (! isset($headers['Content-Type'])) {
+            $preparedHeaders[] = sprintf('Content-Type: %s', $this->payload->contentType());
+        }
+
+        /** @var string $name, @var string $header */
+        foreach ($headers as $name => $header) {
+            $preparedHeaders[] = sprintf('%s: %s', $name, $header);
+        }
+
+        return $preparedHeaders;
     }
 
     /**
@@ -162,12 +163,19 @@ class Request implements RequestContract
     public function __construct($method, $url)
     {
         $this->_method = $method;
-        $this->_url    = $url;
+        $this->_url = $url;
     }
 
-    public function __get($name)
+    /**
+     * Magic getter.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function __get(string $name)
     {
-        $candidate = '_' . $name;
+        $candidate = '_'.$name;
 
         if (property_exists($this, $candidate)) {
             return $this->$candidate;
@@ -187,6 +195,14 @@ class Request implements RequestContract
         ));
     }
 
+    /**
+     * Setter.
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @throws LogicException whenever setting a non-existing property is attempted.
+     */
     public function __set($name, $value)
     {
         throw new LogicException(sprintf(
@@ -216,13 +232,18 @@ class Request implements RequestContract
         $crlf = "\r\n";
 
         return $init
-            . $crlf
-            . implode($crlf, $headers)
-            . $crlf . $crlf
-            . $this->payload;
+            .$crlf
+            .implode($crlf, $headers)
+            .$crlf.$crlf
+            .$this->payload;
     }
 
-    public function __toString()
+    /**
+     * Return the request as a string.
+     *
+     * @return string
+     */
+    public function __toString() : string
     {
         return $this->render();
     }
@@ -257,128 +278,6 @@ class Request implements RequestContract
         $events['beforeSend'][] = $callback;
 
         return $this->with('events', $events);
-    }
-
-    /**
-     * Set the allowed crypto method.
-     *
-     * A Crypto method can be one of the CRYPTO_* constants
-     *
-     * @param string
-     *
-     * @return RequestContract
-     */
-    public function withCryptoMethod($cryptoMethod)
-    {
-        if (!isset($this->cryptoMethodMap[$cryptoMethod])) {
-            throw new UnexpectedValueException(sprintf(
-                'Crypto methed "%s" is invalid. Must be one of [%s]',
-                $cryptoMethod,
-                implode(', ', array_keys($this->cryptoMethodMap))
-            ));
-        }
-
-        return $this->with('cryptoMethod', $cryptoMethod);
-    }
-
-    /**
-     * Set the transfer engine.
-     *
-     * @param EngineContract $engine
-     *
-     * @return RequestContract
-     */
-    public function withEngine(EngineContract $engine)
-    {
-        return $this->with('engine', $engine);
-    }
-
-    /**
-     * Set all headers.
-     *
-     * @param array $headers
-     *
-     * @return RequestContract
-     */
-    public function withHeaders(array $headers) : RequestContract
-    {
-        return $this->with('headers', $headers);
-    }
-
-    /**
-     * Set the proxy server.
-     *
-     * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).
-     *
-     * @return RequestContract
-     */
-    public function withProxy($proxy) : RequestContract
-    {
-        return $this->with('proxy', $proxy);
-    }
-
-    /**
-     * Add a header to the request.
-     *
-     * @param string $name
-     * @param string $value
-     *
-     * @return RequestContract
-     */
-    public function withHeader($name, $value) : RequestContract
-    {
-        $headers = $this->headers;
-
-        $headers[] = sprintf('%s: %s', $name, $value);
-
-        return $this->withHeaders($headers);
-    }
-
-    /**
-     * Set the TLS version.
-     *
-     * @param string $version currently, 1.*, 1.0, 1.1 and 1.2 are supported
-     *
-     * @return RequestContract
-     */
-    public function withTls($version)
-    {
-        switch ($version) {
-        case '1.*':
-            return $this->withCryptoMethod(static::CRYPTO_TLS);
-        case '1.0':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_0);
-        case '1.1':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_1);
-        case '1.2':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_2);
-        default:
-            throw new UnexpectedValueException(sprintf(
-                'TLS version "%s" is unavailable. Must be one of: [1.*, 1.0, 1.1, 1.2]',
-                $version
-            ));
-        }
-    }
-
-    /**
-     * Add a basic authorization (which is actually an authenticaation) header.
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @return RequestContract
-     */
-    public function withBasicAuth(string $username, string $password): RequestContract
-    {
-        return $this->withHeader(sprintf(
-            'Authorization: Basic %s',
-            base64_encode(sprintf('%s:%s', $username, $password))
-        ));
-    }
-
-    public function withPayload(PayloadContract $payload)
-    {
-        return $this->with('payload', $payload);
     }
 
     /**
@@ -445,65 +344,38 @@ class Request implements RequestContract
     }
 
     /**
-     * Add a multipart entry.
+     * Add Accept header.
      *
-     * @param string      $name        posted Field name
-     * @param string      $data        The data blob to add.
-     * @param string|null $filename    The filename to use. If null, no filename is sent.
-     * @param string|null $contentType The content type to send. If null, no content-type will be sent.
+     * @param string $mimeType
+     * @param float  $qualityFactor must be between 0 and 1
      *
      * @return RequestContract
      */
-    public function addMultipartField(string $name, string $data, string $filename = null, string $contentType = null) : RequestContract
+    public function expects(string $mimeType, float $qualityFactor = 1) : RequestContract
     {
-        if ($this->payload && !$this->payload instanceof Payloads\MultipartPayload) {
-            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
-        }
+        // force qualityFactor to be between 0 and 1
+        $qualityFactor = max(0, min(1, $qualityFactor));
 
-        $payload = $this->payload ?: new Payloads\MultipartPayload();
-
-        return $this->withPayload($payload->withField($name, $data, $filename, $contentType));
+        return $this->withHeader('Accept', sprintf('%s; %s', $mimeType, $qualityFactor));
     }
 
     /**
-     * Add a file to the multipart payload.
+     * Add Accept header with many types.
      *
-     * @param string $name        The posted field name
-     * @param string $file        The filename on the physical HD
-     * @param string $filename    The filename to post. If null, the basename of $filename will be used.
-     * @param string $contentType The content type of the file. If null, the content type will be inferred via mime_content_type()
+     * @param array $types Associative array of [mimeType => qualityFactor].
      *
      * @return RequestContract
      */
-    public function addFile(
-        string $name,
-        string $file,
-        string $filename = null,
-        string $contentType = null
-    ) : RequestContract {
-        if ($filename === null) {
-            $filename = basename($file);
-        }
-
-        if ($contentType === null) {
-            $contentType = mime_content_type($file);
-        }
-
-        return $this->addMultipartField($name, file_get_contents($file), $filename, $contentType);
-    }
-
-    /**
-     * Add a data field to the multipart payload.
-     *
-     * @param string      $name        The posted field name
-     * @param string      $data        The data blob to add.
-     * @param string|null $contentType The content type to send. If null, no content-type will be sent.
-     *
-     * @return RequestContract
-     */
-    public function addBlob(string $name, string $data, $contentType = null) : RequestContract
+    public function expectsMany(array $types) : RequestContract
     {
-        return $this->addMultipartField($name, $data, null, $contentType);
+        $parts = [];
+
+        foreach ($types as $mimeType => $qualityFactor) {
+            $qualityFactor = max(0, min(1, $qualityFactor));
+            $parts[] = sprintf('%s; %s', $mimeType, $qualityFactor);
+        }
+
+        return $this->withHeader('Accept', implode(', ', $parts));
     }
 
     /**

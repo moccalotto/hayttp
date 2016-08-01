@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace spec\Moccalotto\Hayttp;
 
-use SimpleXmlElement;
-use PhpSpec\ObjectBehavior;
-use Moccalotto\Hayttp\Request;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Request;
+use PhpSpec\ObjectBehavior;
+use SimpleXmlElement;
 
 class RequestSpec extends ObjectBehavior
 {

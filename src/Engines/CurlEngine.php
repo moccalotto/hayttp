@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp\Engines;
 
-use RuntimeException;
-use Moccalotto\Hayttp\Response as Response;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Moccalotto\Hayttp\Response as Response;
+use RuntimeException;
 
 class CurlEngine implements EngineContract
 {
@@ -44,8 +53,8 @@ class CurlEngine implements EngineContract
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $body      = (string) $request->body;
-        $headers   = $request->preparedHeaders();
+        $body = (string) $request->body;
+        $headers = $request->preparedHeaders();
         $headers[] = 'Expect:';
         $headers[] = sprintf('Content-Length: %d', strlen($body));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

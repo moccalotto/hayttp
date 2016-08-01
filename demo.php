@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 use Moccalotto\Hayttp\Request as Hayttp;
 
 require 'vendor/autoload.php';
@@ -32,10 +41,10 @@ require 'vendor/autoload.php';
 // This puts the request into "multipart" mode,
 // but it does not lock the contents for further
 // updates.
-echo Hayttp::post('http://eu.httpbin.org/post')
-// print Hayttp::post('http://localhost:8000')
+echo Hayttp::post('https://eu.httpbin.org/post')
+    // print Hayttp::post('http://localhost:8000')
+    ->withCryptoMethod('tls')
     ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
-    ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='), 'r.gif', 'image/gif')
+    ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true), 'r.gif', 'image/gif')
     ->addMultipartField('file2', '<html><body>Naked</body></html>', 't.html', 'text/html')
-    ->send()
-    ;
+    ->send();

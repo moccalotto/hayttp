@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace Moccalotto\Hayttp\Contracts;
 
 use SimpleXmlElement;
@@ -7,7 +16,7 @@ use SimpleXmlElement;
 /**
  * Http Request.
  *
- * @property PayloadContract $payload
+ * @property Payload $payload
  * @property float $timeout
  * @property string $body Rendered payload/body
  * @property string $contentLength Length of rendered body
@@ -22,19 +31,40 @@ use SimpleXmlElement;
  */
 interface Request
 {
-    const CRYPTO_ANY     = 'any';
-    const CRYPTO_SSLV3   = 'sslv3';
-    const CRYPTO_TLS     = 'tls';
+    const CRYPTO_ANY = 'any';
+    const CRYPTO_SSLV3 = 'sslv3';
+    const CRYPTO_TLS = 'tls';
     const CRYPTO_TLS_1_0 = 'tlsv1.0';
     const CRYPTO_TLS_1_1 = 'tlsv1.1';
     const CRYPTO_TLS_1_2 = 'tlsv1.2';
+
+    /// @var array
+    const CRYPTO_METHODS = [
+        self::CRYPTO_ANY => true,
+        self::CRYPTO_SSLV3 => true,
+        self::CRYPTO_TLS => true,
+        self::CRYPTO_TLS_1_0 => true,
+        self::CRYPTO_TLS_1_1 => true,
+        self::CRYPTO_TLS_1_2 => true,
+    ];
+
+    /**
+     * Format headers.
+     *
+     * Only one hosts header, which must be the first header
+     * Only one User Agent header.
+     * All other headers are copied verbatim.
+     *
+     * @return string[]
+     */
+    public function preparedHeaders() : array;
 
     /**
      * Return the request as a string.
      *
      * @return string
      */
-    public function render() : string;
+    public function __toString() : string;
 
     /**
      * Set an event handler to be called just before the message is sent.
@@ -53,6 +83,17 @@ interface Request
      * @return Request
      */
     public function onAfterResponse($callback) : Request;
+
+    /**
+     * Set the allowed crypto method.
+     *
+     * A Crypto method can be one of the CRYPTO_* constants
+     *
+     * @param string
+     *
+     * @return Request
+     */
+    public function withCryptoMethod($cryptoMethod) : Request;
 
     /**
      * Set all headers.
@@ -81,6 +122,22 @@ interface Request
      * @return Request
      */
     public function withHeader($name, $value) : Request;
+
+    /**
+     * Disable all SSL certificate checks.
+     *
+     * @return Request
+     */
+    public function withInsecureSsl() : Request;
+
+    /**
+     * Set the transfer engine.
+     *
+     * @param Engine $engine
+     *
+     * @return Request
+     */
+    public function withEngine(Engine $engine) : Request;
 
     /**
      * Set the raw body of the request.
@@ -118,6 +175,44 @@ interface Request
      * @return Request
      */
     public function sends(array $data) : Request;
+
+    /**
+     * Add Accept header.
+     *
+     * @param string $mimeType
+     * @param float  $qualityFactor must be between 0 and 1
+     *
+     * @return Request
+     */
+    public function expects(string $mimeType, float $qualityFactor = 1) : Request;
+
+    /**
+     * Add Accept header with many types.
+     *
+     * @param array $types Associative array of [mimeType => qualityFactor].
+     *
+     * @return Request
+     */
+    public function expectsMany(array $types) : Request;
+
+    /**
+     * Accept application/json.
+     *
+     * @return Request
+     */
+    public function expectsJson() : Request;
+
+    /**
+     * Accept application/xml.
+     */
+    public function expectsXml() : Request;
+
+    /**
+     * * Accept * / *.
+     *
+     * @return Request
+     */
+    public function expectsAny() : Request;
 
     /**
      * Add a multipart entry.
