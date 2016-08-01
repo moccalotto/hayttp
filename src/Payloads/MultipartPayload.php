@@ -1,11 +1,11 @@
 <?php
 
-namespace Moccalotto\Hayttp;
+namespace Moccalotto\Hayttp\Payloads;
 
 /**
  * Multipart Body Helper.
  */
-class MultipartBody
+class MultipartPayload extends BasePayload
 {
     /**
      * @var string
@@ -45,9 +45,9 @@ class MultipartBody
      * @param string|null $filename    The filename to use. If null, no filename is sent.
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
-     * @return MultipartBody
+     * @return MultipartPayload
      */
-    public function withField(string $name, string $data, $filename, $contentType)
+    public function withField(string $name, string $data, $filename, $contentType) : MultipartPayload
     {
         $clone            = clone $this;
         $clone->entries[] = [
@@ -58,6 +58,16 @@ class MultipartBody
         ];
 
         return $clone;
+    }
+
+    /**
+     * The Content-Type header to use when sending this payload.
+     *
+     * @return string
+     */
+    public function contentType() : string
+    {
+        return sprintf('multipart/form-data; boundary=%s', $this->boundary);
     }
 
     /**
@@ -86,7 +96,12 @@ class MultipartBody
         return implode("\r\n", $lines) . "\r\n";
     }
 
-    public function __toString()
+    /**
+     * Render the body of the payload.
+     *
+     * @return string
+     */
+    public function __toString() : string
     {
         return $this->render();
     }

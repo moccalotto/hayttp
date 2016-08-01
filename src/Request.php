@@ -7,10 +7,12 @@ use SimpleXmlElement;
 use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * HTTP Request class.
+ *
  */
 class Request implements RequestContract
 {
@@ -21,7 +23,7 @@ class Request implements RequestContract
      *
      * @var array
      */
-    protected $_cryptoMethodMap = [
+    protected $cryptoMethodMap = [
         RequestContract::CRYPTO_ANY => true,
         RequestContract::CRYPTO_SSLV3 => true,
         RequestContract::CRYPTO_TLS => true,
@@ -48,11 +50,6 @@ class Request implements RequestContract
     /**
      * @var string
      */
-    protected $_mode = RequestContract::MODE_RAW;
-
-    /**
-     * @var string
-     */
     protected $_userAgent = 'Hayttp';
 
     /**
@@ -66,14 +63,9 @@ class Request implements RequestContract
     protected $_headers = ['Expect:'];
 
     /**
-     * @var mixed
+     * @var PayloadContract
      */
-    protected $_body;
-
-    /**
-     * @var bool
-     */
-    protected $_lockedBody = false;
+    protected $_payload;
 
     /**
      * @var string|null
@@ -113,8 +105,9 @@ class Request implements RequestContract
      */
     public function preparedHeaders()
     {
-        $userAgentHeader = sprintf('User-agent: %s', $this->userAgent);
-        $hostHeader      = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
+        $userAgentHeader   = sprintf('User-agent: %s', $this->userAgent);
+        $hostHeader        = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
+        $contentTypeHeader = sprintf('Content-Type: %s', $this->payload->contentType());
 
         $preparedHeaders = [];
 
@@ -129,13 +122,18 @@ class Request implements RequestContract
                 continue;
             }
 
+            if (preg_match('/content-type:/Ai', $header)) {
+                $contentTypeHeader = $header;
+            }
+
             $preparedHeaders[] = $header;
         }
 
         array_unshift(
             $preparedHeaders,
             $hostHeader,
-            $userAgentHeader
+            $userAgentHeader,
+            $contentTypeHeader
         );
 
         return $preparedHeaders;
@@ -176,6 +174,14 @@ class Request implements RequestContract
             return $this->$candidate;
         }
 
+        if ($name === 'body') {
+            return (string) $this->payload;
+        }
+
+        if ($name === 'contentLength') {
+            return strlen((string) $this->payload);
+        }
+
         throw new LogicException(sprintf(
             'Unknown property "%s"',
             $name
@@ -214,7 +220,7 @@ class Request implements RequestContract
             . $crlf
             . implode($crlf, $headers)
             . $crlf . $crlf
-            . $this->body;
+            . $this->payload;
     }
 
     public function __toString()
@@ -265,11 +271,11 @@ class Request implements RequestContract
      */
     public function withCryptoMethod($cryptoMethod)
     {
-        if (!isset($this->_cryptoMethodMap[$cryptoMethod])) {
+        if (!isset($this->cryptoMethodMap[$cryptoMethod])) {
             throw new UnexpectedValueException(sprintf(
                 'Crypto methed "%s" is invalid. Must be one of [%s]',
                 $cryptoMethod,
-                implode(', ', array_keys($this->_cryptoMethodMap))
+                implode(', ', array_keys($this->cryptoMethodMap))
             ));
         }
 
@@ -356,22 +362,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Set the "mode" of the request.
-     * Mode can be one of the MODE_* constants
-     *  "raw": used for sending raw xml and json
-     *  "urlencoded": used for conventional http posts
-     *  "multipart": used for file and blob transfers.
-     *
-     *  @param string $mode
-     *
-     *  @return RequestContract
-     */
-    public function withMode($mode) : RequestContract
-    {
-        return $this->with('mode', $mode);
-    }
-
-    /**
      * Add a basic authorization (which is actually an authenticaation) header.
      *
      * @param string $username
@@ -387,37 +377,39 @@ class Request implements RequestContract
         ));
     }
 
+    public function withPayload(PayloadContract $payload)
+    {
+        return $this->with('payload', $payload);
+    }
+
     /**
-     * Set the raw body of the request.
+     * Set the raw payload of the request.
      *
-     * @param string $body
+     * @param string $payload
      * @param string $contentType
      *
      * @return RequestContract
      */
-    public function sendsRaw(string $body, string $contentType = 'application/octet-stream') : RequestContract
+    public function sendsRaw(string $payload, string $contentType = 'application/octet-stream') : RequestContract
     {
-        if ($this->lockedBody) {
-            throw new LogicException('The body of this request has been locked. You cannot modify it further.');
+        if ($this->payload) {
+            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
         }
 
-        return $this->withMode(RequestContract::MODE_RAW)
-            ->withHeader('Content-Type', $contentType)
-            ->with('lockedBody', true)
-            ->with('body', $body);
+        return $this->withPayload(new Payloads\RawPayload($payload, $contentType));
     }
 
     /**
      * Set a JSON payload.
      *
-     * @param array|object $body The body to send - the body will always be json encoded.
+     * @param array|object $payload The payload to send - the payload will always be json encoded.
      *
      * @return RequestContract
      */
-    public function sendsJson($body) : RequestContract
+    public function sendsJson($payload) : RequestContract
     {
         return $this->sendsRaw(
-            json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'application/json'
         );
     }
@@ -465,28 +457,17 @@ class Request implements RequestContract
      */
     public function addMultipartField(string $name, string $data, string $filename = null, string $contentType = null) : RequestContract
     {
-        if ($this->lockedBody && $this->mode !== RequestContract::MODE_MULTIPART) {
-            throw new LogicException('The body of this request has been locked. You cannot modify it further.');
+        if ($this->payload && !$this->payload instanceof Payloads\MultipartPayload) {
+            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
         }
 
-        if ($this->body instanceof MultipartBody) {
-            $body = $this->body;
+        $payload = $this->payload ?: new Payloads\MultipartPayload();
 
-            return $this->with('body', $body->withField($name, $data, $filename, $contentType));
-        }
-
-        $body    = new MultipartBody();
-        $headers = $this->headers;
-
-        return $this
-            ->with('lockedBody', true)
-            ->withMode(RequestContract::MODE_MULTIPART)
-            ->with('body', $body->withField($name, $data, $filename, $contentType))
-            ->withHeader('Content-Type', sprintf('multipart/form-data; boundary=%s', $body->boundary()));
+        return $this->withPayload($payload->withField($name, $data, $filename, $contentType));
     }
 
     /**
-     * Add a file to the multipart body.
+     * Add a file to the multipart payload.
      *
      * @param string $name        The posted field name
      * @param string $file        The filename on the physical HD
@@ -513,7 +494,7 @@ class Request implements RequestContract
     }
 
     /**
-     * Add a data field to the multipart body.
+     * Add a data field to the multipart payload.
      *
      * @param string      $name        The posted field name
      * @param string      $data        The data blob to add.
@@ -535,11 +516,11 @@ class Request implements RequestContract
      */
     public function send() : ResponseContract
     {
-        $clone = $this->with('lockedBody', true);
+        $clone = clone $this;
 
         $clone->publishEvent('beforeSend', [$clone]);
 
-        $engine = $this->_engine ?: new Engines\NativeEngine;
+        $engine = $this->_engine ?: new Engines\NativeEngine();
 
         $response = $engine->send($clone);
 
