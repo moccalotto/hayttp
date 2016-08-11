@@ -1,10 +1,19 @@
 {
     "name": "moccalotto/hayttp",
-    "type:": "library",
-    "description": "Fancy HTTP requests",
+    "type": "library",
+    "description": "Easy HTTP API requests with a fluent API",
     "keywords": ["rest", "http", "api"],
+    "homepage": "https://moccalotto.github.io/docs/hayttp",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kim Ravn Hansen",
+            "email": "moccalotto@gmail.com",
+            "homepage": "https://moccalotto.github.io"
+        }
+    ],
     "require": {
-        "php": ">=7.0.0."
+        "php": ">=7.0.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",
