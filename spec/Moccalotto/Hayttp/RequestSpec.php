@@ -25,14 +25,22 @@ class RequestSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->beConstructedWith('post', 'https://example.org');
+        $this->beConstructedWith('POST', 'https://example.org');
         $this->shouldHaveType(Request::class);
         $this->shouldHaveType(RequestContract::class);
     }
 
+    public function it_renders_toString()
+    {
+        $this->beConstructedWith('GET', 'https://example.org');
+        $rendered = $this->render();
+        $rendered->shouldContain("GET / HTTP/1.0\r\n");
+        $rendered->shouldContain("Host: example.org\r\n");
+    }
+
     public function it_posts_json()
     {
-        $this->beConstructedThrough('post', ['https://example.org']);
+        $this->beConstructedThrough('POST', ['https://example.org']);
 
         $data = ['this' => 'array', 'will' => 'be', 'conterted' => 'to', 'json' => 'object'];
 
@@ -49,7 +57,7 @@ class RequestSpec extends ObjectBehavior
 
     public function it_posts_xml()
     {
-        $this->beConstructedThrough('post', ['https://example.org']);
+        $this->beConstructedThrough('POST', ['https://example.org']);
 
         $data = new SimpleXmlElement('<root></root>');
 
