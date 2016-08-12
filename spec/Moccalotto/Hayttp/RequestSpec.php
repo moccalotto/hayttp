@@ -12,6 +12,8 @@
 namespace spec\Moccalotto\Hayttp;
 
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Engines\CurlEngine;
+use Moccalotto\Hayttp\Response;
 use Moccalotto\Hayttp\Request;
 use PhpSpec\ObjectBehavior;
 use SimpleXmlElement;
@@ -68,5 +70,21 @@ class RequestSpec extends ObjectBehavior
         $req->render()->shouldContain($data->asXml());
 
         $req->render()->shouldContain('Content-Type: application/xml');
+    }
+
+    public function it_can_send_requests(CurlEngine $engine)
+    {
+        $this->beConstructedThrough('POST', ['https://example.org']);
+
+        $clone = $this->withEngine($engine);
+
+        $response = new Response('Test Body', ['Content-Type: text/plain'], $clone->getWrappedObject());
+
+        $engine->send($clone)->shouldBeCalled();
+        $engine->send($clone)->willReturn($response);
+
+        $response = $clone->send();
+
+        $response->shouldBe($response);
     }
 }
