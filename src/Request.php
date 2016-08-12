@@ -142,7 +142,7 @@ class Request implements RequestContract
             $preparedHeaders[] = sprintf('User-agent: %s', $this->userAgent);
         }
 
-        if (! isset($headers['Content-Type'])) {
+        if (! isset($headers['Content-Type']) && $this->payload !== null) {
             $preparedHeaders[] = sprintf('Content-Type: %s', $this->payload->contentType());
         }
 
