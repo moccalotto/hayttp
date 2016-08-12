@@ -56,7 +56,7 @@ class Request implements RequestContract
     /**
      * @var array
      */
-    protected $_headers = ['Expect' => ''];
+    protected $_headers = [];
 
     /**
      * @var PayloadContract
