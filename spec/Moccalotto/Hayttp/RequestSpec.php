@@ -16,6 +16,11 @@ use Moccalotto\Hayttp\Request;
 use PhpSpec\ObjectBehavior;
 use SimpleXmlElement;
 
+/**
+ * Test
+ *
+ * @codingStandardsIgnoreStart
+ */
 class RequestSpec extends ObjectBehavior
 {
     public function it_is_initializable()
