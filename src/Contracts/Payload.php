@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Hayttp package.
  *
  * @package Hayttp

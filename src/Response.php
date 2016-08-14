@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Hayttp package.
  *
  * @package Hayttp
@@ -11,6 +11,7 @@
 
 namespace Moccalotto\Hayttp;
 
+use LogicException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 use SimpleXmlElement;
@@ -41,24 +42,56 @@ class Response implements ResponseContract
     }
 
     /**
-     * Get the HTTP Response Code.
+     * Return the status line of the response.
+     *
+     * @return string[]
+     *
+     * @throws LogicException
      */
-    public function responseCode()
+    protected function parseStatusLine() : array
     {
         if (empty($this->headers)) {
-            return;
+            throw new LogicException('This response has no headers');
         }
-        list($proto, $status, $message) = preg_split('/\s+/', $this->headers[0]);
+
+        return preg_split('/\s+/', $this->headers[0]);
+    }
+
+    /**
+     * Get the HTTP Response Code.
+     *
+     * @return string
+     */
+    public function statusCode() : string
+    {
+        return $this->parseStatusLine()[1];
+    }
+
+    /**
+     * Get the http reason phrase.
+     *
+     * @return string
+     */
+    public function reasonPhrase() : string
+    {
+        return $this->parseStatusLine()[2];
     }
 
     /**
      * Get the headers.
+     *
+     * @return string[]
      */
     public function headers() : array
     {
         return $this->headers;
     }
 
+    /**
+     * Get the response body.
+     *
+     * @return string
+     */
     public function body() : string
     {
         return $this->body;
