@@ -65,6 +65,16 @@ class Response implements ResponseContract
     }
 
     /**
+     * Get the request that produced this response.
+     *
+     * @return RequestContract
+     */
+    public function request() : RequestContract
+    {
+        return $this->request;
+    }
+
+    /**
      * Get the HTTP Response Code.
      *
      * @return string
