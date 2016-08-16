@@ -226,7 +226,7 @@ interface Request
      */
     public function addMultipartField(
         string $name,
-        string $file,
+        string $data,
         string $filename = null,
         string $contentType = null
     ) : Request;
