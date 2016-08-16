@@ -26,25 +26,4 @@ interface Payload
      * @return string
      */
     public function contentType() : string;
-
-    /**
-     * Array of headers to add to the request upon sending.
-     *
-     * @return string[]
-     */
-    public function addedHeaders() : array;
-
-    /**
-     * Add these strings to the path.
-     *
-     * @return string[]
-     */
-    public function addedPath() : array;
-
-    /**
-     * Add these args to the query string.
-     *
-     * @return array Associative array of args to add.
-     */
-    public function addedQueryArgs() : array;
 }
