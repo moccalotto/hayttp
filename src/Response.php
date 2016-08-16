@@ -34,6 +34,13 @@ class Response implements ResponseContract
      */
     protected $request;
 
+    /**
+     * Constructor.
+     *
+     * @param string $body
+     * @param array $headers
+     * @param RequestContract $request
+     */
     public function __construct(string $body, array $headers, RequestContract $request)
     {
         $this->body = $body;
