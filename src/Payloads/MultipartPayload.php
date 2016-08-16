@@ -11,10 +11,12 @@
 
 namespace Moccalotto\Hayttp\Payloads;
 
+use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
+
 /**
  * Multipart Body Helper.
  */
-class MultipartPayload extends BasePayload
+class MultipartPayload implements PayloadContract
 {
     /**
      * @var string
