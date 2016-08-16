@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Hayttp package.
  *
  * @package Hayttp
@@ -13,13 +13,14 @@ namespace spec\Moccalotto\Hayttp;
 
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Engines\CurlEngine;
-use Moccalotto\Hayttp\Response;
+use Moccalotto\Hayttp\Engines\NativeEngine;
 use Moccalotto\Hayttp\Request;
+use Moccalotto\Hayttp\Response;
 use PhpSpec\ObjectBehavior;
 use SimpleXmlElement;
 
 /**
- * Test
+ * Test.
  *
  * @codingStandardsIgnoreStart
  */
@@ -72,7 +73,23 @@ class RequestSpec extends ObjectBehavior
         $req->render()->shouldContain('Content-Type: application/xml');
     }
 
-    public function it_can_send_requests(CurlEngine $engine)
+    public function it_can_send_requests_via_curl(CurlEngine $engine)
+    {
+        $this->beConstructedThrough('POST', ['https://example.org']);
+
+        $clone = $this->withEngine($engine);
+
+        $response = new Response('Test Body', ['Content-Type: text/plain'], $clone->getWrappedObject());
+
+        $engine->send($clone)->shouldBeCalled();
+        $engine->send($clone)->willReturn($response);
+
+        $response = $clone->send();
+
+        $response->shouldBe($response);
+    }
+
+    public function it_can_send_requests_via_stream(NativeEngine $engine)
     {
         $this->beConstructedThrough('POST', ['https://example.org']);
 
