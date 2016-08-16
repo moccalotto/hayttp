@@ -15,6 +15,7 @@ use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 use Moccalotto\Hayttp\Response as Response;
+use RuntimeException;
 
 class NativeEngine implements EngineContract
 {
@@ -73,16 +74,16 @@ class NativeEngine implements EngineContract
      */
     public function send(RequestContract $request) : ResponseContract
     {
-        $responseBody = file_get_contents($request->url, false, $this->buildContext($request));
+        $stream = @fopen($request->url, 'r', false, $this->buildContext($request));
 
-        if ($responseBody === false) {
-            $success = false;
-            $responseHeaders = [];
-        } else {
-            $success = true;
-            $responseHeaders = $http_response_header;
+        if ($stream === false) {
+            throw new RuntimeException('Could not connect' . error_get_last()['message']);
         }
 
-        return new Response($responseBody, $responseHeaders, $request);
+        $body = stream_get_contents($stream);
+        $headers = $http_response_header;
+        $metadata = stream_get_meta_data($stream);
+
+        return new Response($body, $headers, $metadata, $request);
     }
 }

@@ -79,7 +79,7 @@ class RequestSpec extends ObjectBehavior
 
         $clone = $this->withEngine($engine);
 
-        $response = new Response('Test Body', ['Content-Type: text/plain'], $clone->getWrappedObject());
+        $response = new Response('Test Body', ['Content-Type: text/plain'], ['meta' => 'data'], $clone->getWrappedObject());
 
         $engine->send($clone)->shouldBeCalled();
         $engine->send($clone)->willReturn($response);
@@ -95,7 +95,7 @@ class RequestSpec extends ObjectBehavior
 
         $clone = $this->withEngine($engine);
 
-        $response = new Response('Test Body', ['Content-Type: text/plain'], $clone->getWrappedObject());
+        $response = new Response('Test Body', ['Content-Type: text/plain'], ['meta' => 'data'], $clone->getWrappedObject());
 
         $engine->send($clone)->shouldBeCalled();
         $engine->send($clone)->willReturn($response);

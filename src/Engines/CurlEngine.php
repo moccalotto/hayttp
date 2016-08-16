@@ -92,10 +92,11 @@ class CurlEngine implements EngineContract
 
         $this->assertNoError($ch, $result);
 
-        $info = curl_getinfo($ch);
+        list($headersText, $body) = explode("\r\n\r\n", $result, 2);
 
-        list($headers, $body) = explode("\r\n\r\n", $result, 2);
+        $headers = explode("\r\n", $headersText);
+        $metadata = curl_getinfo($ch);
 
-        return new Response($body, explode("\r\n", $headers), $request);
+        return new Response($body, $headers, $metadata, $request);
     }
 }

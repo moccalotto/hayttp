@@ -30,6 +30,11 @@ class Response implements ResponseContract
     protected $headers;
 
     /**
+     * @var array
+     */
+    protected $metadata;
+
+    /**
      * @var RequestContract
      */
     protected $request;
@@ -41,11 +46,12 @@ class Response implements ResponseContract
      * @param array $headers
      * @param RequestContract $request
      */
-    public function __construct(string $body, array $headers, RequestContract $request)
+    public function __construct(string $body, array $headers, array $metadata, RequestContract $request)
     {
         $this->body = $body;
         $this->headers = $headers;
         $this->request = $request;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -62,6 +68,16 @@ class Response implements ResponseContract
         }
 
         return preg_split('/\s+/', $this->headers[0]);
+    }
+
+    /**
+     * Get the (raw) metadata
+     *
+     * @return array
+     */
+    public function metadata() : array
+    {
+        return $this->metadata;
     }
 
     /**

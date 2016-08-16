@@ -11,6 +11,7 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
+use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
@@ -26,6 +27,17 @@ trait HasWithMethods
      * @return RequestContract
      */
     abstract protected function with($property, $value) : RequestContract;
+
+    /**
+     * Set the timeout
+     *
+     * @param float $timeout
+     * @return RequestContract
+     */
+    public function withTimeout(float $timeout) : RequestContract
+    {
+        return $this->with('timeout', $timeout);
+    }
 
     /**
      * Set the allowed crypto method.

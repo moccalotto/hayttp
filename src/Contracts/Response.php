@@ -16,11 +16,29 @@ use SimpleXmlElement;
 interface Response
 {
     /**
+     * Constructor.
+     *
+     * @param string $body
+     * @param array $headers
+     * @param array $metadata
+     * @param Request $request
+     */
+    public function __construct(string $body, array $headers, array $metadata, Request $request);
+
+    /**
      * Get the request that produced this response.
      *
      * @return RequestContract
      */
     public function request() : Request;
+
+
+    /**
+     * Get the (raw) metadata.
+     *
+     * @return array.
+     */
+    public function metadata() : array;
 
     /**
      * Get the HTTP Response Code.
