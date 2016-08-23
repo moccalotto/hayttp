@@ -72,7 +72,7 @@ class Response implements ResponseContract
     }
 
     /**
-     * Get the (raw) metadata
+     * Get the (raw) metadata.
      *
      * @return array
      */
