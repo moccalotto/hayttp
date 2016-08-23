@@ -30,6 +30,11 @@ class RequestSpec extends ObjectBehavior
     {
         $this->beConstructedWith('POST', 'https://example.org');
         $this->shouldHaveType(Request::class);
+    }
+
+    public function it_implements_contract()
+    {
+        $this->beConstructedWith('POST', 'https://example.org');
         $this->shouldHaveType(RequestContract::class);
     }
 
