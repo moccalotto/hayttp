@@ -40,11 +40,6 @@ class Request implements RequestContract
     protected $engine;
 
     /**
-     * @var array
-     */
-    protected $events = [];
-
-    /**
      * @var string
      */
     protected $userAgent = 'Hayttp';
@@ -99,22 +94,6 @@ class Request implements RequestContract
         $clone->$property = $value;
 
         return $clone;
-    }
-
-    /**
-     * Publish an event.
-     *
-     * @param string $eventName
-     * @param array  $args
-     */
-    protected function publishEvent(string $eventName, array $args = [])
-    {
-        $events = $this->events[$eventName] ?? [];
-
-        /** @var callable $event */
-        foreach ($events as $event) {
-            $event(...$args);
-        }
     }
 
     /**
@@ -218,38 +197,6 @@ class Request implements RequestContract
     public function __toString() : string
     {
         return $this->render();
-    }
-
-    /**
-     * Set an event handler to be called just before the message is sent.
-     *
-     * @param callable $callback. A callable that takes the Request as its only parameter.
-     *
-     * @return RequestContract
-     */
-    public function onBeforeSend($callback) : RequestContract
-    {
-        $events = $this->events;
-
-        $events['beforeSend'][] = $callback;
-
-        return $this->with('events', $events);
-    }
-
-    /**
-     * Set an event handler to be called just before the message is sent.
-     *
-     * @param callable $callback. A callable that takes the Response as its only parameter.
-     *
-     * @return RequestContract
-     */
-    public function onAfterResponse($callback) : RequestContract
-    {
-        $events = $this->events;
-
-        $events['beforeSend'][] = $callback;
-
-        return $this->with('events', $events);
     }
 
     /**
@@ -361,13 +308,9 @@ class Request implements RequestContract
     {
         $clone = clone $this;
 
-        $clone->publishEvent('beforeSend', [$clone]);
-
         $engine = $this->engine ?: new Engines\NativeEngine();
 
         $response = $engine->send($clone);
-
-        $clone->publishEvent('afterResponse', [$response]);
 
         return $response;
     }

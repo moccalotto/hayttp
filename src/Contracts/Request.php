@@ -67,24 +67,6 @@ interface Request
     public function __toString() : string;
 
     /**
-     * Set an event handler to be called just before the message is sent.
-     *
-     * @param callable $callback. A callable that takes the Request as its only parameter.
-     *
-     * @return Request
-     */
-    public function onBeforeSend($callback) : Request;
-
-    /**
-     * Set an event handler to be called just before the message is sent.
-     *
-     * @param callable $callback. A callable that takes the Response as its only parameter.
-     *
-     * @return Request
-     */
-    public function onAfterResponse($callback) : Request;
-
-    /**
      * Set the allowed crypto method.
      *
      * A Crypto method can be one of the CRYPTO_* constants
