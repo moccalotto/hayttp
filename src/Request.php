@@ -23,50 +23,51 @@ use SimpleXmlElement;
  */
 class Request implements RequestContract
 {
-    use Traits\HasWithMethods,
-        Traits\CreatesRequests,
-        Traits\ExpectsCommonMimeTypes,
-        Traits\HandlesMultipartPayloads;
+    use Traits\HasWithMethods;
+    use Traits\HasRequestAccessors;
+    use Traits\CreatesRequests;
+    use Traits\ExpectsCommonMimeTypes;
+    use Traits\HandlesMultipartPayloads;
 
     /**
      * @var string
      */
-    protected $_method = 'GET';
+    protected $method = 'GET';
 
     /**
      * @var EngineContract
      */
-    protected $_engine;
+    protected $engine;
 
     /**
      * @var array
      */
-    protected $_events = [];
+    protected $events = [];
 
     /**
      * @var string
      */
-    protected $_userAgent = 'Hayttp';
+    protected $userAgent = 'Hayttp';
 
     /**
      * @var string
      */
-    protected $_url;
+    protected $url;
 
     /**
      * @var array
      */
-    protected $_headers = [];
+    protected $headers = [];
 
     /**
      * @var PayloadContract
      */
-    protected $_payload;
+    protected $payload;
 
     /**
      * @var string|null
      */
-    protected $_proxy;
+    protected $proxy;
 
     /**
      * @var bool
@@ -76,12 +77,12 @@ class Request implements RequestContract
     /**
      * @var float
      */
-    protected $_timeout = 5;
+    protected $timeout = 5;
 
     /**
      * @var array
      */
-    protected $_cryptoMethod = 'tlsv1.2';
+    protected $cryptoMethod = 'tlsv1.2';
 
     /**
      * Clone object with a new property value.
@@ -95,7 +96,7 @@ class Request implements RequestContract
     {
         $clone = clone $this;
 
-        $clone->{'_'.$property} = $value;
+        $clone->$property = $value;
 
         return $clone;
     }
@@ -108,7 +109,7 @@ class Request implements RequestContract
      */
     protected function publishEvent(string $eventName, array $args = [])
     {
-        $events = $this->_events[$eventName] ?? [];
+        $events = $this->events[$eventName] ?? [];
 
         /** @var callable $event */
         foreach ($events as $event) {
@@ -127,7 +128,7 @@ class Request implements RequestContract
      */
     public function preparedHeaders() : array
     {
-        $headers = $this->_headers;
+        $headers = $this->headers;
 
         $preparedHeaders = [];
 
@@ -162,37 +163,8 @@ class Request implements RequestContract
      */
     public function __construct($method, $url)
     {
-        $this->_method = $method;
-        $this->_url = $url;
-    }
-
-    /**
-     * Magic getter.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function __get(string $name)
-    {
-        $candidate = '_'.$name;
-
-        if (property_exists($this, $candidate)) {
-            return $this->$candidate;
-        }
-
-        if ($name === 'body') {
-            return (string) $this->payload;
-        }
-
-        if ($name === 'contentLength') {
-            return strlen((string) $this->payload);
-        }
-
-        throw new LogicException(sprintf(
-            'Unknown property "%s"',
-            $name
-        ));
+        $this->method = $method;
+        $this->url = $url;
     }
 
     /**
@@ -257,7 +229,7 @@ class Request implements RequestContract
      */
     public function onBeforeSend($callback) : RequestContract
     {
-        $events = $this->_events;
+        $events = $this->events;
 
         $events['beforeSend'][] = $callback;
 
@@ -391,7 +363,7 @@ class Request implements RequestContract
 
         $clone->publishEvent('beforeSend', [$clone]);
 
-        $engine = $this->_engine ?: new Engines\NativeEngine();
+        $engine = $this->engine ?: new Engines\NativeEngine();
 
         $response = $engine->send($clone);
 

@@ -46,8 +46,8 @@ print_r(
     // print Hayttp::post('http://localhost:8000')
     ->withTimeout(2.0)
     ->withCryptoMethod('tlsv1.2')
-    ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
+    // ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
     ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true), 'r.gif', 'image/gif')
     ->addMultipartField('file2', '<html><body>Naked</body></html>', 't.html', 'text/html')
-    ->send()->metadata()
+    ->send()
 );

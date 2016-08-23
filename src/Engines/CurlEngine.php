@@ -34,26 +34,26 @@ class CurlEngine implements EngineContract
     protected function buildHandle(RequestContract $request)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request->url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $request->method);
-        if ($request->method === 'HEAD') {
+        curl_setopt($ch, CURLOPT_URL, $request->url());
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $request->method());
+        if ($request->method() === 'HEAD') {
             curl_setopt($ch, CURLOPT_NOBODY, true);
         }
         if (defined(CURLOPT_TIMEOUT_MS)) {
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, (int) ($request->timeout * 1000));
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, (int) ($request->timeout() * 1000));
         } else {
-            curl_setopt($ch, CURLOPT_TIMEOUT, (int) $request->timeout);
+            curl_setopt($ch, CURLOPT_TIMEOUT, (int) $request->timeout());
         }
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $request->secureSsl);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $request->secureSsl ? 2 : 0);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, $request->secureSsl);
-        curl_setopt($ch, CURLOPT_SSLVERSION, $this->cryptoMap[$request->cryptoMethod]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $request->secureSsl());
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $request->secureSsl() ? 2 : 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, $request->secureSsl());
+        curl_setopt($ch, CURLOPT_SSLVERSION, $this->cryptoMap[$request->cryptoMethod()]);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $body = (string) $request->body;
+        $body = (string) $request->body();
         $headers = $request->preparedHeaders();
         $headers[] = 'Expect:';
         $headers[] = sprintf('Content-Length: %d', strlen($body));
@@ -61,7 +61,7 @@ class CurlEngine implements EngineContract
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        curl_setopt($ch, CURLOPT_PROXY, $request->proxy);
+        curl_setopt($ch, CURLOPT_PROXY, $request->proxy());
 
         return $ch;
     }

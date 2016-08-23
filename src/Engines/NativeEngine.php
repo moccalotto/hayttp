@@ -33,25 +33,25 @@ class NativeEngine implements EngineContract
 
     protected function buildContext(RequestContract $request)
     {
-        $cryptoMethodFlag = $this->cryptoMap[$request->cryptoMethod];
+        $cryptoMethodFlag = $this->cryptoMap[$request->cryptoMethod()];
 
         $options = [
             'http' => [ // http://php.net/manual/en/context.http.php
-                'method' => $request->method,
-                'user_agent' => $request->userAgent,
-                'proxy' => $request->proxy,
+                'method' => $request->method(),
+                'user_agent' => $request->userAgent(),
+                'proxy' => $request->proxy(),
                 'follow_location' => false,
                 'max_redirects' => 0,
-                'timeout' => $request->timeout,
+                'timeout' => $request->timeout(),
                 'protocol_version' => 1.0,
                 'ignore_errors' => true,
                 'header' => $request->preparedHeaders(),
-                'content' => (string) $request->body,
+                'content' => (string) $request->body(),
             ],
             'ssl' => [ // http://php.net/manual/en/context.ssl.php
-                'verify_peer' => $request->secureSsl,
-                'verify_peer_name' => $request->secureSsl,
-                'allow_self_signed' => ! $request->secureSsl,
+                'verify_peer' => $request->secureSsl(),
+                'verify_peer_name' => $request->secureSsl(),
+                'allow_self_signed' => ! $request->secureSsl(),
                 'verify_depth' => 10,
                 'crypto_method' => $cryptoMethodFlag,
                 // disable compression to prevent CRIME attack.
@@ -71,10 +71,12 @@ class NativeEngine implements EngineContract
      * @return ResponseContract
      *
      * @throws ConnectionException if connection could not be established.
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function send(RequestContract $request) : ResponseContract
     {
-        $stream = @fopen($request->url, 'r', false, $this->buildContext($request));
+        $stream = @fopen($request->url(), 'r', false, $this->buildContext($request));
 
         if ($stream === false) {
             throw new RuntimeException('Could not connect' . error_get_last()['message']);

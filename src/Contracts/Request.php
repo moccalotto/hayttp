@@ -260,4 +260,79 @@ interface Request
      * @return Response
      */
     public function send() : Response;
+
+    /**
+     * The http method.
+     *
+     * @return string
+     */
+    public function method();
+
+    /**
+     * The request engine.
+     *
+     * @return EngineContract
+     */
+    public function engine();
+
+    /**
+     * All registered event hooks.
+     *
+     * @return array
+     */
+    public function events();
+
+    /**
+     * The user agent string.
+     *
+     * @return string
+     */
+    public function userAgent();
+
+    /**
+     * The target url.
+     *
+     * @return string
+     */
+    public function url();
+
+    /**
+     * @return array
+     */
+    public function headers();
+
+    /**
+     * The request payload.
+     *
+     * @return PayloadContract
+     */
+    public function payload();
+
+    /**
+     * The proxy to use.
+     *
+     * @return string|null
+     */
+    public function proxy();
+
+    /**
+     * Are we doing strict SSL checking?
+     *
+     * @return bool
+     */
+    public function secureSsl();
+
+    /**
+     * Timeout in seconds.
+     *
+     * @return float
+     */
+    public function timeout();
+
+    /**
+     * Cryptographic transport method.
+     *
+     * @return array
+     */
+    public function cryptoMethod();
 }
