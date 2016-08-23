@@ -73,14 +73,23 @@ interface Response
      *
      * @return mixed - array or StdClass
      */
-    public function decodedJson();
+    public function jsonDecoded();
 
     /**
      * Parse the body as xml and return it as a SimpleXmlElement.
      *
      * @return SimpleXmlElement
      */
-    public function decodedXml() : SimpleXmlElement;
+    public function xmlDecoded() : SimpleXmlElement;
+
+    /**
+     * Parse the response as url-encoded and return the parsed array.
+     *
+     * @return array
+     *
+     * @see parse_str
+     */
+    public function urlDecoded() : array;
 
     /**
      * Get the entire response, including headers, as a string.

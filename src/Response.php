@@ -143,8 +143,8 @@ class Response implements ResponseContract
         $startsWith = $headerName . ':';
 
         foreach ($this->headers as $header) {
-            if (strpos($header, $startsWith) !== 0) {
-                return explode(':', $header, 2)[1];
+            if (strpos($header, $startsWith) === 0) {
+                return trim(explode(':', $header, 2)[1]);
             }
         }
     }
@@ -173,6 +173,38 @@ class Response implements ResponseContract
     }
 
     /**
+     * Is the response text/plain
+     *
+     * @return bool
+     */
+    public function isPlainText() : bool
+    {
+        return $this->contentType() === 'text/plain';
+    }
+
+    /**
+     * Is this a text response.
+     *
+     * Is the mime type text/*
+     *
+     * @return bool
+     */
+    public function isText() : bool
+    {
+        return strpos($this->contentType(), 'text/') === 0;
+    }
+
+    /**
+     * Is this an url-encoded response.
+     *
+     * @return bool
+     */
+    public function isUrlEncoded() : bool
+    {
+        return $this->contentType() === 'application/x-www-form-urlencoded';
+    }
+
+    /**
      * Get the response body.
      *
      * @return string
@@ -183,16 +215,53 @@ class Response implements ResponseContract
     }
 
     /**
+     * Get the parsed body of the response.
+     *
+     * If the content type is json, a json object is returned (not an array!)
+     *
+     * @return mixed
+     *      If Content-Type is xml, a SimpleXmlElement is returned.
+     *      If Content-Type is json an array or StdClass is returned.
+     *      If Content-Type is application/x-www-form-urlencoded, an array is returned.
+     *      If Content-Type is text/* The raw response body is returned
+     *
+     * @throws UnexpectedValueException if the content type could not be determined.
+     */
+    public function decoded()
+    {
+        if ($this->isXml()) {
+            return $this->xmlDecoded();
+        }
+
+        if ($this->isJson()) {
+            return $this->jsonDecoded();
+        }
+
+        if ($this->isUrlEncoded()) {
+            return $this->urlDecoded();
+        }
+
+        if ($this->isText()) {
+            return $this->body;
+        }
+
+        throw new UnexpectedValueException(sprintf(
+            'Could not determine the response type. Content-Type: %s',
+            $this->contentType() ?: 'unknown'
+        ));
+    }
+
+    /**
      * Parse the body as json and return it as a PHP value.
      *
      * @return mixed - array or StdClass
      */
-    public function decodedJson()
+    public function jsonDecoded()
     {
         $decoded = json_decode($this->body);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new UnexpectedValueException(sprintf('Could not decode json: %s', json_last_error_msg()));
+            throw new UnexpectedValueException(sprintf('Response was not valid json: %s', json_last_error_msg()));
         }
 
         return $decoded;
@@ -203,9 +272,27 @@ class Response implements ResponseContract
      *
      * @return SimpleXmlElement
      */
-    public function decodedXml() : SimpleXmlElement
+    public function xmlDecoded() : SimpleXmlElement
     {
-        return new SimpleXmlElement($this->body);
+        try {
+            return new SimpleXmlElement($this->body);
+        } catch (Exception $e) {
+            throw new UnexpectedValueException('Response was not valid xml', 0, $e);
+        }
+    }
+
+    /**
+     * Parse the response as url-encoded and return the parsed array.
+     *
+     * @return array
+     *
+     * @see parse_str
+     */
+    public function urlDecoded() : array
+    {
+        parse_str($this->body, $result);
+
+        return $result;
     }
 
     /**
