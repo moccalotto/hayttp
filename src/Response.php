@@ -112,6 +112,16 @@ class Response implements ResponseContract
     }
 
     /**
+     * Get the contents of the Content-Type header.
+     *
+     * @return string|null
+     */
+    public function contentType()
+    {
+        return $this->header('Content-Type');
+    }
+
+    /**
      * Get the headers.
      *
      * @return string[]
@@ -119,6 +129,47 @@ class Response implements ResponseContract
     public function headers() : array
     {
         return $this->headers;
+    }
+
+    /**
+     * Get the contents of a given header.
+     *
+     * @param string $headerName   The name of the header to search for
+     *
+     * @return string|null The contents of the header or null if it was not found.
+     */
+    public function header($headerName)
+    {
+        $startsWith = $headerName . ':';
+
+        foreach ($this->headers as $header) {
+            if (strpos($header, $startsWith) !== 0) {
+                return explode(':', $header, 2)[1];
+            }
+        }
+    }
+
+    /**
+     * Is this a json response.
+     *
+     * @return bool
+     */
+    public function isJson() : bool
+    {
+        return $this->contentType() === 'application/json';
+    }
+
+    /**
+     * Is this an xml response.
+     *
+     * @return bool
+     */
+    public function isXml() : bool
+    {
+        return in_array($this->contentType(), [
+            'application/xml',
+            'text/xml',
+        ]);
     }
 
     /**
