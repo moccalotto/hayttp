@@ -42,9 +42,10 @@ class Response implements ResponseContract
     /**
      * Constructor.
      *
-     * @param string $body
-     * @param array $headers
-     * @param RequestContract $request
+     * @param string          $body     Response body.
+     * @param array           $headers  Response headers.
+     * @param array           $metadata Engine-specific metadata about the connection.
+     * @param RequestContract $request  The request that yielded this response.
      */
     public function __construct(string $body, array $headers, array $metadata, RequestContract $request)
     {
