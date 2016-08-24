@@ -15,19 +15,6 @@ use SimpleXmlElement;
 
 /**
  * Http Request.
- *
- * @property Payload $payload
- * @property float $timeout
- * @property string $body Rendered payload/body
- * @property string $contentLength Length of rendered body
- * @property string $cryptoMethod
- * @property string $engine
- * @property string $headers
- * @property string $methed
- * @property string $proxy
- * @property string $secureSsl
- * @property string $url
- * @property string $userAgent
  */
 interface Request
 {
