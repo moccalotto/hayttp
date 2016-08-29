@@ -1,13 +1,26 @@
 <?php
 
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @package Hayttp
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2016
+ * @license MIT
+ */
+
 namespace spec\Moccalotto\Hayttp\Payloads;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
+/**
+ * Test.
+ *
+ * @codingStandardsIgnoreStart
+ */
 class RawPayloadSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->beConstructedWith('', 'text/plain');
         $this->shouldHaveType('Moccalotto\Hayttp\Payloads\RawPayload');
