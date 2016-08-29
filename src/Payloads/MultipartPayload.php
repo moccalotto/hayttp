@@ -26,7 +26,7 @@ class MultipartPayload implements PayloadContract
     /**
      * @var array
      */
-    protected $entries;
+    protected $entries = [];
 
     /**
      * Constructor.
