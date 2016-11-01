@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/moccalotto/hayttp.svg)](https://travis-ci.org/moccalotto/hayttp)
 
-Validate variables using a fluent syntax.
+Easy http requests.
 
 ## Installation
 
@@ -12,7 +12,7 @@ To add this package as a local, per-project dependency to your project, simply a
 ```json
 {
     "require": {
-        "moccalotto/hayttp": "~0.3"
+        "moccalotto/hayttp": "~0.8"
     }
 }
 ```
