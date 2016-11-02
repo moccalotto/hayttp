@@ -1,4 +1,5 @@
 # Hayttp
+[![Build Status](https://travis-ci.org/moccalotto/hayttp.svg)](https://travis-ci.org/moccalotto/hayttp)
 
 HTTP request made easy!
 
