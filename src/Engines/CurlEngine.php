@@ -15,6 +15,7 @@ use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 use Moccalotto\Hayttp\Response as Response;
+use UnexpectedValueException;
 use RuntimeException;
 
 class CurlEngine implements EngineContract
@@ -30,6 +31,32 @@ class CurlEngine implements EngineContract
         RequestContract::CRYPTO_TLS_1_1 => CURL_SSLVERSION_TLSv1_1,
         RequestContract::CRYPTO_TLS_1_2 => CURL_SSLVERSION_TLSv1_2,
     ];
+
+    protected function curlCryptoMethod($cryptoMethod)
+    {
+        switch ($cryptoMethod) {
+            case RequestContract::CRYPTO_ANY:
+                return CURL_SSLVERSION_DEFAULT;
+            case RequestContract::CRYPTO_SSLV3:
+                return CURL_SSLVERSION_SSLv3;
+            case RequestContract::CRYPTO_TLS:
+                return CURL_SSLVERSION_TLSv1;
+            case RequestContract::CRYPTO_TLS_1_0:
+                return defined(CURL_SSLVERSION_TLSv1_0)
+                    ? CURL_SSLVERSION_TLSv1_0
+                    : CURL_SSLVERSION_TLSv1;
+            case RequestContract::CRYPTO_TLS_1_1:
+                return defined(CURL_SSLVERSION_TLSv1_1)
+                    ? CURL_SSLVERSION_TLSv1_1
+                    : CURL_SSLVERSION_TLSv1;
+            case RequestContract::CRYPTO_TLS_1_2:
+                return defined(CURL_SSLVERSION_TLSv1_2)
+                    ? CURL_SSLVERSION_TLSv1_2
+                    : CURL_SSLVERSION_TLSv1;
+            default:
+                throw new UnexpectedValueException('Unknown cryptoMethod');
+        }
+    }
 
     protected function buildHandle(RequestContract $request)
     {
