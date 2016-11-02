@@ -67,7 +67,7 @@ class Request implements RequestContract
     /**
      * @var bool
      */
-    protected $_secureSsl = true;
+    protected $secureSsl = true;
 
     /**
      * @var float
