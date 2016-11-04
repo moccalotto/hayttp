@@ -140,7 +140,7 @@ class Request implements RequestContract
      * @param string $method
      * @param string $url
      */
-    public function __construct($method, $url)
+    public function __construct(string $method, string $url)
     {
         $this->method = $method;
         $this->url = $url;
