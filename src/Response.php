@@ -58,6 +58,16 @@ class Response implements ResponseContract
     }
 
     /**
+     * Cast to string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
      * Return the status line of the response.
      *
      * @return string[]
@@ -310,15 +320,5 @@ class Response implements ResponseContract
             .$crlf
             .$crlf
             .$this->body;
-    }
-
-    /**
-     * Cast to string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }
