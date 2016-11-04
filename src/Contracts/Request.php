@@ -25,7 +25,9 @@ interface Request
     const CRYPTO_TLS_1_1 = 'tlsv1.1';
     const CRYPTO_TLS_1_2 = 'tlsv1.2';
 
-    /// @var array
+    /**
+     * @var array
+     */
     const CRYPTO_METHODS = [
         self::CRYPTO_ANY => true,
         self::CRYPTO_SSLV3 => true,
