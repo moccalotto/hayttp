@@ -26,6 +26,7 @@ class Request implements RequestContract
     use Traits\HasWithMethods;
     use Traits\HasRequestAccessors;
     use Traits\CreatesRequests;
+    use Traits\HasCompleteDebugInfo;
     use Traits\ExpectsCommonMimeTypes;
     use Traits\HandlesMultipartPayloads;
 
@@ -147,18 +148,13 @@ class Request implements RequestContract
     }
 
     /**
-     * Return debug info for var_dump, et al.
+     * Return the request as a string.
      *
-     * @return array
+     * @return string
      */
-    public function __debugInfo()
+    public function __toString() : string
     {
-        $result = [];
-        foreach ($this as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        return $result;
+        return $this->render();
     }
 
     /**
@@ -202,16 +198,6 @@ class Request implements RequestContract
             .implode($crlf, $headers)
             .$crlf.$crlf
             .$this->payload;
-    }
-
-    /**
-     * Return the request as a string.
-     *
-     * @return string
-     */
-    public function __toString() : string
-    {
-        return $this->render();
     }
 
     /**

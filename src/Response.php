@@ -19,6 +19,8 @@ use UnexpectedValueException;
 
 class Response implements ResponseContract
 {
+    use Traits\HasCompleteDebugInfo;
+
     /**
      * @var string
      */
