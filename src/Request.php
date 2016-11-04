@@ -147,6 +147,21 @@ class Request implements RequestContract
     }
 
     /**
+     * Return debug info for var_dump, et al.
+     *
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        $result = [];
+        foreach ($this as $key => $value) {
+            $result[$key] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * Setter.
      *
      * @param string $name
