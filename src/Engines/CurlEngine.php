@@ -64,7 +64,7 @@ class CurlEngine implements EngineContract
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $request->secureSsl());
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $request->secureSsl() ? 2 : 0);
         // curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, $request->secureSsl());
-        curl_setopt($ch, CURLOPT_SSLVERSION, $this->cryptoMethod($request->cryptoMethod()));
+        curl_setopt($ch, CURLOPT_SSLVERSION, $this->curlCryptoMethod($request->cryptoMethod()));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
