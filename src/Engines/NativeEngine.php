@@ -14,6 +14,7 @@ namespace Moccalotto\Hayttp\Engines;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Moccalotto\Hayttp\Exceptions\CouldNotConnectException;
 use Moccalotto\Hayttp\Response as Response;
 use RuntimeException;
 
@@ -76,10 +77,18 @@ class NativeEngine implements EngineContract
      */
     public function send(RequestContract $request) : ResponseContract
     {
-        $stream = @fopen($request->url(), 'r', false, $this->buildContext($request));
+        try {
+            $stream = @fopen($request->url(), 'r', false, $this->buildContext($request));
+        } catch (ErrorException $e) {
+            // Reached if fancy php error-exception handler is running
+            // and fopen fails
+            throw new CouldNotConnectException($request, $e);
+        }
 
         if ($stream === false) {
-            throw new RuntimeException('Could not connect' . error_get_last()['message']);
+            // reached if error-exception handler isnt running
+            // and fopen fails
+            throw new CouldNotConnectException($request, error_get_last());
         }
 
         $body = stream_get_contents($stream);

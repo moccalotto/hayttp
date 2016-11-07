@@ -14,6 +14,7 @@ namespace Moccalotto\Hayttp\Engines;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Moccalotto\Hayttp\Exceptions\CouldNotConnectException;
 use Moccalotto\Hayttp\Response as Response;
 use UnexpectedValueException;
 use RuntimeException;
@@ -81,17 +82,6 @@ class CurlEngine implements EngineContract
         return $ch;
     }
 
-    protected function assertNoError($ch, $result)
-    {
-        if ($result === false) {
-            throw new RuntimeException(sprintf(
-                'Unable to connect. %d %s',
-                curl_errno($ch),
-                curl_error($ch)
-            ));
-        }
-    }
-
     /**
      * Send/execute the request.
      *
@@ -105,7 +95,13 @@ class CurlEngine implements EngineContract
 
         $result = curl_exec($ch);
 
-        $this->assertNoError($ch, $result);
+        if ($result === false) {
+            throw new CouldNotConnectException($request, [
+                'curl_error' => curl_error($ch),
+                'curl_errno' => curl_errno($ch),
+                'curl_info' => curl_getinfo($ch),
+            ]);
+        }
 
         list($headersText, $body) = explode("\r\n\r\n", $result, 2);
 
