@@ -19,6 +19,8 @@ use UnexpectedValueException;
 
 class Response implements ResponseContract
 {
+    use Traits\HasCallbacks;
+    use Traits\HasStatusHelpers;
     use Traits\HasCompleteDebugInfo;
 
     /**
@@ -65,67 +67,6 @@ class Response implements ResponseContract
     public function __toString()
     {
         return $this->render();
-    }
-
-    /**
-     * Is the status code 2xx ?
-     *
-     * @return bool
-     */
-    public function is2xx() : bool
-    {
-        $statusCode = $this->statusCode();
-        return $statusCode >= 200 && $statusCode < 300;
-    }
-
-    /**
-     * Is the status code 3xx ?
-     *
-     * @return bool
-     */
-    public function is3xx() : bool
-    {
-        $statusCode = $this->statusCode();
-        return $statusCode >= 300 && $statusCode < 400;
-    }
-
-    /**
-     * Is the status code 3xx ?
-     *
-     * @return bool
-     */
-    public function is4xx() : bool
-    {
-        $statusCode = $this->statusCode();
-        return $statusCode >= 400 && $statusCode < 500;
-    }
-
-    /**
-     * Is the status code 5xx ?
-     *
-     * @return bool
-     */
-    public function is5xx() : bool
-    {
-        $statusCode = $this->statusCode();
-        return $statusCode >= 500 && $statusCode < 600;
-    }
-
-    public function isSuccess()
-    {
-        return $this->is2xx();
-    }
-
-    public function isRedirect() : bool
-    {
-        return $this->is3xx();
-    }
-
-    public function isFailure() : bool
-    {
-        $statusCode = $this->statusCode();
-
-        return $statusCode >= 200 && $statusCode < 600;
     }
 
     /**

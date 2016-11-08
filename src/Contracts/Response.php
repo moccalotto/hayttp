@@ -26,6 +26,13 @@ interface Response
     public function __construct(string $body, array $headers, array $metadata, Request $request);
 
     /**
+     * Cast to string.
+     *
+     * @return string
+     */
+    public function __toString();
+
+    /**
      * Get the request that produced this response.
      *
      * @return RequestContract
@@ -99,9 +106,153 @@ interface Response
     public function render() : string;
 
     /**
-     * Cast to string.
+     * Transform this response into something else.
      *
-     * @return string
+     * @param callable $callback Callback with signature: callback($response, $request)
+     *
+     * @return mixed The result from calling $callbale
      */
-    public function __toString();
+    public function transform(callable $callback);
+
+    /**
+     * Execute a callback.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     */
+    public function apply(callable $callback, &$result = null) : Response;
+
+    /**
+     * Execute a callback if statusCode is 5xx.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     */
+    public function on5xx(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if statusCode is 4xx.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     */
+    public function on4xx(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if statusCode is 3xx.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     */
+    public function on3xx(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if status code is 2xx.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     */
+    public function on2xx(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if status code is 4xx or 5xx.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     *
+     * @see RequestContract::isError()
+     */
+    public function onError(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if status code indicates a success.
+     *
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result The result of calling $callback
+     *
+     * @return Response A clone of $this
+     *
+     * @see RequestContract::isSuccess()
+     */
+    public function onSuccess(callable $callback, &$result = null) : Response;
+
+
+    /**
+     * Execute a callback if status code === $statusCode
+     *
+     * @param int statusCode
+     * @param callable $callback Callback with signature: callback($response, $request)
+     * @param mixed $result the result form the callback
+     *
+     * @return Response A clone of $this
+     */
+    public function onStatusCode(int $statusCode, callable $callback, &$result = null) : Response;
+
+    /**
+     * Is the status code 2xx ?
+     *
+     * @return bool
+     */
+    public function is2xx() : bool;
+
+    /**
+     * Is the status code 3xx ?
+     *
+     * @return bool
+     */
+    public function is3xx() : bool;
+
+    /**
+     * Is the status code 3xx ?
+     *
+     * @return bool
+     */
+    public function is4xx() : bool;
+
+    /**
+     * Is the status code 5xx ?
+     *
+     * @return bool
+     */
+    public function is5xx() : bool;
+
+    /**
+     * Is this request a success? (i.e. a 2xx status code)
+     *
+     * @return bool
+     *
+     * @see is2xx
+     */
+    public function isSuccess() : bool;
+
+    /**
+     * Is this request a redirect? (i.e. a 3xx status code)
+     *
+     * @return bool
+     */
+    public function isRedirect() : bool;
+
+    /**
+     * Is this request a failure? (i.e. a 4xx or 5xx status code)
+     *
+     * @return bool
+     */
+    public function isError() : bool;
 }
