@@ -59,7 +59,6 @@ class NativeEngine implements EngineContract
                 // only necessary if an external user can affect
                 // the message (cookie, etc.)
                 'disable_compression' => true,
-
             ],
         ];
 
