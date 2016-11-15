@@ -91,8 +91,8 @@ class NativeEngine implements EngineContract
         }
 
         $body = stream_get_contents($stream);
-        $headers = $http_response_header;
         $metadata = stream_get_meta_data($stream);
+        $headers = $metadata['wrapper_data'];
 
         return new Response($body, $headers, $metadata, $request);
     }
