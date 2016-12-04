@@ -112,6 +112,7 @@ class Request implements RequestContract
 
         $preparedHeaders = [];
 
+        // Make sure the host header is the very first header.
         if (isset($headers['Host'])) {
             $preparedHeaders[] = sprintf('Host: %s', $headers['Host']);
             unset($headers['Host']);
