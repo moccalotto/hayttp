@@ -35,7 +35,7 @@ class CouldNotConnectException extends RuntimeException
     /**
      * Constructor
      */
-    public function __construct(RequestContract $request, array $metadata = [], Exception $previous, null)
+    public function __construct(RequestContract $request, array $metadata = [], Exception $previous = null)
     {
         $this->request = $request;
         $this->metadata = $metadata;
@@ -61,5 +61,4 @@ class CouldNotConnectException extends RuntimeException
     {
         return $this->metadata;
     }
-
 }
