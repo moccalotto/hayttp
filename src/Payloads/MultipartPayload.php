@@ -35,7 +35,7 @@ class MultipartPayload implements PayloadContract
      */
     public function __construct()
     {
-        $this->boundary = '----HayttpBoundary'.substr(md5(uniqid()), 0, 10);
+        $this->boundary = '----HayttpBoundary'.mt_rand() . mt_rand();
     }
 
     /**
