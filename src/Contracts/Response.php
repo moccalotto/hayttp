@@ -5,7 +5,7 @@
  *
  * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
- * @copyright 2016
+ * @copyright 2017
  * @license MIT
  */
 
