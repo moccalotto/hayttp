@@ -5,7 +5,7 @@
  *
  * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
- * @copyright 2016
+ * @copyright 2017
  * @license MIT
  */
 
@@ -13,6 +13,11 @@ namespace spec\Moccalotto\Hayttp\Engines;
 
 use PhpSpec\ObjectBehavior;
 
+/**
+ * Test.
+ *
+ * @codingStandardsIgnoreStart
+ */
 class NativeEngineSpec extends ObjectBehavior
 {
     public function it_is_initializable()
