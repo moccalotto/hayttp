@@ -10,9 +10,9 @@ HTTP request made easy!
 * Basic Auth.
 * Immutable.
 * Awesome advanced options:
-  * Choose between CURL and php native http stream wrapper.
+  * Choose between CURL and php native http streams.
   * Create your own http transport engine (for instance a guzzle wrapper).
-  * Choose ssl/tls scheme and version:
+  * Choose ssl/tls scheme and version.
   * Create custom payloads.
 
 ## Installation
