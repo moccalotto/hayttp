@@ -28,6 +28,11 @@ To add this package as a local, per-project dependency to your project, simply a
 }
 ```
 
+Alternatively execute the following command in your shell.
+
+```bash
+composer require moccalotto/hayttp
+```
 
 ## Usage
 
