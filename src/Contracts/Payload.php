@@ -4,7 +4,7 @@
  * This file is part of the Hayttp package.
  *
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
- * @copyright 2016
+ * @copyright 2017
  * @license MIT
  */
 

@@ -10,9 +10,9 @@ HTTP request made easy!
 * Basic Auth.
 * Immutable.
 * Awesome advanced options:
-  * Choose between CURL and php native http stream wrapper.
+  * Choose between CURL and php native http streams.
   * Create your own http transport engine (for instance a guzzle wrapper).
-  * Choose ssl/tls scheme and version:
+  * Choose ssl/tls scheme and version.
   * Create custom payloads.
 
 ## Installation
@@ -28,6 +28,11 @@ To add this package as a local, per-project dependency to your project, simply a
 }
 ```
 
+Alternatively execute the following command in your shell.
+
+```bash
+composer require moccalotto/hayttp
+```
 
 ## Usage
 
