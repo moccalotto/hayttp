@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -11,7 +10,6 @@
 
 namespace Moccalotto\Hayttp;
 
-use LogicException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 /**
@@ -30,7 +28,7 @@ class Hayttp
     protected $requestFqcn;
 
     /**
-     * Get the default/global instance
+     * Get the default/global instance.
      *
      * @return Hayttp
      */
@@ -44,9 +42,9 @@ class Hayttp
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $requestFqcn The fqcn of a class that implements the RequestContract interface.
+     * @param string $requestFqcn the fqcn of a class that implements the RequestContract interface
      */
     public function __construct(string $requestFqcn)
     {
@@ -78,7 +76,7 @@ class Hayttp
     }
 
     /**
-     * Create a GET request
+     * Create a GET request.
      *
      * @param string $url
      *
@@ -90,7 +88,7 @@ class Hayttp
     }
 
     /**
-     * Create a POST request
+     * Create a POST request.
      *
      * @param string $url
      *
@@ -102,7 +100,7 @@ class Hayttp
     }
 
     /**
-     * Create a PUT request
+     * Create a PUT request.
      *
      * @param string $url
      *
@@ -114,7 +112,7 @@ class Hayttp
     }
 
     /**
-     * Create a DELETE request
+     * Create a DELETE request.
      *
      * @param string $url
      *
@@ -126,7 +124,7 @@ class Hayttp
     }
 
     /**
-     * Create a PATCH request
+     * Create a PATCH request.
      *
      * @param string $url
      *
@@ -138,7 +136,7 @@ class Hayttp
     }
 
     /**
-     * Create a OPTIONS request
+     * Create a OPTIONS request.
      *
      * @param string $url
      *
@@ -150,7 +148,7 @@ class Hayttp
     }
 
     /**
-     * Create a HEAD request
+     * Create a HEAD request.
      *
      * @param string $url
      *

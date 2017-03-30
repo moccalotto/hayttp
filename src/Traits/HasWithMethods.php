@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -22,16 +21,17 @@ trait HasWithMethods
      * Clone object with a new property value.
      *
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return RequestContract
      */
     abstract protected function with($property, $value) : RequestContract;
 
     /**
-     * Set the timeout
+     * Set the timeout.
      *
      * @param float $timeout
+     *
      * @return RequestContract
      */
     public function withTimeout(float $timeout) : RequestContract
@@ -50,7 +50,7 @@ trait HasWithMethods
      */
     public function withCryptoMethod($cryptoMethod) : RequestContract
     {
-        if (! isset(RequestContract::CRYPTO_METHODS[$cryptoMethod])) {
+        if (!isset(RequestContract::CRYPTO_METHODS[$cryptoMethod])) {
             throw new UnexpectedValueException(sprintf(
                 'Crypto methed "%s" is invalid. Must be one of [%s]',
                 $cryptoMethod,
@@ -154,7 +154,7 @@ trait HasWithMethods
      *
      * @return RequestContract
      */
-    public function withBasicAuth(string $username, string $password): RequestContract
+    public function withBasicAuth(string $username, string $password) : RequestContract
     {
         return $this->withHeader(sprintf(
             'Authorization: Basic %s',

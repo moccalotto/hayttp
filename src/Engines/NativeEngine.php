@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -16,7 +15,6 @@ use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 use Moccalotto\Hayttp\Exceptions\CouldNotConnectException;
 use Moccalotto\Hayttp\Response as Response;
-use RuntimeException;
 
 class NativeEngine implements EngineContract
 {
@@ -52,7 +50,7 @@ class NativeEngine implements EngineContract
             'ssl' => [ // http://php.net/manual/en/context.ssl.php
                 'verify_peer' => $request->secureSsl(),
                 'verify_peer_name' => $request->secureSsl(),
-                'allow_self_signed' => ! $request->secureSsl(),
+                'allow_self_signed' => !$request->secureSsl(),
                 'verify_depth' => 10,
                 'crypto_method' => $cryptoMethodFlag,
                 // disable compression to prevent CRIME attack.
@@ -70,7 +68,7 @@ class NativeEngine implements EngineContract
      *
      * @return ResponseContract
      *
-     * @throws ConnectionException if connection could not be established.
+     * @throws ConnectionException if connection could not be established
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */

@@ -78,7 +78,7 @@ class ResponseSpec extends ObjectBehavior
     public function it_has__apply__callback(Request $request)
     {
         $body = '';
-        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain', ];
+        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
@@ -86,7 +86,7 @@ class ResponseSpec extends ObjectBehavior
         // and use a referenced scope variable.
         $scopeVar = [];
 
-        $result = $this->apply(function($res, $req) use (&$scopeVar) {
+        $result = $this->apply(function ($res, $req) use (&$scopeVar) {
             $scopeVar = [$res, $req];
         }/*,  $out */); // cannot check out param - phpspec enters permanent loop.
 
@@ -99,11 +99,11 @@ class ResponseSpec extends ObjectBehavior
     public function it_has__transform__callback(Request $request)
     {
         $body = '';
-        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain', ];
+        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
-        $result = $this->transform(function($response, $request) {
+        $result = $this->transform(function ($response, $request) {
             return [$response, $request];
         });
 
@@ -113,19 +113,18 @@ class ResponseSpec extends ObjectBehavior
         $result[0]->request()->shouldBe($result[1]);
     }
 
-
     public function it_has_2xx_success_callbacks(Request $request)
     {
         $body = '';
-        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain', ];
+        $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
-        $called = function($res, $req) use (&$scopeVar) {
+        $called = function ($res, $req) use (&$scopeVar) {
             $scopeVar[] = [$res, $req];
         };
-        $notCalled = function($req, $res) use (&$scopeVar) {
+        $notCalled = function ($req, $res) use (&$scopeVar) {
             throw new \Exception('Will not be executed');
         };
 
@@ -152,10 +151,10 @@ class ResponseSpec extends ObjectBehavior
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
-        $called = function($res, $req) use (&$scopeVar) {
+        $called = function ($res, $req) use (&$scopeVar) {
             $scopeVar[] = [$res, $req];
         };
-        $notCalled = function($req, $res) use (&$scopeVar) {
+        $notCalled = function ($req, $res) use (&$scopeVar) {
             throw new \Exception('Will not be executed');
         };
 
@@ -177,15 +176,15 @@ class ResponseSpec extends ObjectBehavior
     public function it_has_4xx_error_callbacks(Request $request)
     {
         $body = '';
-        $headers = ['HTTP/1.0 400 Bad Request', 'Content-Type: text/plain', ];
+        $headers = ['HTTP/1.0 400 Bad Request', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
-        $called = function($res, $req) use (&$scopeVar) {
+        $called = function ($res, $req) use (&$scopeVar) {
             $scopeVar[] = [$res, $req];
         };
-        $notCalled = function($req, $res) use (&$scopeVar) {
+        $notCalled = function ($req, $res) use (&$scopeVar) {
             throw new \Exception('Will not be executed');
         };
         $this->on2xx($notCalled)
@@ -206,15 +205,15 @@ class ResponseSpec extends ObjectBehavior
     public function it_has_5xx_error_callbacks(Request $request)
     {
         $body = '';
-        $headers = ['HTTP/1.0 500 Internal Server Error', 'Content-Type: text/plain', ];
+        $headers = ['HTTP/1.0 500 Internal Server Error', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
-        $called = function($res, $req) use (&$scopeVar) {
+        $called = function ($res, $req) use (&$scopeVar) {
             $scopeVar[] = [$res, $req];
         };
-        $notCalled = function($req, $res) use (&$scopeVar) {
+        $notCalled = function ($req, $res) use (&$scopeVar) {
             throw new \Exception('Will not be executed');
         };
         $this->on2xx($notCalled)

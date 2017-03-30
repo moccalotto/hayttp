@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -120,11 +119,11 @@ class Request implements RequestContract
             $preparedHeaders[] = sprintf('Host: %s', parse_url($this->url, PHP_URL_HOST));
         }
 
-        if (! isset($headers['User-Agent'])) {
+        if (!isset($headers['User-Agent'])) {
             $preparedHeaders[] = sprintf('User-agent: %s', $this->userAgent);
         }
 
-        if (! isset($headers['Content-Type']) && $this->payload instanceof PayloadContract) {
+        if (!isset($headers['Content-Type']) && $this->payload instanceof PayloadContract) {
             $preparedHeaders[] = sprintf('Content-Type: %s', $this->payload->contentType());
         }
 
@@ -164,7 +163,7 @@ class Request implements RequestContract
      * @param string $name
      * @param mixed  $value
      *
-     * @throws LogicException whenever setting a non-existing property is attempted.
+     * @throws LogicException whenever setting a non-existing property is attempted
      */
     public function __set($name, $value)
     {
@@ -195,10 +194,10 @@ class Request implements RequestContract
         $crlf = "\r\n";
 
         return $init
-            .$crlf
-            .implode($crlf, $headers)
-            .$crlf.$crlf
-            .$this->payload;
+            . $crlf
+            . implode($crlf, $headers)
+            . $crlf . $crlf
+            . $this->payload;
     }
 
     /**
@@ -221,7 +220,7 @@ class Request implements RequestContract
     /**
      * Set a JSON payload.
      *
-     * @param array|object $payload The payload to send - the payload will always be json encoded.
+     * @param array|object $payload the payload to send - the payload will always be json encoded
      *
      * @return RequestContract
      */
@@ -283,7 +282,7 @@ class Request implements RequestContract
     /**
      * Add Accept header with many types.
      *
-     * @param array $types Associative array of [mimeType => qualityFactor].
+     * @param array $types associative array of [mimeType => qualityFactor]
      *
      * @return RequestContract
      */
@@ -304,7 +303,7 @@ class Request implements RequestContract
      *
      * @return ResponseContract
      *
-     * @throws ConnectionException if connection could not be established.
+     * @throws ConnectionException if connection could not be established
      */
     public function send() : ResponseContract
     {

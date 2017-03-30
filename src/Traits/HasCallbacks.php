@@ -7,14 +7,21 @@ use Moccalotto\Hayttp\Contracts\Requestas as RequestContract;
 
 trait HasCallbacks
 {
-    public abstract function statusCode() : string;
-    public abstract function isRedirect() : bool;
-    public abstract function isSuccess() : bool;
-    public abstract function isError() : bool;
-    public abstract function is2xx() : bool;
-    public abstract function is3xx() : bool;
-    public abstract function is4xx() : bool;
-    public abstract function is5xx() : bool;
+    abstract public function statusCode() : string;
+
+    abstract public function isRedirect() : bool;
+
+    abstract public function isSuccess() : bool;
+
+    abstract public function isError() : bool;
+
+    abstract public function is2xx() : bool;
+
+    abstract public function is3xx() : bool;
+
+    abstract public function is4xx() : bool;
+
+    abstract public function is5xx() : bool;
 
     /**
      * Transform this response into something else.
@@ -34,7 +41,7 @@ trait HasCallbacks
      * Execute a callback.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      */
@@ -50,7 +57,7 @@ trait HasCallbacks
      * Execute a callback if statusCode is 5xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      */
@@ -67,7 +74,7 @@ trait HasCallbacks
      * Execute a callback if statusCode is 4xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      */
@@ -84,7 +91,7 @@ trait HasCallbacks
      * Execute a callback if statusCode is 3xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      */
@@ -101,7 +108,7 @@ trait HasCallbacks
      * Execute a callback if status code is 2xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      */
@@ -118,7 +125,7 @@ trait HasCallbacks
      * Execute a callback if status code is 4xx or 5xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      *
@@ -134,10 +141,10 @@ trait HasCallbacks
     }
 
     /**
-     * Execute a callback if status code is 3xx
+     * Execute a callback if status code is 3xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      *
@@ -156,7 +163,7 @@ trait HasCallbacks
      * Execute a callback if status code indicates a success.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return ResponseContract A clone of $this
      *
@@ -172,11 +179,11 @@ trait HasCallbacks
     }
 
     /**
-     * Execute a callback if status code === $statusCode
+     * Execute a callback if status code === $statusCode.
      *
      * @param int statusCode
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result the result form the callback
+     * @param mixed    $result   the result form the callback
      *
      * @return ResponseContract A clone of $this
      */

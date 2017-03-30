@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -123,7 +122,7 @@ interface Request
     /**
      * Set a JSON payload.
      *
-     * @param array|object $body The body to send - the body will be json encoded.
+     * @param array|object $body the body to send - the body will be json encoded
      *
      * @return Request
      */
@@ -160,7 +159,7 @@ interface Request
     /**
      * Add Accept header with many types.
      *
-     * @param array $types Associative array of [mimeType => qualityFactor].
+     * @param array $types associative array of [mimeType => qualityFactor]
      *
      * @return Request
      */
@@ -189,7 +188,7 @@ interface Request
      * Add a multipart entry.
      *
      * @param string      $name        posted Field name
-     * @param string      $data        The data blob to add.
+     * @param string      $data        the data blob to add
      * @param string|null $filename    The filename to use. If null, no filename is sent.
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
@@ -218,7 +217,7 @@ interface Request
      * Add a data field to the multipart body.
      *
      * @param string      $name        The posted field name
-     * @param string      $data        The data blob to add.
+     * @param string      $data        the data blob to add
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
      * @return Request

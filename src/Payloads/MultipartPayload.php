@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -35,7 +34,7 @@ class MultipartPayload implements PayloadContract
      */
     public function __construct()
     {
-        $this->boundary = '----HayttpBoundary'.mt_rand() . mt_rand();
+        $this->boundary = '----HayttpBoundary' . mt_rand() . mt_rand();
     }
 
     /**
@@ -52,7 +51,7 @@ class MultipartPayload implements PayloadContract
      * Add a multipart entry.
      *
      * @param string      $name        posted Field name
-     * @param string      $data        The data blob to add.
+     * @param string      $data        the data blob to add
      * @param string|null $filename    The filename to use. If null, no filename is sent.
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
@@ -87,7 +86,7 @@ class MultipartPayload implements PayloadContract
     public function render() : string
     {
         foreach ($this->entries as $entry) {
-            $lines[] = '--'.$this->boundary;
+            $lines[] = '--' . $this->boundary;
             if ($entry['filename']) {
                 $lines[] = sprintf('Content-Disposition: form-data; name="%s"; filename="%s"', $entry['name'], $entry['filename']);
             } else {
@@ -102,9 +101,9 @@ class MultipartPayload implements PayloadContract
             $lines[] = $entry['data'];
         }
 
-        $lines[] = '--'.$this->boundary.'--';
+        $lines[] = '--' . $this->boundary . '--';
 
-        return implode("\r\n", $lines)."\r\n";
+        return implode("\r\n", $lines) . "\r\n";
     }
 
     /**

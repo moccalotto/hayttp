@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -46,10 +45,10 @@ class Response implements ResponseContract
     /**
      * Constructor.
      *
-     * @param string          $body     Response body.
-     * @param array           $headers  Response headers.
-     * @param array           $metadata Engine-specific metadata about the connection.
-     * @param RequestContract $request  The request that yielded this response.
+     * @param string          $body     response body
+     * @param array           $headers  response headers
+     * @param array           $metadata engine-specific metadata about the connection
+     * @param RequestContract $request  the request that yielded this response
      */
     public function __construct(string $body, array $headers, array $metadata, RequestContract $request)
     {
@@ -148,9 +147,9 @@ class Response implements ResponseContract
     /**
      * Get the contents of a given header.
      *
-     * @param string $headerName   The name of the header to search for
+     * @param string $headerName The name of the header to search for
      *
-     * @return string|null The contents of the header or null if it was not found.
+     * @return string|null the contents of the header or null if it was not found
      */
     public function header($headerName)
     {
@@ -187,7 +186,7 @@ class Response implements ResponseContract
     }
 
     /**
-     * Is the response text/plain
+     * Is the response text/plain.
      *
      * @return bool
      */
@@ -234,12 +233,12 @@ class Response implements ResponseContract
      * If the content type is json, a json object is returned (not an array!)
      *
      * @return mixed
-     *      If Content-Type is xml, a SimpleXmlElement is returned.
-     *      If Content-Type is json an array or StdClass is returned.
-     *      If Content-Type is application/x-www-form-urlencoded, an array is returned.
-     *      If Content-Type is text/* The raw response body is returned
+     *               If Content-Type is xml, a SimpleXmlElement is returned.
+     *               If Content-Type is json an array or StdClass is returned.
+     *               If Content-Type is application/x-www-form-urlencoded, an array is returned.
+     *               If Content-Type is text/* The raw response body is returned
      *
-     * @throws UnexpectedValueException if the content type could not be determined.
+     * @throws UnexpectedValueException if the content type could not be determined
      */
     public function decoded()
     {
@@ -319,8 +318,8 @@ class Response implements ResponseContract
         $crlf = "\r\n";
 
         return implode($crlf, $this->headers)
-            .$crlf
-            .$crlf
-            .$this->body;
+            . $crlf
+            . $crlf
+            . $this->body;
     }
 }

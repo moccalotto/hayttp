@@ -4,7 +4,7 @@ namespace Moccalotto\Hayttp\Traits;
 
 trait HasStatusHelpers
 {
-    public abstract function statusCode() : string;
+    abstract public function statusCode() : string;
 
     /**
      * Is the status code 2xx ?
@@ -14,6 +14,7 @@ trait HasStatusHelpers
     public function is2xx() : bool
     {
         $statusCode = $this->statusCode();
+
         return $statusCode >= 200 && $statusCode < 300;
     }
 
@@ -25,6 +26,7 @@ trait HasStatusHelpers
     public function is3xx() : bool
     {
         $statusCode = $this->statusCode();
+
         return $statusCode >= 300 && $statusCode < 400;
     }
 
@@ -36,6 +38,7 @@ trait HasStatusHelpers
     public function is4xx() : bool
     {
         $statusCode = $this->statusCode();
+
         return $statusCode >= 400 && $statusCode < 500;
     }
 
@@ -47,11 +50,12 @@ trait HasStatusHelpers
     public function is5xx() : bool
     {
         $statusCode = $this->statusCode();
+
         return $statusCode >= 500 && $statusCode < 600;
     }
 
     /**
-     * Is this request a success? (i.e. a 2xx status code)
+     * Is this request a success? (i.e. a 2xx status code).
      *
      * @return bool
      *
@@ -63,7 +67,7 @@ trait HasStatusHelpers
     }
 
     /**
-     * Is this request a redirect? (i.e. a 3xx status code)
+     * Is this request a redirect? (i.e. a 3xx status code).
      *
      * @return bool
      */
@@ -73,7 +77,7 @@ trait HasStatusHelpers
     }
 
     /**
-     * Is this request a failure? (i.e. a 4xx or 5xx status code)
+     * Is this request a failure? (i.e. a 4xx or 5xx status code).
      *
      * @return bool
      */

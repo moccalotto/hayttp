@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -16,7 +15,7 @@ use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
- * Http connection exception
+ * Http connection exception.
  *
  * Thrown when we could not connect to the given URL because of timeout, dns, etc.
  */
@@ -28,7 +27,7 @@ class ServerException extends RuntimeException
     protected $response;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(ResponseContract $response, Exceptions $previous = null)
     {

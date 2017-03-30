@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -11,10 +10,8 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
-use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 trait HasRequestAccessors
 {

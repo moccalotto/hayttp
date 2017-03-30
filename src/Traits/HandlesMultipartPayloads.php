@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -20,7 +19,7 @@ trait HandlesMultipartPayloads
      * Add a multipart entry.
      *
      * @param string      $name        posted Field name
-     * @param string      $data        The data blob to add.
+     * @param string      $data        the data blob to add
      * @param string|null $filename    The filename to use. If null, no filename is sent.
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
@@ -28,7 +27,7 @@ trait HandlesMultipartPayloads
      */
     public function addMultipartField(string $name, string $data, string $filename = null, string $contentType = null) : RequestContract
     {
-        if ($this->payload && ! $this->payload instanceof Payloads\MultipartPayload) {
+        if ($this->payload && !$this->payload instanceof Payloads\MultipartPayload) {
             throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
         }
 
@@ -68,7 +67,7 @@ trait HandlesMultipartPayloads
      * Add a data field to the multipart payload.
      *
      * @param string      $name        The posted field name
-     * @param string      $data        The data blob to add.
+     * @param string      $data        the data blob to add
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
      * @return RequestContract

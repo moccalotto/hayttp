@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -18,9 +17,9 @@ interface Response
     /**
      * Constructor.
      *
-     * @param string $body
-     * @param array $headers
-     * @param array $metadata
+     * @param string  $body
+     * @param array   $headers
+     * @param array   $metadata
      * @param Request $request
      */
     public function __construct(string $body, array $headers, array $metadata, Request $request);
@@ -39,11 +38,10 @@ interface Response
      */
     public function request() : Request;
 
-
     /**
      * Get the (raw) metadata.
      *
-     * @return array.
+     * @return array
      */
     public function metadata() : array;
 
@@ -118,7 +116,7 @@ interface Response
      * Execute a callback.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      */
@@ -128,51 +126,47 @@ interface Response
      * Execute a callback if statusCode is 5xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      */
     public function on5xx(callable $callback, &$result = null) : Response;
 
-
     /**
      * Execute a callback if statusCode is 4xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      */
     public function on4xx(callable $callback, &$result = null) : Response;
 
-
     /**
      * Execute a callback if statusCode is 3xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      */
     public function on3xx(callable $callback, &$result = null) : Response;
 
-
     /**
      * Execute a callback if status code is 2xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      */
     public function on2xx(callable $callback, &$result = null) : Response;
 
-
     /**
      * Execute a callback if status code is 4xx or 5xx.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      *
@@ -180,12 +174,11 @@ interface Response
      */
     public function onError(callable $callback, &$result = null) : Response;
 
-
     /**
      * Execute a callback if status code indicates a success.
      *
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result The result of calling $callback
+     * @param mixed    $result   The result of calling $callback
      *
      * @return Response A clone of $this
      *
@@ -193,13 +186,12 @@ interface Response
      */
     public function onSuccess(callable $callback, &$result = null) : Response;
 
-
     /**
-     * Execute a callback if status code === $statusCode
+     * Execute a callback if status code === $statusCode.
      *
      * @param int statusCode
      * @param callable $callback Callback with signature: callback($response, $request)
-     * @param mixed $result the result form the callback
+     * @param mixed    $result   the result form the callback
      *
      * @return Response A clone of $this
      */
@@ -234,7 +226,7 @@ interface Response
     public function is5xx() : bool;
 
     /**
-     * Is this request a success? (i.e. a 2xx status code)
+     * Is this request a success? (i.e. a 2xx status code).
      *
      * @return bool
      *
@@ -243,14 +235,14 @@ interface Response
     public function isSuccess() : bool;
 
     /**
-     * Is this request a redirect? (i.e. a 3xx status code)
+     * Is this request a redirect? (i.e. a 3xx status code).
      *
      * @return bool
      */
     public function isRedirect() : bool;
 
     /**
-     * Is this request a failure? (i.e. a 4xx or 5xx status code)
+     * Is this request a failure? (i.e. a 4xx or 5xx status code).
      *
      * @return bool
      */

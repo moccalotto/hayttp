@@ -3,7 +3,6 @@
 /**
  * This file is part of the Hayttp package.
  *
- * @package Hayttp
  * @author Kim Ravn Hansen <moccalotto@gmail.com>
  * @copyright 2016
  * @license MIT
@@ -16,7 +15,7 @@ use RuntimeException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 /**
- * Http connection exception
+ * Http connection exception.
  *
  * Thrown when we could not connect to the given URL because of timeout, dns, etc.
  */
@@ -33,7 +32,7 @@ class CouldNotConnectException extends RuntimeException
     protected $metadata;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(RequestContract $request, array $metadata = [], Exception $previous = null)
     {
@@ -43,7 +42,7 @@ class CouldNotConnectException extends RuntimeException
     }
 
     /**
-     * Get the request that couldn't connect
+     * Get the request that couldn't connect.
      *
      * @return RequestContract
      */
