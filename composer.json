@@ -23,6 +23,7 @@
     "autoload": {
         "psr-4": {
             "Moccalotto\\Hayttp\\": "src/"
-        }
+        },
+        "files": ["src/helpers.php"]
     }
 }
