@@ -40,6 +40,18 @@ trait HasWithMethods
     }
 
     /**
+     * Set the user agent header.
+     *
+     * @param string $userAgent
+     *
+     * @return RequestContract
+     */
+    public function withUserAgent(string $userAgent) : RequestContract
+    {
+        return $this->with('userAgent', $userAgent);
+    }
+
+    /**
      * Set the allowed crypto method.
      *
      * A Crypto method can be one of the CRYPTO_* constants
