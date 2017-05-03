@@ -168,10 +168,10 @@ trait HasWithMethods
      */
     public function withBasicAuth(string $username, string $password) : RequestContract
     {
-        return $this->withHeader(sprintf(
-            'Authorization: Basic %s',
-            base64_encode(sprintf('%s:%s', $username, $password))
-        ));
+        return $this->withHeader(
+            'Authorization',
+            sprintf('Basic %s', base64_encode(sprintf('%s:%s', $username, $password)))
+        );
     }
 
     public function withPayload(PayloadContract $payload)
