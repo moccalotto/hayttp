@@ -61,9 +61,8 @@ $response = Hayttp::post($url)
         'this' => 'associative',
         'array' => 'will',
         'be' => 'converted',
-        'converted' => 'to',
-        'a' => 'json',
-        'object' => 'weee!',
+        'to' => 'a',
+        'json' => 'object',
     ])
     ->send();
 ```
