@@ -75,6 +75,15 @@ interface Request
     public function withHeaders(array $headers) : Request;
 
     /**
+     * Add an array of headers.
+     *
+     * @param array $headers
+     *
+     * @return Request
+     */
+    public function withAdditionalHeaders(array $headers) : Request;
+
+    /**
      * Set the proxy server.
      *
      * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).

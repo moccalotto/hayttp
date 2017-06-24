@@ -108,6 +108,18 @@ trait HasWithMethods
     }
 
     /**
+     * Add an array of headers.
+     *
+     * @param array $headers
+     *
+     * @return RequestContract
+     */
+    public function withAdditionalHeaders(array $headers) : RequestContract
+    {
+        return $this->withHeaders(array_merge($this->headers, $headers));
+    }
+
+    /**
      * Set the proxy server.
      *
      * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).
@@ -129,7 +141,7 @@ trait HasWithMethods
      */
     public function withHeader($name, $value) : RequestContract
     {
-        return $this->withHeaders(array_merge($this->headers, [$name => $value]));
+        return $this->withAdditionalHeaders([$name => $value]);
     }
 
     /**
