@@ -189,7 +189,7 @@ class Response implements ResponseContract
      */
     public function isXml() : bool
     {
-        return in_array($this->contentType(), [
+        return in_array($this->contentTypeWithoutCharset(), [
             'application/xml',
             'text/xml',
         ]);
@@ -202,7 +202,7 @@ class Response implements ResponseContract
      */
     public function isPlainText() : bool
     {
-        return $this->contentType() === 'text/plain';
+        return $this->contentTypeWithoutCharset() === 'text/plain';
     }
 
     /**
@@ -214,7 +214,7 @@ class Response implements ResponseContract
      */
     public function isText() : bool
     {
-        return strpos($this->contentType(), 'text/') === 0;
+        return strpos($this->contentTypeWithoutCharset(), 'text/') === 0;
     }
 
     /**
@@ -224,7 +224,7 @@ class Response implements ResponseContract
      */
     public function isUrlEncoded() : bool
     {
-        return $this->contentType() === 'application/x-www-form-urlencoded';
+        return $this->contentTypeWithoutCharset() === 'application/x-www-form-urlencoded';
     }
 
     /**
