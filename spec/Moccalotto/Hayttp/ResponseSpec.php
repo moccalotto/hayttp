@@ -58,6 +58,17 @@ class ResponseSpec extends ObjectBehavior
         $this->decoded()->property->shouldBe('value');
     }
 
+    public function it_detects_content_type_without_charset(Request $request)
+    {
+        $body = '{"property":"value"}';
+        $headers = ['HTTP/1.0 200 OK', 'Content-Type: application/json;charset=UTF-8'];
+        $metadata = ['meta' => 'data'];
+        $this->beConstructedWith($body, $headers, $metadata, $request);
+
+        $this->contentTypeWithoutCharset()->shouldBe('application/json');
+        $this->decoded()->property->shouldBe('value');
+    }
+
     public function it_decodes_xml(Request $request)
     {
         $body = '<root><child>foo</child></root>';
