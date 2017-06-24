@@ -135,6 +135,16 @@ class Response implements ResponseContract
     }
 
     /**
+     * Get the content type, but remove anything after the first semi-colon.
+     *
+     * @return string|null
+     */
+    public function contentTypeWithoutCharset()
+    {
+        return explode(';', $this->contentType(), 2)[0];
+    }
+
+    /**
      * Get the headers.
      *
      * @return string[]
@@ -169,7 +179,7 @@ class Response implements ResponseContract
      */
     public function isJson() : bool
     {
-        return $this->contentType() === 'application/json';
+        return explode(';', $this->contentType())[0] === 'application/json';
     }
 
     /**
