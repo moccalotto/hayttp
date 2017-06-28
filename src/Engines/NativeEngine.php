@@ -68,7 +68,7 @@ class NativeEngine implements EngineContract
      *
      * @return ResponseContract
      *
-     * @throws ConnectionException if connection could not be established
+     * @throws CouldNotConnectException if connection could not be established
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
