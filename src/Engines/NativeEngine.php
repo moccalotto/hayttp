@@ -69,8 +69,6 @@ class NativeEngine implements EngineContract
      * @return ResponseContract
      *
      * @throws CouldNotConnectException if connection could not be established
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function send(RequestContract $request) : ResponseContract
     {
