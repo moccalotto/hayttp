@@ -282,7 +282,7 @@ class Request implements RequestContract
         // force qualityFactor to be between 0 and 1
         $qualityFactor = max(0, min(1, $qualityFactor));
 
-        return $this->withHeader('Accept', sprintf('%s; %s', $mimeType, $qualityFactor));
+        return $this->withHeader('Accept', sprintf('%s; q=%s', $mimeType, $qualityFactor));
     }
 
     /**
