@@ -159,11 +159,10 @@ interface Request
      * Add Accept header.
      *
      * @param string $mimeType
-     * @param float  $qualityFactor must be between 0 and 1
      *
      * @return Request
      */
-    public function expects(string $mimeType, float $qualityFactor = 1) : Request;
+    public function expects(string $mimeType) : Request;
 
     /**
      * Add Accept header with many types.

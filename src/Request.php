@@ -273,7 +273,6 @@ class Request implements RequestContract
      * Add Accept header.
      *
      * @param string $mimeType
-     * @param float  $qualityFactor must be between 0 and 1
      *
      * @return RequestContract
      */
