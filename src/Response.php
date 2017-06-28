@@ -58,7 +58,7 @@ class Response implements ResponseContract
         $this->request = $request;
         $this->metadata = $metadata;
 
-        foreach ($request->responseCalls() as [$methodName, $args]) {
+        foreach ($request->responseCalls() as list($methodName, $args)) {
             $callback = [clone $this, $methodName];
             if (!is_callable($callback)) {
                 throw new LogicException(sprintf('Method »%s« does not exist', $methodName));
