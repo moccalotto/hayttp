@@ -11,6 +11,7 @@
 namespace Moccalotto\Hayttp;
 
 use LogicException;
+use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
@@ -78,6 +79,11 @@ class Request implements RequestContract
      * @var array
      */
     protected $cryptoMethod = 'tlsv1.2';
+
+    /**
+     * @var array
+     */
+    protected $responseCalls = [];
 
     /**
      * Clone object with a new property value.
@@ -314,5 +320,51 @@ class Request implements RequestContract
         $response = $engine->send($clone);
 
         return $response;
+    }
+
+    /**
+     * Execute the $response->$methodName(...$args) as soon as we have a response.
+     *
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return RequestContract
+     */
+    public function withResponseCall(string $methodName, array $args = []) : RequestContract
+    {
+        if (!method_exists(ResponseContract::class, $methodName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Method »%s« does not exist on class %s',
+                $methodName,
+                Response::class
+            ));
+        }
+
+        $clone = clone $this;
+        $clone->responseCalls[] = [$methodName, $args];
+
+        return $clone;
+    }
+
+    /**
+     * Get the calls that are to be executed on the response
+     * as soon as we have one.
+     *
+     * @return array
+     */
+    public function responseCalls() : array
+    {
+        return $this->responseCalls;
+    }
+
+    /**
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return RequestContract
+     */
+    public function __call($methodName, $args)
+    {
+        return $this->onResponse($methodName, $args);
     }
 }

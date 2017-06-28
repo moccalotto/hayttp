@@ -314,4 +314,22 @@ interface Request
      * @return array
      */
     public function cryptoMethod();
+
+    /**
+     * Execute the $response->$methodName(...$args) as soon as we have a response.
+     *
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return RequestContract
+     */
+    public function withResponseCall(string $methodName, array $args = []) : Request;
+
+    /**
+     * Get the calls that are to be executed on the response
+     * as soon as we have one.
+     *
+     * @return array
+     */
+    public function responseCalls() : array;
 }

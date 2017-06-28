@@ -47,5 +47,6 @@ print_r(
     // ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
     ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true), 'r.gif', 'image/gif')
     ->addMultipartField('file2', '<html><body>Naked</body></html>', 't.html', 'text/html')
+    ->ensure200()
     ->send()
 );

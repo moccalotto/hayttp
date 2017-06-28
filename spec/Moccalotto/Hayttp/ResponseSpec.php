@@ -22,12 +22,14 @@ class ResponseSpec extends ObjectBehavior
 {
     public function it_is_initializable(Request $request)
     {
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith('body', [], [], $request);
         $this->shouldHaveType('Moccalotto\Hayttp\Response');
     }
 
     public function it_implements_contract(Request $request)
     {
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith('body', [], [], $request);
         $this->shouldHaveType('Moccalotto\Hayttp\Contracts\Response');
     }
@@ -37,6 +39,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '{"property":"value"}';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: application/json'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->body()->shouldBe($body);
@@ -52,6 +55,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '{"property":"value"}';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: application/json'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->contentType()->shouldBe('application/json');
@@ -63,6 +67,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '{"property":"value"}';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: application/json;charset=UTF-8'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->contentTypeWithoutCharset()->shouldBe('application/json');
@@ -74,6 +79,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '<root><child>foo</child></root>';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: application/xml'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->body()->shouldBe($body);
@@ -91,6 +97,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         // Since we cannot test via the $out parameter - we hax it a bit
@@ -112,6 +119,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $result = $this->transform(function ($response, $request) {
@@ -129,6 +137,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
@@ -159,6 +168,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 302 Found', 'Content-Type: text/plain', 'Location: https://example.org'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
@@ -189,6 +199,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 400 Bad Request', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
@@ -218,6 +229,7 @@ class ResponseSpec extends ObjectBehavior
         $body = '';
         $headers = ['HTTP/1.0 500 Internal Server Error', 'Content-Type: text/plain'];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $scopeVar = [];
@@ -250,6 +262,7 @@ class ResponseSpec extends ObjectBehavior
             'Content-Type: application/json',
         ];
         $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $rawRequest = <<<EOF
@@ -259,5 +272,37 @@ Content-Type: application/json\r
 {"property":"value"}
 EOF;
         $this->render()->shouldBe($rawRequest);
+    }
+
+    public function it_executes_deferred_calls(Request $request)
+    {
+        $body = '{"property":"value"}';
+        $headers = [
+            'HTTP/1.0 200 OK',
+            'Content-Type: application/json',
+        ];
+        $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([
+            ['ensure301', []],
+        ]);
+        $this->beConstructedWith($body, $headers, $metadata, $request);
+
+        $this->shouldThrow('\Moccalotto\Hayttp\Exceptions\ResponseException')->duringInstantiation();
+    }
+
+    public function it_throws_exception_in_case_of_invalid_deferred_call(Request $request)
+    {
+        $body = '{"property":"value"}';
+        $headers = [
+            'HTTP/1.0 200 OK',
+            'Content-Type: application/json',
+        ];
+        $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([
+            ['foo', []],
+        ]);
+        $this->beConstructedWith($body, $headers, $metadata, $request);
+
+        $this->shouldThrow('LogicException')->duringInstantiation();
     }
 }

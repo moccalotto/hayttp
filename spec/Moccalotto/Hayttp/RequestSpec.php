@@ -108,4 +108,17 @@ class RequestSpec extends ObjectBehavior
 
         $response->shouldBe($response);
     }
+
+    public function it_can_defer_calls_to_response()
+    {
+        $this->beConstructedThrough('POST', ['https://example.org']);
+
+        $clone = $this->withResponseCall('transform', ['strtoupper']);
+
+        $clone->responseCalls()->shouldBe([
+            ['transform', ['strtoupper']],
+        ]);
+
+        $clone->shouldThrow('UnexpectedValueException')->during('withResponseCall', ['nonExistingMethod']);
+    }
 }

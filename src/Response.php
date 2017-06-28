@@ -11,16 +11,17 @@
 namespace Moccalotto\Hayttp;
 
 use LogicException;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 use SimpleXmlElement;
 use UnexpectedValueException;
+use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 class Response implements ResponseContract
 {
     use Traits\HasCallbacks;
     use Traits\HasStatusHelpers;
     use Traits\HasCompleteDebugInfo;
+    use Traits\MakesResponseAssertions;
 
     /**
      * @var string
@@ -56,6 +57,14 @@ class Response implements ResponseContract
         $this->headers = $headers;
         $this->request = $request;
         $this->metadata = $metadata;
+
+        foreach ($request->responseCalls() as [$methodName, $args]) {
+            $callback = [clone $this, $methodName];
+            if (!is_callable($callback)) {
+                throw new LogicException(sprintf('Method »%s« does not exist', $methodName));
+            }
+            call_user_func_array([clone $this, $methodName], $args);
+        }
     }
 
     /**
