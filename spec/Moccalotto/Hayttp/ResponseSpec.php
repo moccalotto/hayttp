@@ -254,7 +254,7 @@ class ResponseSpec extends ObjectBehavior
         }
     }
 
-    public function it_renders(Request $request)
+    public function it_can_be_rendered_to_raw_text(Request $request)
     {
         $body = '{"property":"value"}';
         $headers = [

@@ -121,4 +121,31 @@ class RequestSpec extends ObjectBehavior
 
         $clone->shouldThrow('UnexpectedValueException')->during('withResponseCall', ['nonExistingMethod']);
     }
+
+    public function it_can_expect_and_ensure_json()
+    {
+        $this->beConstructedThrough('POST', ['https://example.org']);
+
+        $clone = $this->ensureJson();
+
+        $clone->responseCalls()->shouldBe([
+            ['ensureJson', []]
+        ]);
+
+        $clone->headers()['Accept']->shouldContain('application/json');
+    }
+
+
+    public function it_can_expect_and_ensure_xml()
+    {
+        $this->beConstructedThrough('POST', ['https://example.org']);
+
+        $clone = $this->ensureXml();
+
+        $clone->responseCalls()->shouldBe([
+            ['ensureXml', []]
+        ]);
+
+        $clone->headers()['Accept']->shouldContain('application/xml');
+    }
 }
