@@ -14,6 +14,7 @@ use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 trait HasWithMethods
 {
@@ -186,8 +187,39 @@ trait HasWithMethods
         );
     }
 
+    /**
+     * Set the payload of the request.
+     *
+     * @param PayloadContract $payload
+     *
+     * @return RequestContract
+     */
     public function withPayload(PayloadContract $payload)
     {
         return $this->with('payload', $payload);
+    }
+
+    /**
+     * Execute the $response->$methodName(...$args) as soon as we have a response.
+     *
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return RequestContract
+     */
+    public function withResponseCall(string $methodName, array $args = []) : RequestContract
+    {
+        if (!method_exists(ResponseContract::class, $methodName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Method »%s« does not exist on class %s',
+                $methodName,
+                Response::class
+            ));
+        }
+
+        $clone = clone $this;
+        $clone->responseCalls[] = [$methodName, $args];
+
+        return $clone;
     }
 }

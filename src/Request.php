@@ -323,30 +323,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Execute the $response->$methodName(...$args) as soon as we have a response.
-     *
-     * @param string $methodName
-     * @param array  $args
-     *
-     * @return RequestContract
-     */
-    public function withResponseCall(string $methodName, array $args = []) : RequestContract
-    {
-        if (!method_exists(ResponseContract::class, $methodName)) {
-            throw new UnexpectedValueException(sprintf(
-                'Method »%s« does not exist on class %s',
-                $methodName,
-                Response::class
-            ));
-        }
-
-        $clone = clone $this;
-        $clone->responseCalls[] = [$methodName, $args];
-
-        return $clone;
-    }
-
-    /**
      * Get the calls that are to be executed on the response
      * as soon as we have one.
      *

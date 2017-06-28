@@ -41,4 +41,26 @@ trait ExpectsCommonMimeTypes
     {
         return $this->expects('*/*');
     }
+
+    /**
+     * Expect json response type and throw an exception if json is not returned.
+     *
+     * @return RequestContract
+     */
+    public function ensureJson() : RequestContract
+    {
+        return $this->expectsJson()
+            ->withResponseCall('ensureJson');
+    }
+
+    /**
+     * Expect json response type and throw an exception if json is not returned.
+     *
+     * @return RequestContract
+     */
+    public function ensureXml() : RequestContract
+    {
+        return $this->expectsXml()
+            ->withResponseCall('ensureXml');
+    }
 }
