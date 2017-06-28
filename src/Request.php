@@ -365,6 +365,6 @@ class Request implements RequestContract
      */
     public function __call($methodName, $args)
     {
-        return $this->onResponse($methodName, $args);
+        return $this->withResponseCall($methodName, $args);
     }
 }
