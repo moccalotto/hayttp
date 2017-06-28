@@ -92,7 +92,7 @@ class ResponseSpec extends ObjectBehavior
         $this->decoded()->child->shouldHaveType('SimpleXmlElement');
     }
 
-    public function it_has__apply__callback(Request $request)
+    public function it_has_APPLY_callback(Request $request)
     {
         $body = '';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];
@@ -114,7 +114,7 @@ class ResponseSpec extends ObjectBehavior
         $result->shouldNotBe($this->getWrappedObject());
     }
 
-    public function it_has__transform__callback(Request $request)
+    public function it_has_TRANSFORM_callback(Request $request)
     {
         $body = '';
         $headers = ['HTTP/1.0 200 OK', 'Content-Type: text/plain'];

@@ -247,4 +247,149 @@ interface Response
      * @return bool
      */
     public function isError() : bool;
+
+    /**
+     * Is this a json response.
+     *
+     * @return bool
+     */
+    public function isJson() : bool;
+
+    /**
+     * Is this an xml response.
+     *
+     * @return bool
+     */
+    public function isXml() : bool;
+
+    /**
+     * Is the response text/plain.
+     *
+     * @return bool
+     */
+    public function isPlainText() : bool;
+
+    /**
+     * Is this a text response.
+     *
+     * Is the mime type text/*
+     *
+     * @return bool
+     */
+    public function isText() : bool;
+
+    /**
+     * Is this an url-encoded response.
+     *
+     * @return bool
+     */
+    public function isUrlEncoded() : bool;
+
+    /**
+     * Ensure that status code is in a given range.
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensureStatusInRange($min, $max) : Response;
+
+    /**
+     * Ensure that the status code is in a given et of codes.
+     *
+     * @param int[] $validCodes
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensureStatusIn(array $validCodes) : Response;
+
+    /**
+     * Ensure that the status code equals $validCode
+     *
+     * @param int $validCode
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensureStatus($validCode);
+
+    /**
+     * Ensure that the status code is in the range [200...299]
+     *
+     * @param int $validCode
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure2xx();
+
+    /**
+     * Ensure that the status code is 200
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure200();
+
+    /**
+     * Ensure that the status code is 201
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure201();
+
+    /**
+     * Ensure that the status code is 204
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure204();
+
+    /**
+     * Ensure that the status code is 301
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure301();
+
+    /**
+     * Ensure that the status code is 302
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensure302();
+
+    /**
+     * Ensure that the content type is application/json
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensureJson();
+
+    /**
+     * Ensure that the content type is application/xml
+     *
+     * @return Response
+     *
+     * @throws ResponseException
+     */
+    public function ensureXml();
 }
