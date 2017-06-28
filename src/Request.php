@@ -277,12 +277,9 @@ class Request implements RequestContract
      *
      * @return RequestContract
      */
-    public function expects(string $mimeType, float $qualityFactor = 1) : RequestContract
+    public function expects(string $mimeType) : RequestContract
     {
-        // force qualityFactor to be between 0 and 1
-        $qualityFactor = max(0, min(1, $qualityFactor));
-
-        return $this->withHeader('Accept', sprintf('%s; q=%s', $mimeType, $qualityFactor));
+        return $this->withHeader('Accept', $mimeType);
     }
 
     /**
@@ -298,7 +295,7 @@ class Request implements RequestContract
 
         foreach ($types as $mimeType => $qualityFactor) {
             $qualityFactor = max(0, min(1, $qualityFactor));
-            $parts[] = sprintf('%s; %s', $mimeType, $qualityFactor);
+            $parts[] = sprintf('%s; q=%s', $mimeType, $qualityFactor);
         }
 
         return $this->withHeader('Accept', implode(', ', $parts));
