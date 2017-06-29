@@ -31,13 +31,13 @@ trait HasWithMethods
     /**
      * Set the timeout.
      *
-     * @param float $timeout
+     * @param float $seconds
      *
      * @return RequestContract
      */
-    public function withTimeout(float $timeout) : RequestContract
+    public function withTimeout(float $seconds) : RequestContract
     {
-        return $this->with('timeout', $timeout);
+        return $this->with('timeout', $seconds);
     }
 
     /**
