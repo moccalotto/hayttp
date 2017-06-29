@@ -10,6 +10,7 @@
 
 namespace Moccalotto\Hayttp;
 
+use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 /**
@@ -26,6 +27,16 @@ class Hayttp
      * @var string
      */
     protected $requestFqcn;
+
+    /**
+     * @var string
+     */
+    public $mountPoint = '';
+
+    /**
+     * @var array
+     */
+    protected $deferredCalls = [];
 
     /**
      * Get the default/global instance.
@@ -67,12 +78,26 @@ class Hayttp
      * Factory.
      *
      * Create a request object of the $requestFqcn class.
+     *
+     * @param string $method
+     * @param string $url
+     *
+     * @return RequestContract
      */
     public function createRequest(string $method, string $url) : RequestContract
     {
         $class = $this->requestFqcn;
 
-        return new $class(strtoupper($method), $url);
+        $request = new $class(
+            strtoupper($method),
+            Util::applyMountPoint($url, $this->mountPoint)
+        );
+
+        foreach ($this->deferredCalls as list($methodName, $args)) {
+            $request = call_user_func_array([clone $request, $methodName], $args);
+        }
+
+        return $request;
     }
 
     /**
@@ -157,5 +182,76 @@ class Hayttp
     public static function head(string $url) : RequestContract
     {
         return static::instance()->createRequest('HEAD', $url);
+    }
+
+    /**
+     * Clone object with a new property value.
+     *
+     * @param string $property
+     * @param mixed  $value
+     *
+     * @return Hayttp
+     */
+    protected function with(string $property, $value) : Hayttp
+    {
+        $clone = clone $this;
+        $clone->$property = $value;
+
+        return $clone;
+    }
+
+    /**
+     * Having created a request, apply these calls to the
+     *
+     * @param string $methodName
+     * @param array $args
+     *
+     * @return Hayttp
+     */
+    public function withDeferredCall(string $methodName, array $args = []) : Hayttp
+    {
+        $tmp = $this->deferredCalls;
+        $tmp[] = [$methodName, $args];
+
+        return $this->with('deferredCalls', $tmp);
+    }
+
+    /**
+     * All requests will have this mount point prepended to their url.
+     *
+     * @param string $url
+     *
+     * @return Hayttp
+     */
+    public function withMountPoint(string $url) : Hayttp
+    {
+        return $this->with(
+            'mountPoint',
+            Util::ensureValidUrl($url)
+        );
+    }
+
+    /**
+     * All requests will have this timeout.
+     *
+     * @param float $seconds
+     *
+     * @return Hayttp
+     */
+    public function withTimeout(float $seconds) : Hayttp
+    {
+        return $this->withDeferredCall('withTimeout', [$seconds]);
+    }
+
+    /**
+     * Set the user agent header.
+     *
+     * @param string $userAgent
+     *
+     * @return RequestContract
+     */
+    public function withUserAgent(string $userAgent) : Hayttp
+    {
+        return $this->withDeferredCall('withUserAgent', $userAgent);
     }
 }
