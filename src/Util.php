@@ -30,9 +30,9 @@ class Util
      *
      * @return string
      */
-    public static function applyMountPoint(string $pathOrUrl, $mountPoint)
+    public static function applyMountPoint(string $pathOrUrl, $mountPoint = null)
     {
-        if (!$mountPoint) {
+        if ($mountPoint === null) {
             return $pathOrUrl;
         }
 
@@ -40,8 +40,8 @@ class Util
             return $pathOrUrl;
         }
 
-        static::ensureValidUrl(vsprintf('%s/%s', [
-            rtrim($this->mountPoint, '/'),
+        return static::ensureValidUrl(vsprintf('%s/%s', [
+            rtrim($mountPoint, '/'),
             ltrim($pathOrUrl, '/'),
         ]));
     }
