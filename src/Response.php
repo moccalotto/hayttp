@@ -63,7 +63,7 @@ class Response implements ResponseContract
             if (!is_callable($callback)) {
                 throw new LogicException(sprintf('Method »%s« does not exist', $methodName));
             }
-            call_user_func_array([clone $this, $methodName], $args);
+            call_user_func_array($callback, $args);
         }
     }
 
