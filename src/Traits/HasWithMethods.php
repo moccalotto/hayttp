@@ -10,7 +10,9 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
+use SimpleXmlElement;
 use UnexpectedValueException;
+use Moccalotto\Hayttp\Payloads\RawPayload;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
@@ -221,5 +223,73 @@ trait HasWithMethods
         $clone->responseCalls[] = [$methodName, $args];
 
         return $clone;
+    }
+
+    /**
+     * Set the raw payload of the request.
+     *
+     * @param string $payload
+     * @param string $contentType
+     *
+     * @return RequestContract
+     */
+    public function withRawPayload(string $payload, string $contentType = 'application/octet-stream') : RequestContract
+    {
+        if ($this->payload) {
+            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
+        }
+
+        return $this->withPayload(new RawPayload($payload, $contentType));
+    }
+
+    /**
+     * Set a JSON payload.
+     *
+     * NOTE that the neither unicode characters nor slashes are escaped.
+     * This behaviors is compatible with the json standard as well as
+     * most browsers' * JSON.stringify() and JSON.parse().
+     * However, it is not default output of json_encode.
+     *
+     * @param array|object $payload the payload to send - the payload will always be json encoded
+     *
+     * @return RequestContract
+     */
+    public function withJsonPayload($payload) : RequestContract
+    {
+        return $this->withRawPayload(
+            json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'application/json'
+        );
+    }
+
+    /**
+     * Set an XML payload.
+     *
+     * @param SimpleXmlElement|string $xml
+     *
+     * @return RequestContract
+     */
+    public function withXmlPayload($xml) : RequestContract
+    {
+        if ($xml instanceof SimpleXmlElement) {
+            $xml = $xml->asXml();
+        }
+
+        return $this->withRawPayload($xml, 'application/xml');
+    }
+
+    /**
+     * Set a URL-encoded payload.
+     *
+     * @param array $form key/value pairs to post as normal urlencoded fields
+     *
+     * @return RequestContract
+     */
+    public function withFormDataPayload(array $form) : RequestContract
+    {
+        return $this->withRawPayload(
+            http_build_query($form, '', '&', PHP_QUERY_RFC1738),
+            'application/x-www-form-urlencoded'
+        );
     }
 }

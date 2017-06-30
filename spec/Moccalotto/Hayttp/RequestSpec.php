@@ -51,7 +51,7 @@ class RequestSpec extends ObjectBehavior
 
         $data = ['this' => 'array', 'will' => 'be', 'conterted' => 'to', 'json' => 'object'];
 
-        $request = $this->sendsJson($data);
+        $request = $this->withJsonPayload($data);
 
         $request->shouldHaveType(RequestContract::class);
 
@@ -68,13 +68,13 @@ class RequestSpec extends ObjectBehavior
 
         $data = new SimpleXmlElement('<root></root>');
 
-        $request = $this->sendsXml($data);
+        $request = $this->withXmlPayload($data);
 
         $request->shouldHaveType(Request::class);
 
-        $request->render()->shouldContain($data->asXml());
-
         $request->render()->shouldContain('Content-Type: application/xml');
+
+        $request->render()->shouldContain($data->asXml());
     }
 
     public function it_can_send_requests_via_curl(CurlEngine $engine)
