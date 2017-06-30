@@ -29,7 +29,7 @@ $response = Hayttp::post('https://example.org/post')
 
 // Send traditional post data
 $response = Hayttp::post('https://example.org/post')
-    ->sends(['Friends' => ['Lisa', 'Andy']])
+    ->sends(['Friends' => ['Lisa', 'Danni']])
     ->send();
 
 //---------------------------------------------
