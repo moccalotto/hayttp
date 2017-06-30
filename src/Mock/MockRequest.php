@@ -11,6 +11,8 @@
 namespace Moccalotto\Hayttp\Mock;
 
 use LogicException;
+use Moccalotto\Hayttp\Util;
+use PHPUnit\Framework\Assert as PHPUnit;
 use Moccalotto\Hayttp\Request as BaseRequest;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
@@ -63,6 +65,14 @@ class MockRequest extends BaseRequest
     /**
      * We do not allow stacking of mocked end points.
      *
+     * @param string $methodPattern
+     * @param string $urlPattern
+     * @param callable $callback
+     *
+     * @return void
+     *
+     * @throws LogicException always
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function withMockedEndpoint(string $methodPattern, string $urlPattern, callable $callback)
@@ -70,12 +80,42 @@ class MockRequest extends BaseRequest
         throw new LogicException('You cannot nest mocked endpoints');
     }
 
-    public function assertContentType($contentType)
+    /**
+     * Assert that the request has a given content type.
+     *
+     * @param string $expected the expected content type.
+     *
+     * @return $this
+     */
+    public function assertContentType($expected)
     {
+        PHPUnit::assertEquals($expected, $this->contentType(), Util::makePhpUnitExpectationMessage(
+            'Invalid content type',
+            $expected,
+            $this->contentType()
+        ));
+
+        return $this;
     }
 
-    public function assertMethod()
+    /**
+     * Assert that the request has a given http method
+     *
+     * @param string $expected the expected method.
+     *
+     * @return $this
+     */
+    public function assertMethod($method)
     {
+        $expected = strtoupper($method);
+        $actual   = strtoupper($this->method);
+        PHPUnit::assertEquals($expected, $actual, Util::makePhpUnitExpectationMessage(
+            'Invalid method',
+            $expected,
+            $actual
+        ));
+
+        return $this;
     }
 
     /**
@@ -83,6 +123,23 @@ class MockRequest extends BaseRequest
      */
     public function assertHeader($headerName, $value = null)
     {
+        foreach ($this->headers as $key => $val) {
+            if (strtolower($headerName) !== strtolower($key)) {
+                continue;
+            }
+
+            if ($value !== null) {
+                PHPUnit::assertEquals($value, $val, Util::makePhpUnitExpectationMessage(
+                    "Invalid header $headerName'",
+                    $value,
+                    $val
+                ));
+            }
+
+            return $this;
+        }
+
+        PHPUnit::assertTrue(false, "Header $headerName not found");
     }
 
     /**
@@ -90,6 +147,14 @@ class MockRequest extends BaseRequest
      */
     public function assertJson(array $data)
     {
+        PHPUnit::assertArraySubset(
+            $data,
+            json_decode($this->payload, true),
+            false,
+            $this->assertJsonMessage($data)
+        );
+
+        return $this;
     }
 
     /**

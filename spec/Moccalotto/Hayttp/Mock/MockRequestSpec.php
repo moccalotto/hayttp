@@ -42,4 +42,33 @@ class MockRequestSpec extends ObjectBehavior
 
         $this->withEngine($engine)->passthru();
     }
+
+    function it_can_make_assertions_about_http_method()
+    {
+        $request = hayttp()->get('https://foo.bar');
+
+        $this->beConstructedWith($request);
+
+        $this->assertMethod('GET')->shouldHaveType(get_class($request));
+        $this->assertMethod('get')->shouldHaveType(get_class($request));
+
+        $this->shouldThrow('PHPUnit\Framework\ExpectationFailedException')->during(
+            'assertMethod',
+            ['POST']
+        );
+    }
+
+    function it_can_make_assertions_about_content_type()
+    {
+        $request = hayttp()->post('https://foo.bar');
+
+        $this->beConstructedWith($request);
+
+        $this->assertContentType('application/json')->shouldHaveType(get_class($request));
+
+        $this->shouldThrow('PHPUnit\Framework\ExpectationFailedException')->during(
+            'assertContentType',
+            ['application/xml']
+        );
+    }
 }

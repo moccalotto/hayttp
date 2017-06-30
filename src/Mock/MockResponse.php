@@ -12,6 +12,7 @@ namespace Moccalotto\Hayttp\Mock;
 
 use SimpleXmlElement;
 use Moccalotto\Hayttp\Util;
+use PHPUnit\Framework\Assert as PHPUnit;
 use Moccalotto\Hayttp\Response as BaseResponse;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
@@ -310,7 +311,7 @@ class MockResponse extends BaseResponse
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
 
-        return Util::makeJsonFragmentErrorMessage(
+        return Util::makePhpUnitExpectationMessage(
             'Unable to find json',
             $expected,
             $actual
@@ -351,7 +352,7 @@ class MockResponse extends BaseResponse
         foreach (Util::recursiveArraySort($data) as $key => $value) {
             $expected = substr(json_encode([$key => $value]), 1, -1);
 
-            $error = Util::makeJsonFragmentErrorMessage(
+            $error = Util::makePhpUnitExpectationMessage(
                 'Unable to find json fragment',
                 $expected,
                 $actual
@@ -379,7 +380,7 @@ class MockResponse extends BaseResponse
         foreach (Util::recursiveArraySort($data) as $key => $value) {
             $expected = substr(json_encode([$key => $value]), 1, -1);
 
-            $error = Util::makeJsonFragmentErrorMessage(
+            $error = Util::makePhpUnitExpectationMessage(
                 'Found unexpected json fragment',
                 $expected,
                 $actual

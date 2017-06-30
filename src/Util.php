@@ -91,7 +91,7 @@ class Util
         return $array;
     }
 
-    public static function makeJsonFragmentErrorMessage($message, $expected, $actual)
+    public static function makePhpUnitExpectationMessage($message, $expected, $actual)
     {
         return $message
             . PHP_EOL
