@@ -18,19 +18,16 @@ require 'vendor/autoload.php';
 // this puts the request into "raw" mode, and it also
 // locks the content. We cannot overwrite the content now
 $response = Hayttp::post('https://example.org')
-     ->sendsJson(['this' => 'object', 'will' => 'be', 'converted' => 'to json', 'foreign' => 'lommel'])
-     ->send();
+     ->sendJson(['this' => 'object', 'will' => 'be', 'converted' => 'to json', 'foreign' => 'lommel']);
 
 // Send raw blob
 // going into raw mode always locks the contents
 $response = Hayttp::post('https://example.org/post')
-     ->sendsRaw("csv;data\nkey1;value1\nkey2;value2", 'text/csv')
-     ->send();
+     ->sendRaw("csv;data\nkey1;value1\nkey2;value2", 'text/csv');
 
 // Send traditional post data
 $response = Hayttp::post('https://example.org/post')
-    ->sends(['Friends' => ['Lisa', 'Danni']])
-    ->send();
+    ->sendFormData(['Friends' => ['Lisa', 'Danni']]);
 
 //---------------------------------------------
 // Send files and other data to the server
