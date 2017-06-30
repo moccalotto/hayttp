@@ -10,11 +10,20 @@
 
 namespace Moccalotto\Hayttp;
 
+use BadMethodCallException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Request creation facade.
+ *
+ * @method \Moccalotto\Hayttp\Contracts\Request get(string $url)     Create a GET request
+ * @method \Moccalotto\Hayttp\Contracts\Request post(string $url)    Create a POST request
+ * @method \Moccalotto\Hayttp\Contracts\Request put(string $url)     Create a PUT request
+ * @method \Moccalotto\Hayttp\Contracts\Request patch(string $url)   Create a PATCH request
+ * @method \Moccalotto\Hayttp\Contracts\Request head(string $url)    Create a HEAD request
+ * @method \Moccalotto\Hayttp\Contracts\Request delete(string $url)  Create a DELETE request
+ * @method \Moccalotto\Hayttp\Contracts\Request options(string $url) Create a OPTIONS request
  */
 class Hayttp
 {
@@ -101,87 +110,25 @@ class Hayttp
     }
 
     /**
-     * Create a GET request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
+     * Easy request construction
      */
-    public static function get(string $url) : RequestContract
+    public function __call($methodName, $args)
     {
-        return static::instance()->createRequest('GET', $url);
+        $method = strtoupper($methodName);
+
+        if (in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'])) {
+            return $this->createRequest($method, $args[0]);
+        }
+
+        throw new BadMethodCallException(sprintf('Unknown method »%s«', $methodName));
     }
 
     /**
-     * Create a POST request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
+     * Forward calls to default instance
      */
-    public static function post(string $url) : RequestContract
+    public static function __callStatic($methodName, $args)
     {
-        return static::instance()->createRequest('POST', $url);
-    }
-
-    /**
-     * Create a PUT request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
-     */
-    public static function put(string $url) : RequestContract
-    {
-        return static::instance()->createRequest('PUT', $url);
-    }
-
-    /**
-     * Create a DELETE request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
-     */
-    public static function delete(string $url) : RequestContract
-    {
-        return static::instance()->createRequest('DELETE', $url);
-    }
-
-    /**
-     * Create a PATCH request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
-     */
-    public static function patch(string $url) : RequestContract
-    {
-        return static::instance()->createRequest('PATCH', $url);
-    }
-
-    /**
-     * Create a OPTIONS request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
-     */
-    public static function options(string $url) : RequestContract
-    {
-        return static::instance()->createRequest('OPTIONS', $url);
-    }
-
-    /**
-     * Create a HEAD request.
-     *
-     * @param string $url
-     *
-     * @return RequestContract
-     */
-    public static function head(string $url) : RequestContract
-    {
-        return static::instance()->createRequest('HEAD', $url);
+        return call_user_func_array([static::instance(), $methodName], $args);
     }
 
     /**
@@ -238,9 +185,9 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withTimeout(float $seconds) : Hayttp
+    public function withTimeout() : Hayttp
     {
-        return $this->withDeferredCall('withTimeout', [$seconds]);
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -248,10 +195,120 @@ class Hayttp
      *
      * @param string $userAgent
      *
-     * @return RequestContract
+     * @return Hayttp
      */
-    public function withUserAgent(string $userAgent) : Hayttp
+    public function withUserAgent() : Hayttp
     {
-        return $this->withDeferredCall('withUserAgent', $userAgent);
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Set the allowed crypto method.
+     *
+     * A Crypto method can be one of the CRYPTO_* constants
+     *
+     * @param string
+     *
+     * @return Hayttp
+     */
+    public function withCryptoMethod() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Disable all SSL certificate checks.
+     *
+     * @return Hayttp
+     */
+    public function withInsecureSsl() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Set the transfer engine.
+     *
+     * @param EngineContract $engine
+     *
+     * @return Hayttp
+     */
+    public function withEngine() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Set all headers.
+     *
+     * @param array $headers
+     *
+     * @return Hayttp
+     */
+    public function withHeaders() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Add an array of headers.
+     *
+     * @param array $headers
+     *
+     * @return Hayttp
+     */
+    public function withAdditionalHeaders() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Set the proxy server.
+     *
+     * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).
+     *
+     * @return Hayttp
+     */
+    public function withProxy() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Add a header to the request.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return Hayttp
+     */
+    public function withHeader() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Set the TLS version.
+     *
+     * @param string $version currently, 1.*, 1.0, 1.1 and 1.2 are supported
+     *
+     * @return Hayttp
+     */
+    public function withTls() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * Add a basic authorization (which is actually an authenticaation) header.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return Hayttp
+     */
+    public function withBasicAuth() : Hayttp
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
 }
