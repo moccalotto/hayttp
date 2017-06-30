@@ -11,11 +11,9 @@
 namespace Moccalotto\Hayttp\Traits;
 
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
-use Moccalotto\Hayttp\Payloads;
 
 trait SendsRequest
 {
-
     /**
      * Send/execute the request.
      *
@@ -25,7 +23,7 @@ trait SendsRequest
      */
     public function send() : ResponseContract
     {
-        $clone = $this->with('engine', $this->engine ?: new Engines\NativeEngine);
+        $clone = $this->with('engine', $this->engine ?: new Engines\NativeEngine());
 
         foreach ($this->mockedEndpoints as $endpoint) {
             if ($endpoint->handles($clone)) {
@@ -48,7 +46,6 @@ trait SendsRequest
     {
         return $this->withRawPayload($payload, $contentType)->send();
     }
-
 
     /**
      * Set a JSON payload and send/execute the request.

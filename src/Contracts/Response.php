@@ -309,7 +309,7 @@ interface Response
     public function ensureStatusIn(array $validCodes) : Response;
 
     /**
-     * Ensure that the status code equals $validCode
+     * Ensure that the status code equals $validCode.
      *
      * @param int $validCode
      *
@@ -320,7 +320,7 @@ interface Response
     public function ensureStatus($validCode);
 
     /**
-     * Ensure that the status code is in the range [200...299]
+     * Ensure that the status code is in the range [200...299].
      *
      * @param int $validCode
      *
@@ -331,7 +331,7 @@ interface Response
     public function ensure2xx();
 
     /**
-     * Ensure that the status code is 200
+     * Ensure that the status code is 200.
      *
      * @return Response
      *
@@ -340,7 +340,7 @@ interface Response
     public function ensure200();
 
     /**
-     * Ensure that the status code is 201
+     * Ensure that the status code is 201.
      *
      * @return Response
      *
@@ -349,7 +349,7 @@ interface Response
     public function ensure201();
 
     /**
-     * Ensure that the status code is 204
+     * Ensure that the status code is 204.
      *
      * @return Response
      *
@@ -358,7 +358,7 @@ interface Response
     public function ensure204();
 
     /**
-     * Ensure that the status code is 301
+     * Ensure that the status code is 301.
      *
      * @return Response
      *
@@ -367,7 +367,7 @@ interface Response
     public function ensure301();
 
     /**
-     * Ensure that the status code is 302
+     * Ensure that the status code is 302.
      *
      * @return Response
      *
@@ -376,7 +376,7 @@ interface Response
     public function ensure302();
 
     /**
-     * Ensure that the content type is application/json
+     * Ensure that the content type is application/json.
      *
      * @return Response
      *
@@ -385,7 +385,7 @@ interface Response
     public function ensureJson();
 
     /**
-     * Ensure that the content type is application/xml
+     * Ensure that the content type is application/xml.
      *
      * @return Response
      *

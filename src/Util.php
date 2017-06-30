@@ -71,7 +71,8 @@ class Util
     /**
      * Recursive array sort (sort by keys if possible, otherwise sort by values).
      *
-     * @param  array $array
+     * @param array $array
+     *
      * @return array
      */
     public static function recursiveArraySort($array)
@@ -84,10 +85,12 @@ class Util
 
         if (array_keys($array) === range(0, count($array) - 1)) {
             sort($array);
+
             return $array;
         }
 
         ksort($array);
+
         return $array;
     }
 

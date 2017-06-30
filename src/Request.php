@@ -11,11 +11,9 @@
 namespace Moccalotto\Hayttp;
 
 use LogicException;
-use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * HTTP Request class.

@@ -11,7 +11,6 @@
 namespace Moccalotto\Hayttp\Traits;
 
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Payloads;
 
 trait DeprecatedRequestMethods
 {
@@ -43,7 +42,6 @@ trait DeprecatedRequestMethods
     {
         return $this->withJsonPayload($payload);
     }
-
 
     /**
      * Set a XML payload.

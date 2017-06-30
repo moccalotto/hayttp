@@ -4,7 +4,6 @@ use Moccalotto\Hayttp\Hayttp;
 use Moccalotto\Hayttp\Contracts\Response;
 
 if (!function_exists('hayttp')) {
-
     /**
      * Create a Hayttp instance or perform a GET request.
      *

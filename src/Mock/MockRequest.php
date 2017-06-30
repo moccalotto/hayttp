@@ -65,11 +65,9 @@ class MockRequest extends BaseRequest
     /**
      * We do not allow stacking of mocked end points.
      *
-     * @param string $methodPattern
-     * @param string $urlPattern
+     * @param string   $methodPattern
+     * @param string   $urlPattern
      * @param callable $callback
-     *
-     * @return void
      *
      * @throws LogicException always
      *
@@ -83,7 +81,7 @@ class MockRequest extends BaseRequest
     /**
      * Assert that the request has a given content type.
      *
-     * @param string $expected the expected content type.
+     * @param string $expected the expected content type
      *
      * @return $this
      */
@@ -99,16 +97,16 @@ class MockRequest extends BaseRequest
     }
 
     /**
-     * Assert that the request has a given http method
+     * Assert that the request has a given http method.
      *
-     * @param string $expected the expected method.
+     * @param string $expected the expected method
      *
      * @return $this
      */
     public function assertMethod($method)
     {
         $expected = strtoupper($method);
-        $actual   = strtoupper($this->method);
+        $actual = strtoupper($this->method);
         PHPUnit::assertEquals($expected, $actual, Util::makePhpUnitExpectationMessage(
             'Invalid method',
             $expected,

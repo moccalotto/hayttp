@@ -37,7 +37,7 @@ class ResponseException extends RuntimeException
     }
 
     /**
-     * Get the request that caused the bad response
+     * Get the request that caused the bad response.
      *
      * @return RequestContract
      */

@@ -110,7 +110,7 @@ class Hayttp
     }
 
     /**
-     * Easy request construction
+     * Easy request construction.
      */
     public function __call($methodName, $args)
     {
@@ -124,7 +124,7 @@ class Hayttp
     }
 
     /**
-     * Forward calls to default instance
+     * Forward calls to default instance.
      */
     public static function __callStatic($methodName, $args)
     {
@@ -148,10 +148,10 @@ class Hayttp
     }
 
     /**
-     * Having created a request, apply these calls to the
+     * Having created a request, apply these calls to the.
      *
      * @param string $methodName
-     * @param array $args
+     * @param array  $args
      *
      * @return Hayttp
      */

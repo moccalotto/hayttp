@@ -10,7 +10,6 @@
 
 namespace Moccalotto\Hayttp\Mock;
 
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**

@@ -18,7 +18,7 @@ trait MakesResponseAssertions
     /**
      * Throw a ResponseException if $success is false.
      *
-     * @param bool $success
+     * @param bool   $success
      * @param string $message
      *
      * @return ResponseContract
@@ -81,7 +81,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code equals $validCode
+     * Ensure that the status code equals $validCode.
      *
      * @param int $validCode
      *
@@ -98,7 +98,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is in the range [200...299]
+     * Ensure that the status code is in the range [200...299].
      *
      * @param int $validCode
      *
@@ -112,7 +112,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is 200
+     * Ensure that the status code is 200.
      *
      * @return ResponseContract
      *
@@ -124,7 +124,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is 201
+     * Ensure that the status code is 201.
      *
      * @return ResponseContract
      *
@@ -136,7 +136,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is 204
+     * Ensure that the status code is 204.
      *
      * @return ResponseContract
      *
@@ -148,7 +148,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is 301
+     * Ensure that the status code is 301.
      *
      * @return ResponseContract
      *
@@ -160,7 +160,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the status code is 302
+     * Ensure that the status code is 302.
      *
      * @return ResponseContract
      *
@@ -172,7 +172,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the content type is application/json
+     * Ensure that the content type is application/json.
      *
      * @return ResponseContract
      *
@@ -187,7 +187,7 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Ensure that the content type is application/xml
+     * Ensure that the content type is application/xml.
      *
      * @return ResponseContract
      *
