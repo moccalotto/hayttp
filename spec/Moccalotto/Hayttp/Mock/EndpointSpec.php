@@ -44,7 +44,7 @@ class EndpointSpec extends ObjectBehavior
 
         $response->shouldHaveType('Moccalotto\Hayttp\Mock\MockResponse');
 
-        $response->is2xx()->shouldBe(true);
+        $response->statusCode()->shouldBe('200');
 
         $response->contentType()->shouldBe('application/json');
         $response->decoded()->scheme->shouldBe('https');

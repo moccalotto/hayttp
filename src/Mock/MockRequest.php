@@ -43,7 +43,7 @@ class MockRequest extends BaseRequest
     {
         return new MockResponse(
             '',
-            ['200  OK'],
+            ['HTTP/1.1 200 OK'],
             ['Mocked-Response' => true],
             $this
         );

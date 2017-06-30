@@ -22,7 +22,14 @@ use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
  */
 class MockResponse extends BaseResponse
 {
-    public function createFromBaseResponse(ResponseContract $response)
+    /**
+     * Factory.
+     *
+     * @param ResponseContract $response
+     *
+     * @return MockResponse
+     */
+    public static function createFromBaseResponse(ResponseContract $response)
     {
         return new static(
             $response->body(),
@@ -49,10 +56,10 @@ class MockResponse extends BaseResponse
         return $clone;
     }
 
-    public function withStatus($statusCode, $reasonPhrase)
+    public function withStatus($statusCode, $reasonPhrase, $httpVersion = '1.0')
     {
         $clone = clone $this;
-        $clone->headers[0] = sprintf('%d %s', $statusCode, $reasonPhrase);
+        $clone->headers[0] = sprintf('HTTP/%s %d %s', $httpVersion, $statusCode, $reasonPhrase);
 
         return $clone;
     }
@@ -62,7 +69,12 @@ class MockResponse extends BaseResponse
         $tmp = [];
 
         foreach ($headers as $key => $val) {
-            if (is_int($key) && strpos($val, ':')) {
+            if (is_int($key) && strpos($val, ':') === false) {
+                $tmp[] = $val;
+                continue;
+            }
+
+            if (is_int($key)) {
                 list($key, $val) = explode(':', $val, 2);
             }
 

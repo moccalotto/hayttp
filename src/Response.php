@@ -84,7 +84,7 @@ class Response implements ResponseContract
      *
      * @throws LogicException
      */
-    protected function parseStatusLine() : array
+    public function parseStatusLine() : array
     {
         if (empty($this->headers)) {
             throw new LogicException('This response has no headers');
