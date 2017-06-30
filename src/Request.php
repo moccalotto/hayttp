@@ -86,6 +86,11 @@ class Request implements RequestContract
     protected $responseCalls = [];
 
     /**
+     * @var array
+     */
+    protected $mockedEndpoints = [];
+
+    /**
      * Clone object with a new property value.
      *
      * @param string $property
@@ -309,13 +314,15 @@ class Request implements RequestContract
      */
     public function send() : ResponseContract
     {
-        $clone = clone $this;
+        $clone = $this->with('engine', $this->engine, new Engines\NativeEngine);
 
-        $engine = $this->engine ?: new Engines\NativeEngine();
+        foreach ($this->mockedEndpoints as $endpoint) {
+            if ($endpoint->handles($clone)) {
+                return $endpoint->handle($clone->with('mockedEndpoints', []));
+            }
+        }
 
-        $response = $engine->send($clone);
-
-        return $response;
+        return $clone->engine->send($clone);
     }
 
     /**

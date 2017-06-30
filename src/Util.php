@@ -67,4 +67,42 @@ class Util
             $url
         ));
     }
+
+    /**
+     * Recursive array sort (sort by keys if possible, otherwise sort by values).
+     *
+     * @param  array $array
+     * @return array
+     */
+    public static function recursiveArraySort($array)
+    {
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $value = static::recursiveArraySort($value);
+            }
+        }
+
+        if (array_keys($array) === range(0, count($array) - 1)) {
+            sort($array);
+            return $array;
+        }
+
+        ksort($array);
+        return $array;
+    }
+
+    public static function makeJsonFragmentErrorMessage($message, $expected, $actual)
+    {
+        return $message
+            . PHP_EOL
+            . PHP_EOL
+            . "[$expected]"
+            . PHP_EOL
+            . PHP_EOL
+            . 'within'
+            . PHP_EOL
+            . PHP_EOL
+            . "[$actual]"
+            . PHP_EOL;
+    }
 }

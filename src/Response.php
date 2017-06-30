@@ -175,7 +175,7 @@ class Response implements ResponseContract
         $startsWith = $headerName . ':';
 
         foreach ($this->headers as $header) {
-            if (strpos($header, $startsWith) === 0) {
+            if (stripos($header, $startsWith) === 0) {
                 return trim(explode(':', $header, 2)[1]);
             }
         }
