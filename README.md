@@ -57,14 +57,13 @@ A more interesting POST example.
 ```php
 $response = Hayttp::post($url)
     ->expectsJson()
-    ->sendsJson([
+    ->sendJson([
         'this' => 'associative',
         'array' => 'will',
         'be' => 'converted',
         'to' => 'a',
         'json' => 'object',
-    ])
-    ->send();
+    ]);
 ```
 
 A DELETE request that expects an XML body in the response.
@@ -113,3 +112,26 @@ Decode the respose, inferring the data type from the Content-Type header:
 ```php
 $variable = Hayttp::get($url)->send()->decoded();
 ```
+
+### Helper function
+
+You can use the global `hayttp` method to access the default hayttp instance.
+
+```php
+$response = hayttp()->withTimeout(10)
+                ->post($url)
+                ->sendJson([
+                    'foo' => 'bar',
+                ]);
+```
+
+You can also use the `hayttp` method to make instant GET requests.
+
+```php
+
+// All the lines below are equivalent
+$response = Hayttp::get($url)->send();
+$response = hayttp()->get($url)->send();
+$response = hayttp($url);
+```
+

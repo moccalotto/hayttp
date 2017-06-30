@@ -16,19 +16,20 @@ use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
-use SimpleXmlElement;
 
 /**
  * HTTP Request class.
  */
 class Request implements RequestContract
 {
+    use Traits\SendsRequest;
     use Traits\HasWithMethods;
     use Traits\HasRequestAccessors;
     use Traits\CreatesRequests;
     use Traits\HasCompleteDebugInfo;
     use Traits\ExpectsCommonMimeTypes;
     use Traits\HandlesMultipartPayloads;
+    use Traits\DeprecatedRequestMethods;
 
     /**
      * @var string
@@ -212,69 +213,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Set the raw payload of the request.
-     *
-     * @param string $payload
-     * @param string $contentType
-     *
-     * @return RequestContract
-     */
-    public function sendsRaw(string $payload, string $contentType = 'application/octet-stream') : RequestContract
-    {
-        if ($this->payload) {
-            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
-        }
-
-        return $this->withPayload(new Payloads\RawPayload($payload, $contentType));
-    }
-
-    /**
-     * Set a JSON payload.
-     *
-     * @param array|object $payload the payload to send - the payload will always be json encoded
-     *
-     * @return RequestContract
-     */
-    public function sendsJson($payload) : RequestContract
-    {
-        return $this->sendsRaw(
-            json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            'application/json'
-        );
-    }
-
-    /**
-     * Set a XML payload.
-     *
-     * @param SimpleXmlElement|string $xml
-     *
-     * @return RequestContract
-     */
-    public function sendsXml($xml) : RequestContract
-    {
-        if ($xml instanceof SimpleXmlElement) {
-            $xml = $xml->asXml();
-        }
-
-        return $this->sendsRaw($xml, 'application/xml');
-    }
-
-    /**
-     * Set a URL-encoded payload.
-     *
-     * @param array $data key/value pairs to post as normal urlencoded fields
-     *
-     * @return RequestContract
-     */
-    public function sends(array $data) : RequestContract
-    {
-        return $this->sendsRaw(
-            http_build_query($data, '', '&', PHP_QUERY_RFC1738),
-            'application/x-www-form-urlencoded'
-        );
-    }
-
-    /**
      * Add Accept header.
      *
      * @param string $mimeType
@@ -303,26 +241,6 @@ class Request implements RequestContract
         }
 
         return $this->withHeader('Accept', implode(', ', $parts));
-    }
-
-    /**
-     * Send/execute the request.
-     *
-     * @return ResponseContract
-     *
-     * @throws ConnectionException if connection could not be established
-     */
-    public function send() : ResponseContract
-    {
-        $clone = $this->with('engine', $this->engine, new Engines\NativeEngine);
-
-        foreach ($this->mockedEndpoints as $endpoint) {
-            if ($endpoint->handles($clone)) {
-                return $endpoint->handle($clone->with('mockedEndpoints', []));
-            }
-        }
-
-        return $clone->engine->send($clone);
     }
 
     /**

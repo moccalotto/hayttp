@@ -126,7 +126,7 @@ interface Request
      *
      * @return Request
      */
-    public function sendsRaw(string $body, string $contentType = 'application/octet-stream') : Request;
+    public function withRawPayload(string $body, string $contentType = 'application/octet-stream') : Request;
 
     /**
      * Set a JSON payload.
@@ -135,7 +135,7 @@ interface Request
      *
      * @return Request
      */
-    public function sendsJson($body) : Request;
+    public function withJsonPayload($body) : Request;
 
     /**
      * Set a XML payload.
@@ -144,7 +144,7 @@ interface Request
      *
      * @return Request
      */
-    public function sendsXml($xml) : Request;
+    public function withXmlPayload($xml) : Request;
 
     /**
      * Set a URL-encoded payload.
@@ -153,7 +153,7 @@ interface Request
      *
      * @return Request
      */
-    public function sends(array $data) : Request;
+    public function withFormDataPayload(array $data) : Request;
 
     /**
      * Add Accept header.
