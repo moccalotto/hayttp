@@ -118,17 +118,16 @@ $variable = Hayttp::get($url)->send()->decoded();
 You can use the global `hayttp` method to access the default hayttp instance.
 
 ```php
-$response = hayttp()->withTimeout(10)
-                ->post($url)
-                ->sendJson([
-                    'foo' => 'bar',
-                ]);
+$body = hayttp()->withTimeout(10)
+    ->post($url)
+    ->ensureJson()
+    ->sendJson(['foo' => 'bar',])
+    ->decded();
 ```
 
 You can also use the `hayttp` method to make instant GET requests.
 
 ```php
-
 // All the lines below are equivalent
 $response = Hayttp::get($url)->send();
 $response = hayttp()->get($url)->send();
