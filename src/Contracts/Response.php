@@ -15,16 +15,6 @@ use SimpleXmlElement;
 interface Response
 {
     /**
-     * Constructor.
-     *
-     * @param string  $body
-     * @param array   $headers
-     * @param array   $metadata
-     * @param Request $request
-     */
-    public function __construct(string $body, array $headers, array $metadata, Request $request);
-
-    /**
      * Cast to string.
      *
      * @return string
