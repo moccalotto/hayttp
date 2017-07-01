@@ -74,6 +74,21 @@ trait HasRequestAccessors
     }
 
     /**
+     * Get the contents of a given header.
+     *
+     * @param string $headerName The name of the header to search for
+     *
+     * @return string|null the contents of the header or null if it was not found
+     */
+    public function header($headerName)
+    {
+        return $this->headers[
+            strtolower(trim($headerName))
+        ] ?? null;
+    }
+
+
+    /**
      * The request payload.
      *
      * @return PayloadContract
@@ -131,5 +146,15 @@ trait HasRequestAccessors
     public function body()
     {
         return (string) $this->payload;
+    }
+
+    /**
+     * Get the contents of the Content-Type header.
+     *
+     * @return string|null
+     */
+    public function contentType()
+    {
+        return $this->header('Content-Type');
     }
 }

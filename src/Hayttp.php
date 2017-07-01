@@ -11,6 +11,7 @@
 namespace Moccalotto\Hayttp;
 
 use BadMethodCallException;
+use Moccalotto\Hayttp\Mock\MockResponse;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
@@ -118,6 +119,10 @@ class Hayttp
 
         if (in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'])) {
             return $this->createRequest($method, $args[0]);
+        }
+
+        if ($methodName == 'createMockResponse') {
+            return MockResponse::fromRequest($args[0]);
         }
 
         throw new BadMethodCallException(sprintf('Unknown method »%s«', $methodName));

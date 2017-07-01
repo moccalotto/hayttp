@@ -11,6 +11,7 @@
 namespace Moccalotto\Hayttp\Traits;
 
 use SimpleXmlElement;
+use Moccalotto\Hayttp\Util;
 use UnexpectedValueException;
 use Moccalotto\Hayttp\Payloads\RawPayload;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
@@ -107,7 +108,7 @@ trait HasWithMethods
      */
     public function withHeaders(array $headers) : RequestContract
     {
-        return $this->with('headers', $headers);
+        return $this->with('headers', Util::normalizeHeaders($headers));
     }
 
     /**
@@ -117,9 +118,20 @@ trait HasWithMethods
      *
      * @return RequestContract
      */
-    public function withAdditionalHeaders(array $headers) : RequestContract
+    public function withAdditionalHeaders(array $additionalHeaders) : RequestContract
     {
-        return $this->withHeaders(array_merge($this->headers, $headers));
+        $res = $this->headers;
+        $additionalHeaders = Util::normalizeHeaders($additionalHeaders);
+
+        foreach ($additionalHeaders as $key => $value) {
+            if (isset($res[$key])) {
+                $res[$key] .= ';' . $value;
+            } else {
+                $res[$key] = $value;
+            }
+        }
+
+        return $this->withHeaders($res);
     }
 
     /**

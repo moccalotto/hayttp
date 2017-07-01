@@ -132,7 +132,8 @@ class RequestSpec extends ObjectBehavior
             ['ensureJson', []]
         ]);
 
-        $clone->headers()['Accept']->shouldContain('application/json');
+        $clone->header('accept')->shouldContain('application/json');
+        $clone->header('ACCEPT')->shouldContain('application/json');
     }
 
 
@@ -146,6 +147,7 @@ class RequestSpec extends ObjectBehavior
             ['ensureXml', []]
         ]);
 
-        $clone->headers()['Accept']->shouldContain('application/xml');
+        $clone->header('accept')->shouldContain('application/xml');
+        $clone->header('ACCEPT')->shouldContain('application/xml');
     }
 }

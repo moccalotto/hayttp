@@ -11,6 +11,7 @@
 namespace spec\Moccalotto\Hayttp;
 
 use Moccalotto\Hayttp\Request;
+use Moccalotto\Hayttp\Util;
 use PhpSpec\ObjectBehavior;
 
 /**
@@ -43,11 +44,14 @@ class ResponseSpec extends ObjectBehavior
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->body()->shouldBe($body);
-        $this->headers()->shouldBe($headers);
         $this->metadata()->shouldBe($metadata);
         $this->request()->shouldBe($request);
         $this->statusCode()->shouldBe('200');
         $this->reasonPhrase()->shouldBe('OK');
+        $this->headers()->shouldBe([
+            0 => 'HTTP/1.0 200 OK',
+            'content-type' => 'application/json',
+        ]);
     }
 
     public function it_decodes_json(Request $request)
@@ -83,7 +87,7 @@ class ResponseSpec extends ObjectBehavior
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
         $this->body()->shouldBe($body);
-        $this->headers()->shouldBe($headers);
+        $this->headers()->shouldBe(Util::normalizeHeaders($headers));
         $this->metadata()->shouldBe($metadata);
         $this->request()->shouldBe($request);
         $this->statusCode()->shouldBe('200');

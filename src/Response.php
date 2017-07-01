@@ -12,6 +12,7 @@ namespace Moccalotto\Hayttp;
 
 use LogicException;
 use SimpleXmlElement;
+use Moccalotto\Hayttp\Util;
 use UnexpectedValueException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
@@ -54,7 +55,7 @@ class Response implements ResponseContract
     public function __construct(string $body, array $headers, array $metadata, RequestContract $request)
     {
         $this->body = $body;
-        $this->headers = $headers;
+        $this->headers = Util::normalizeHeaders($headers);
         $this->request = $request;
         $this->metadata = $metadata;
 
@@ -86,8 +87,11 @@ class Response implements ResponseContract
      */
     public function parseStatusLine() : array
     {
-        if (empty($this->headers)) {
-            throw new LogicException('This response has no headers');
+        if (empty($this->headers[0])) {
+            throw new LogicException(sprintf(
+                'This response has no initial header. Headers found: %s',
+                print_r($this->headers, true)
+            ));
         }
 
         return preg_split('/\s+/', $this->headers[0]);
@@ -172,13 +176,7 @@ class Response implements ResponseContract
      */
     public function header($headerName)
     {
-        $startsWith = $headerName . ':';
-
-        foreach ($this->headers as $header) {
-            if (stripos($header, $startsWith) === 0) {
-                return trim(explode(':', $header, 2)[1]);
-            }
-        }
+        return $this->headers[strtolower(trim($headerName))] ?? null;
     }
 
     /**
@@ -198,7 +196,7 @@ class Response implements ResponseContract
      */
     public function isXml() : bool
     {
-        return in_array($this->contentTypeWithoutCharset(), [
+        return $this->hasContentType([
             'application/xml',
             'text/xml',
         ]);
@@ -211,7 +209,7 @@ class Response implements ResponseContract
      */
     public function isPlainText() : bool
     {
-        return $this->contentTypeWithoutCharset() === 'text/plain';
+        return $this->hasContentType('text/plain');
     }
 
     /**
@@ -223,7 +221,7 @@ class Response implements ResponseContract
      */
     public function isText() : bool
     {
-        return strpos($this->contentTypeWithoutCharset(), 'text/') === 0;
+        return strpos($this->contentType(), 'text/') === 0;
     }
 
     /**
@@ -233,8 +231,40 @@ class Response implements ResponseContract
      */
     public function isUrlEncoded() : bool
     {
-        return $this->contentTypeWithoutCharset() === 'application/x-www-form-urlencoded';
+        return $this->hasContentType('application/x-www-form-urlencoded');
     }
+
+    /**
+     * Does the response have a given content type.
+     *
+     * @param string|string[] $contentType
+     *
+     * @return bool
+     */
+    public function hasContentType($contentType)
+    {
+        if (is_array($contentType)) {
+            foreach ($contentType as $option) {
+                if ($this->hasContentType($option)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        $expected = explode(';', $contentType);
+        $actual   = explode(';', $this->contentType());
+
+        foreach (array_keys($expected) as $idx) {
+            if ($expected[$idx] != $actual[$idx]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * Get the response body.
@@ -334,11 +364,29 @@ class Response implements ResponseContract
      */
     public function render() : string
     {
-        $crlf = "\r\n";
-
-        return implode($crlf, $this->headers)
-            . $crlf
-            . $crlf
+        return $this->renderHeaders()
+            . "\r\n"
             . $this->body;
+    }
+
+    /**
+     * Render headers in to a well-formatted string.
+     *
+     */
+    protected function renderHeaders()
+    {
+        $res = '';
+
+        foreach ($this->headers as $key => $value) {
+            if (is_int($key)) {
+                $res .= $value;
+            } else {
+                $key = Util::normalizeHeaderName($key);
+                $res .= "$key: {$value}";
+            }
+            $res .= "\r\n";
+        }
+
+        return $res;
     }
 }

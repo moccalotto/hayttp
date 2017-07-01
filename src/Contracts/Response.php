@@ -15,16 +15,6 @@ use SimpleXmlElement;
 interface Response
 {
     /**
-     * Constructor.
-     *
-     * @param string  $body
-     * @param array   $headers
-     * @param array   $metadata
-     * @param Request $request
-     */
-    public function __construct(string $body, array $headers, array $metadata, Request $request);
-
-    /**
      * Cast to string.
      *
      * @return string
@@ -58,6 +48,20 @@ interface Response
      * @return string
      */
     public function reasonPhrase() : string;
+
+    /**
+     * Get the contents of the Content-Type header.
+     *
+     * @return string|null
+     */
+    public function contentType();
+
+    /**
+     * Get the content type, but remove anything after the first semi-colon.
+     *
+     * @return string|null
+     */
+    public function contentTypeWithoutCharset();
 
     /**
      * Get the headers.
@@ -286,6 +290,15 @@ interface Response
     public function isUrlEncoded() : bool;
 
     /**
+     * Does the response have a given content type.
+     *
+     * @param string|string[] $contentType
+     *
+     * @return bool
+     */
+    public function hasContentType($contentType);
+
+    /**
      * Ensure that status code is in a given range.
      *
      * @param int $min
@@ -392,4 +405,15 @@ interface Response
      * @throws ResponseException
      */
     public function ensureXml();
+
+    /**
+     * Ensure that the response has a given content type
+     *
+     * @param string|strings[] $contentType
+     *
+     * @return ResponseContract
+     *
+     * @throws R\ContentTypeException
+     */
+    public function ensureContentType($contentType);
 }

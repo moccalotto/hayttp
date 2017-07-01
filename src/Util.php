@@ -108,4 +108,55 @@ class Util
             . "[$actual]"
             . PHP_EOL;
     }
+
+    public static function normalizeHeaders(array $headers)
+    {
+        $res = [];
+
+        foreach ($headers as $key => $value) {
+            if (is_int($key) && strpos($value, ':') === false) {
+                $res[] = trim($value);
+                continue;
+            }
+
+            if (is_int($key)) {
+                list($key, $value) = explode(':', $value, 2);
+            }
+
+            $key = trim(strtolower($key));
+            $value = trim($value);
+
+            if (isset($res[$key])) {
+                $res[$key] .= ';' . $value;
+            } else {
+                $res[$key] = $value;
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * Normalize a header name.
+     *
+     * content-type becomes Content-Type
+     * X-FOO-Bar becomes X-Foo-Bar
+     *
+     * @param string $headerName
+     *
+     * @return string
+     */
+    public static function normalizeHeaderName($headerName)
+    {
+        return implode(
+            '-',
+            array_map(
+                'ucfirst',
+                explode(
+                    '-',
+                    trim($headerName)
+                )
+            )
+        );
+    }
 }

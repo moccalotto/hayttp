@@ -26,6 +26,27 @@ class MockResponse extends BaseResponse
     /**
      * Factory.
      *
+     * Create an empty response from a given request.
+     */
+    public static function fromRequest($request)
+    {
+        $contentType = $request->headers('accept') ?: 'application/octet-stream';
+
+        return new static(
+            '',
+            [
+                0 => 'HTTP/1.0 200 OK',
+                'Content-Type' => $contentType,
+            ],
+            ['Mock' => 'Empty'],
+            $request
+        );
+    }
+
+
+    /**
+     * Factory.
+     *
      * @param ResponseContract $response
      *
      * @return MockResponse
@@ -65,34 +86,42 @@ class MockResponse extends BaseResponse
         return $clone;
     }
 
-    public function withHeaders(array $headers) : MockResponse
+    public function withHeaders(array $headers)
     {
-        $tmp = [];
+        return $this->with('headers', Util::normalizeHeaders($headers));
+    }
 
-        foreach ($headers as $key => $val) {
-            if (is_int($key) && strpos($val, ':') === false) {
-                $tmp[] = $val;
-                continue;
+    public function withAdditionalHeaders(array $additionalHeaders)
+    {
+        $res = $this->headers;
+        $additionalHeaders = Util::normalizeHeaders($additionalHeaders);
+
+        foreach ($additionalHeaders as $key => $value) {
+            if (isset($res[$key])) {
+                $res[$key] .= ';' . $value;
+            } else {
+                $res[$key] = $value;
             }
-
-            if (is_int($key)) {
-                list($key, $val) = explode(':', $val, 2);
-            }
-
-            $key = strtolower($key);
-            $val = ltrim($val);
-            $tmp[] = sprintf('%s: %s', $key, $val);
         }
 
-        return $this->with('headers', $tmp);
+        return $this->withHeaders($res);
     }
+
+    public function withContentType($contentType)
+    {
+        $headers = $this->headers;
+
+        $headers['content-type'] = $contentType;
+
+        return $this->withHeaders($headers);
+    }
+
 
     public function withHeader($name, $value)
     {
-        $headers = $this->headers;
-        $headers[strtolower($name)] = $value;
-
-        return $this->withHeaders($headers);
+        return $this->withAdditionalHeaders(
+            [$name, $value]
+        );
     }
 
     public function withBody($body) : MockResponse
@@ -105,14 +134,14 @@ class MockResponse extends BaseResponse
         return $this->withBody(json_encode(
             $payload,
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        ))->withHeader('Content-Type', 'application/json');
+        ))->withContentType('application/json');
     }
 
     public function withXmlBody($xml)
     {
         return $this->withBody(json_encode(
             $xml instanceof SimpleXmlElement ? $xml->asXml() : $xml
-        ))->withHeader('Content-Type', 'application/xml');
+        ))->withContentType('application/xml');
     }
 
     /**

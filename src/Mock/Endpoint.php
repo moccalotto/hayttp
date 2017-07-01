@@ -68,7 +68,7 @@ class Endpoint
 
         $response = call_user_func(
             $this->handler,
-            new MockRequest($request),
+            clone $request,
             new Route($matches)
         );
 

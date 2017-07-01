@@ -10,6 +10,7 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
+use Moccalotto\Hayttp\Exceptions\Response as R;
 use Moccalotto\Hayttp\Exceptions\ResponseException;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
@@ -18,17 +19,17 @@ trait MakesResponseAssertions
     /**
      * Throw a ResponseException if $success is false.
      *
-     * @param bool   $success
-     * @param string $message
+     * @param bool              $success
+     * @param ResponseException $exception
      *
      * @return ResponseContract
      *
      * @throws ResponseException
      */
-    protected function ensure($success, $message) : ResponseContract
+    protected function ensure($success, ResponseException $exception) : ResponseContract
     {
         if (!$success) {
-            throw new ResponseException($this, $message);
+            throw $exception;
         }
 
         return $this;
@@ -42,7 +43,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensureStatusInRange($min, $max) : ResponseContract
     {
@@ -50,11 +51,14 @@ trait MakesResponseAssertions
 
         return $this->ensure(
             $success,
-            sprintf(
-                'Expected status code to be in range [%d...%d], but %d was returned',
-                $min,
-                $max,
-                $this->statusCode()
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be in range [%d...%d], but %d was returned',
+                    $min,
+                    $max,
+                    $this->statusCode()
+                )
             )
         );
     }
@@ -66,16 +70,19 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensureStatusIn(array $validCodes) : ResponseContract
     {
         return $this->ensure(
             in_array($this->statusCode(), $validCodes),
-            sprintf(
-                'Expected status code to be one of [%s], but %d was returned',
-                implode($validCodes),
-                $this->statusCode()
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be one of [%s], but %d was returned',
+                    implode($validCodes),
+                    $this->statusCode()
+                )
             )
         );
     }
@@ -87,13 +94,20 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensureStatus($validCode)
     {
         return $this->ensure(
             $this->statusCode() == $validCode,
-            sprintf('Expected status code to be %d, but it was %d', $validCode, $this->statusCode())
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be %d, but it was %d',
+                    $validCode,
+                    $this->statusCode()
+                )
+            )
         );
     }
 
@@ -104,7 +118,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure2xx()
     {
@@ -116,7 +130,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure200()
     {
@@ -128,7 +142,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure201()
     {
@@ -140,7 +154,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure204()
     {
@@ -152,7 +166,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure301()
     {
@@ -164,7 +178,7 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\StatusCodeException
      */
     public function ensure302()
     {
@@ -176,14 +190,11 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\ContentTypeException
      */
     public function ensureJson()
     {
-        return $this->ensure(
-            $this->isJson(),
-            sprintf('Expected response type to be application/json, but it was %s', $this->contentType())
-        );
+        return $this->ensureContentType('application/json');
     }
 
     /**
@@ -191,13 +202,38 @@ trait MakesResponseAssertions
      *
      * @return ResponseContract
      *
-     * @throws ResponseException
+     * @throws R\ContentTypeException
      */
     public function ensureXml()
     {
+        return $this->ensureContentType(['application/xml', 'text/xml']);
+    }
+
+    /**
+     * Ensure that the response has a given content type
+     *
+     * @param string|strings[] $contentType
+     *
+     * @return ResponseContract
+     *
+     * @throws R\ContentTypeException
+     */
+    public function ensureContentType($contentType)
+    {
+        if (is_string($contentType)) {
+            $contentType = [$contentType];
+        }
+
         return $this->ensure(
-            $this->isXml(),
-            sprintf('Expected response type to be application/json, but it was %s', $this->contentType())
+            $this->hasContentType($contentType),
+            new R\ContentTypeException(
+                $this,
+                sprintf(
+                    'Expected response content type to be [%s], but it was %s',
+                    implode('|', $contentType),
+                    $this->contentType()
+                )
+            )
         );
     }
 }
