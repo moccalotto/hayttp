@@ -10,6 +10,7 @@
 
 namespace Moccalotto\Hayttp\Mock;
 
+use LogicException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 
 /**

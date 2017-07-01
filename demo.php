@@ -7,9 +7,23 @@
  * @copyright 2017
  * @license MIT
  */
-use Moccalotto\Hayttp\Request as Hayttp;
+use Moccalotto\Hayttp\Hayttp;
 
 require 'vendor/autoload.php';
+
+$handler = function ($request, $route) {
+    var_dump($request);
+    var_dump($route);
+
+    return 666;
+    return Hayttp::createMockResponse($request);
+};
+
+Hayttp::mockEndpoint('get', 'http://foo.dev/{path}', $handler);
+
+print_r(Hayttp::get('http://foo.dev/{path}')->send());
+
+die();
 
 //--------------------------------
 // Send some json

@@ -4,7 +4,7 @@ Hayttp::mockEndpoint('post', 'https://myapi.dev/api/v2/cats', function ($request
     $request->assertJson();
     $request->assertContains('cat');
 
-    $response = $request->createMockResponse()
+    $response = hayttp()->createMockResponse($request)
         ->withHeaders([
             'Content-Type' => 'application/json',
         ])->withJsonBody([

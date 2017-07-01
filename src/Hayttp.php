@@ -63,6 +63,22 @@ class Hayttp
     }
 
     /**
+     * Add a mocked end point to all requests created by the global Hayttp facade.
+     *
+     * @param string $methodPattern
+     * @param string $urlPattern
+     * @param callable $handler
+     *
+     * @return Hayttp
+     */
+    public static function mockEndpoint($methodPattern, $urlPattern, $handler)
+    {
+        return static::instance()
+            ->withMockedEndpoint($methodPattern, $urlPattern, $handler)
+            ->setAsGlobal();
+    }
+
+    /**
      * Constructor.
      *
      * @param string $requestFqcn the fqcn of a class that implements the RequestContract interface
@@ -166,6 +182,20 @@ class Hayttp
         $tmp[] = [$methodName, $args];
 
         return $this->with('deferredCalls', $tmp);
+    }
+
+    /**
+     * Add a mocked end point to all requests created.
+     *
+     * @param string $methodPattern
+     * @param string $urlPattern
+     * @param callable $handler
+     *
+     * @return Hayttp
+     */
+    public function withMockedEndpoint()
+    {
+        return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
 
     /**
