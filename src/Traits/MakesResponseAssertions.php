@@ -10,6 +10,7 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
+use Moccalotto\Hayttp\Exceptions\Response as R;
 use Moccalotto\Hayttp\Exceptions\ResponseException;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
@@ -19,16 +20,16 @@ trait MakesResponseAssertions
      * Throw a ResponseException if $success is false.
      *
      * @param bool $success
-     * @param string $message
+     * @param \Exception $exception
      *
      * @return ResponseContract
      *
      * @throws ResponseException
      */
-    protected function ensure($success, $message) : ResponseContract
+    protected function ensure($success, ResponseException $exception) : ResponseContract
     {
         if (!$success) {
-            throw new ResponseException($this, $message);
+            throw $exception;
         }
 
         return $this;
@@ -50,11 +51,14 @@ trait MakesResponseAssertions
 
         return $this->ensure(
             $success,
-            sprintf(
-                'Expected status code to be in range [%d...%d], but %d was returned',
-                $min,
-                $max,
-                $this->statusCode()
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be in range [%d...%d], but %d was returned',
+                    $min,
+                    $max,
+                    $this->statusCode()
+                )
             )
         );
     }
@@ -72,10 +76,13 @@ trait MakesResponseAssertions
     {
         return $this->ensure(
             in_array($this->statusCode(), $validCodes),
-            sprintf(
-                'Expected status code to be one of [%s], but %d was returned',
-                implode($validCodes),
-                $this->statusCode()
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be one of [%s], but %d was returned',
+                    implode($validCodes),
+                    $this->statusCode()
+                )
             )
         );
     }
@@ -93,7 +100,14 @@ trait MakesResponseAssertions
     {
         return $this->ensure(
             $this->statusCode() == $validCode,
-            sprintf('Expected status code to be %d, but it was %d', $validCode, $this->statusCode())
+            new R\StatusCodeException(
+                $this,
+                sprintf(
+                    'Expected status code to be %d, but it was %d',
+                    $validCode,
+                    $this->statusCode()
+                )
+            )
         );
     }
 
@@ -182,7 +196,10 @@ trait MakesResponseAssertions
     {
         return $this->ensure(
             $this->isJson(),
-            sprintf('Expected response type to be application/json, but it was %s', $this->contentType())
+            new R\ContentTypeException(
+                $this,
+                printf('Expected response type to be application/json, but it was %s', $this->contentType())
+            )
         );
     }
 
@@ -197,7 +214,10 @@ trait MakesResponseAssertions
     {
         return $this->ensure(
             $this->isXml(),
-            sprintf('Expected response type to be application/json, but it was %s', $this->contentType())
+            new R\ContentTypeException(
+                $this,
+                sprintf('Expected response type to be application/json, but it was %s', $this->contentType())
+            )
         );
     }
 }

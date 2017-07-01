@@ -18,7 +18,7 @@ use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 /**
  * Http connection exception.
  *
- * Thrown when we could not connect to the given URL because of timeout, dns, etc.
+ * Thrown when the response does not adhere to our expectations
  */
 class ResponseException extends RuntimeException
 {
