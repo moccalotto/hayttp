@@ -211,21 +211,11 @@ trait MakesResponseAssertions
 
         $replaced = array_replace_recursive($bodyArray, $dataArray);
 
-        $exception = new R\ContentException(
-            $this,
-            'Response body does not contain the specified data'
-            . PHP_EOL
-            . PHP_EOL
-            . 'Expected: '
-            . PHP_EOL
-            . print_r($dataArray, true)
-            . PHP_EOL
-            . PHP_EOL
-            . 'Actual: '
-            . PHP_EOL
-            . print_r($bodyArray, true)
-            . PHP_EOL
-        );
+        $exception = new R\ContentException($this, Util::makeExpectationMessage(
+            'Could not find data subset in response',
+            $dataArray,
+            $bodyArray
+        ));
 
         if ($strict && $replaced !== $bodyArray) {
             throw $exception;
@@ -415,43 +405,6 @@ trait MakesResponseAssertions
     }
 
     /**
-     * Assert that the response is a superset of the given JSON.
-     *
-     * @param array $data
-     *
-     * @return $this
-     */
-    public function assertJson(array $data) : ResponseContract
-    {
-    }
-
-    /**
-     * Get the assertion message for assertJson.
-     *
-     * @param array $data
-     *
-     * @return string
-     */
-    protected function assertJsonMessage(array $data) : ResponseContract
-    {
-        $expected = json_encode(
-            $data,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-        );
-
-        $actual = json_encode(
-            $this->jsonDecoded(),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-        );
-
-        return Util::makePhpUnitExpectationMessage(
-            'Unable to find json',
-            $expected,
-            $actual
-        );
-    }
-
-    /**
      * Assert that the response has the exact given JSON.
      *
      * @param array $data
@@ -502,7 +455,7 @@ trait MakesResponseAssertions
         foreach (Util::recursiveArraySort($data) as $key => $value) {
             $expected = substr(json_encode([$key => $value]), 1, -1);
 
-            $error = Util::makePhpUnitExpectationMessage(
+            $error = Util::makeExpectationMessage(
                 'Unable to find json fragment',
                 $expected,
                 $actual
@@ -530,7 +483,7 @@ trait MakesResponseAssertions
         foreach (Util::recursiveArraySort($data) as $key => $value) {
             $expected = substr(json_encode([$key => $value]), 1, -1);
 
-            $error = Util::makePhpUnitExpectationMessage(
+            $error = Util::makeExpectationMessage(
                 'Found unexpected json fragment',
                 $expected,
                 $actual

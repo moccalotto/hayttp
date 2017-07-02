@@ -94,22 +94,57 @@ class Util
         return $array;
     }
 
-    public static function makePhpUnitExpectationMessage($message, $expected, $actual)
+    /**
+     * Create an assertion/expectation message for assertions.
+     *
+     * @param string $message
+     * @param mixed $expected
+     * @param mixed $actual
+     *
+     * @return string
+     */
+    public static function makeExpectationMessage($message, $expected, $actual)
     {
+        $expected = json_encode($expected, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $actual = json_encode($actual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         return $message
             . PHP_EOL
             . PHP_EOL
-            . "[$expected]"
+            . $expected
             . PHP_EOL
             . PHP_EOL
-            . 'within'
+            . 'against'
             . PHP_EOL
             . PHP_EOL
-            . "[$actual]"
+            . $actual
             . PHP_EOL;
     }
 
-    public static function normalizeHeaders(array $headers)
+    /**
+     * Normalize an array of headers.
+     *
+     * Turns this:
+     *
+     * [
+     *      'HTTP/1.0 200 OK',
+     *      'Content-Type ' => ' application/json',
+     *      'x-foo-bar: thing',
+     *      'x-baz-bing: ',
+     * ]
+     *
+     * into this:
+     * [
+     *      'HTTP/1.0 200 OK',
+     *      'content-type' => 'application/json',
+     *      'x-foo-bar' => 'thing',
+     *      'x-foo-bing' => '',
+     * ]
+     *
+     * @param array $headers
+     *
+     * @return array
+     */
+    public static function normalizeHeaders($headers)
     {
         $res = [];
 
