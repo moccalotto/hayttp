@@ -25,7 +25,8 @@ $handler = function ($request, $route) {
 
 Hayttp::mockEndpoint('get', 'http://foo.dev/{path}', $handler);
 
-print_r(Hayttp::get('http://foo.dev/{path}')->send());
+Hayttp::get('http://foo.dev/{path}')->send()
+    ->assertStatus('201');
 
 die();
 
