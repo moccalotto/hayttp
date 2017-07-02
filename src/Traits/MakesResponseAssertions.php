@@ -10,6 +10,7 @@
 
 namespace Moccalotto\Hayttp\Traits;
 
+use Moccalotto\Hayttp\Util;
 use Moccalotto\Hayttp\Exceptions\Response as R;
 use Moccalotto\Hayttp\Exceptions\ResponseException;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
@@ -22,7 +23,7 @@ trait MakesResponseAssertions
      * @param bool              $success
      * @param ResponseException $exception
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -41,7 +42,7 @@ trait MakesResponseAssertions
      * @param int $min
      * @param int $max
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
@@ -68,7 +69,7 @@ trait MakesResponseAssertions
      *
      * @param int[] $validCodes
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
@@ -92,11 +93,11 @@ trait MakesResponseAssertions
      *
      * @param int $validCode
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensureStatus($validCode)
+    public function ensureStatus($validCode) : ResponseContract
     {
         return $this->ensure(
             $this->statusCode() == $validCode,
@@ -114,13 +115,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is in the range [200...299].
      *
-     * @param int $validCode
-     *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure2xx()
+    public function ensure2xx() : ResponseContract
     {
         return $this->ensureStatusInRange(200, 299);
     }
@@ -128,11 +127,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is 200.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure200()
+    public function ensure200() : ResponseContract
     {
         return $this->ensureStatus(200);
     }
@@ -140,11 +139,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is 201.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure201()
+    public function ensure201() : ResponseContract
     {
         return $this->ensureStatus(201);
     }
@@ -152,11 +151,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is 204.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure204()
+    public function ensure204() : ResponseContract
     {
         return $this->ensureStatus(204);
     }
@@ -164,11 +163,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is 301.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure301()
+    public function ensure301() : ResponseContract
     {
         return $this->ensureStatus(301);
     }
@@ -176,11 +175,11 @@ trait MakesResponseAssertions
     /**
      * Ensure that the status code is 302.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\StatusCodeException
      */
-    public function ensure302()
+    public function ensure302() : ResponseContract
     {
         return $this->ensureStatus(302);
     }
@@ -188,37 +187,79 @@ trait MakesResponseAssertions
     /**
      * Ensure that the content type is application/json.
      *
-     * @return ResponseContract
+     * @param array|object $data
+     * @param bool         $strict
+     *
+     * @return $this
      *
      * @throws R\ContentTypeException
      */
-    public function ensureJson()
+    public function ensureJson($data = [], bool $strict = true) : ResponseContract
     {
-        return $this->ensureContentType('application/json');
+        $this->ensureContentType('application/json');
+
+        if (empty($data)) {
+            return $this;
+        }
+
+        $bodyArray = Util::recursiveArraySort(json_decode($this->body(), true));
+        $dataArray = Util::recursiveArraySort(json_decode(json_encode($data), true));
+
+        if (!is_array($bodyArray)) {
+            throw new R\ContentException($this, 'Unparseable json in response body');
+        }
+
+        $replaced = array_replace_recursive($bodyArray, $dataArray);
+
+        $exception = new R\ContentException(
+            $this,
+            'Response body does not contain the specified data'
+            . PHP_EOL
+            . PHP_EOL
+            . 'Expected: '
+            . PHP_EOL
+            . print_r($dataArray, true)
+            . PHP_EOL
+            . PHP_EOL
+            . 'Actual: '
+            . PHP_EOL
+            . print_r($bodyArray, true)
+            . PHP_EOL
+        );
+
+        if ($strict && $replaced !== $bodyArray) {
+            throw $exception;
+        }
+
+        if ($replaced != $bodyArray) {
+            throw $exception;
+        }
+
+        return $this;
     }
 
     /**
      * Ensure that the content type is application/xml.
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\ContentTypeException
      */
-    public function ensureXml()
+    public function ensureXml() : ResponseContract
     {
         return $this->ensureContentType(['application/xml', 'text/xml']);
     }
 
     /**
-     * Ensure that the response has a given content type
+     * Ensure that the response has a given content type.
      *
      * @param string|strings[] $contentType
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\ContentTypeException
      */
-    public function ensureContentType($contentType)
+    public function ensureContentType($contentType) : ResponseContract
     {
         if (is_string($contentType)) {
             $contentType = [$contentType];
@@ -235,5 +276,312 @@ trait MakesResponseAssertions
                 )
             )
         );
+    }
+
+    /**
+     * Ensure that the status code is in the range [200...299].
+     *
+     * @return $this
+     *
+     * @throws R\StatusCodeException
+     */
+    public function ensureSuccess() : ResponseContract
+    {
+        return $this->ensure2xx();
+    }
+
+    /**
+     * Assert whether the response is redirecting to a given URI.
+     *
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function ensureRedirect($url = null) : ResponseContract
+    {
+        return $this->ensureStatusIn([301, 302])
+            ->ensureHeader('Location', $url);
+    }
+
+    /**
+     * Asserts that the response contains the given header and equals the optional value.
+     *
+     * @param string $headerName
+     * @param mixed  $expectedValue
+     *
+     * @return $this
+     */
+    public function ensureHeader($headerName, $expectedValue = null) : ResponseContract
+    {
+        $headerValue = $this->header($headerName);
+
+        if ($headerValue === null) {
+            throw new R\HeaderException($this, "Header $headerName is missing");
+        }
+
+        if ($expectedValue === null) {
+            return $this;
+        }
+
+        if ($expectedValue === $headerValue) {
+            return $this;
+        }
+
+        throw new R\HeaderException(
+            $this,
+            sprintf(
+                'Header %s was expected to have the value %s, but it has the value %s',
+                $headerName,
+                $expectedValue,
+                $headerValue
+            )
+        );
+    }
+
+    /**
+     * Assert that the given string is contained within the response.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function ensureContains($value) : ResponseContract
+    {
+        if (strpos($this->body(), $value) === false) {
+            throw new R\ContentException(
+                $this,
+                "Response body was expected to contain $value, but it does not"
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given string is contained within the response text.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function ensureSeeText($value) : ResponseContract
+    {
+        if (strpos(strip_tags($this->body()), $value) === false) {
+            throw new R\ContentException(
+                $this,
+                "The response text was expected to contain $value, but it does not"
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given string is not contained within the response.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function ensureDontSee($value) : ResponseContract
+    {
+        if (strpos($this->body(), $value) !== false) {
+            throw new R\ContentException(
+                $this,
+                "Response body was expected to contain $value, but it does not"
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given string is not contained within the response text.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function ensureDontSeeText($value) : ResponseContract
+    {
+        if (strpos(strip_tags($this->body()), $value) !== false) {
+            throw new R\ContentException(
+                $this,
+                "The response text was expected to contain $value, but it does not"
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the response is a superset of the given JSON.
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function assertJson(array $data) : ResponseContract
+    {
+    }
+
+    /**
+     * Get the assertion message for assertJson.
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    protected function assertJsonMessage(array $data) : ResponseContract
+    {
+        $expected = json_encode(
+            $data,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+
+        $actual = json_encode(
+            $this->jsonDecoded(),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+
+        return Util::makePhpUnitExpectationMessage(
+            'Unable to find json',
+            $expected,
+            $actual
+        );
+    }
+
+    /**
+     * Assert that the response has the exact given JSON.
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function assertExactJson(array $data) : ResponseContract
+    {
+        $bodyArray = json_encode(Util::recursiveArraySort(
+            json_decode($this->body(), true)
+        ));
+
+        $dataArray = Util::recursiveArraySort($data);
+
+        if ($bodyArray === $dataArray) {
+            return $this;
+        }
+        throw new R\ContentException(
+            $this,
+            'Response body does not contain the specified data'
+            . PHP_EOL
+            . PHP_EOL
+            . 'Expected: '
+            . PHP_EOL
+            . print_r($dataArray, true)
+            . PHP_EOL
+            . PHP_EOL
+            . 'Actual: '
+            . PHP_EOL
+            . print_r($bodyArray, true)
+            . PHP_EOL
+        );
+    }
+
+    /**
+     * Assert that the response contains the given JSON fragment.
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function assertJsonFragment(array $data) : ResponseContract
+    {
+        $actual = json_encode(Util::recursiveArraySort(
+            (array) $this->jsonDecoded()
+        ));
+
+        foreach (Util::recursiveArraySort($data) as $key => $value) {
+            $expected = substr(json_encode([$key => $value]), 1, -1);
+
+            $error = Util::makePhpUnitExpectationMessage(
+                'Unable to find json fragment',
+                $expected,
+                $actual
+            );
+
+            PHPUnit::assertTrue(strpos($actual, $expected) !== false, $error);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the response does not contain the given JSON fragment.
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function assertJsonMissing(array $data) : ResponseContract
+    {
+        $actual = json_encode(Util::recursiveArraySort(
+            (array) $this->jsonDecoded()
+        ));
+
+        foreach (Util::recursiveArraySort($data) as $key => $value) {
+            $expected = substr(json_encode([$key => $value]), 1, -1);
+
+            $error = Util::makePhpUnitExpectationMessage(
+                'Found unexpected json fragment',
+                $expected,
+                $actual
+            );
+
+            PHPUnit::assertFalse(strpos($actual, $expected) !== false, $error);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the response has a given JSON structure.
+     *
+     * @param array|null $structure
+     * @param array|null $responseData
+     *
+     * @return $this
+     */
+    public function assertJsonStructure(array $structure = null, $data = null) : ResponseContract
+    {
+        if (is_null($structure)) {
+            return $this->assertJson($this->jsonDecoded());
+        }
+
+        if (is_null($data)) {
+            $data = $this->jsonDecoded();
+        }
+
+        foreach ($structure as $key => $value) {
+            if (is_array($value) && $key === '*') {
+                PHPUnit::assertInternalType('array', $data);
+
+                foreach ($data as $entry) {
+                    $this->assertJsonStructure($value, $entry);
+                }
+
+                continue;
+            }
+
+            if (is_array($value)) {
+                PHPUnit::assertArrayHasKey($key, $data);
+
+                $this->assertJsonStructure($structure[$key], $data[$key]);
+
+                continue;
+            }
+
+            PHPUnit::assertArrayHasKey($value, $data);
+        }
+
+        return $this;
     }
 }

@@ -309,4 +309,75 @@ EOF;
 
         $this->shouldThrow('LogicException')->duringInstantiation();
     }
+
+    public function it_can_assert_if_body_contains_a_json_blob(Request $request)
+    {
+        $body = <<<JSON
+{
+    "foo": "bar",
+    "baz": {
+        "bing": 1234,
+        "test": 5678
+    }
+}
+JSON;
+        $headers = [
+            'HTTP/1.0 200 OK',
+            'Content-Type: application/json',
+        ];
+        $metadata = ['meta' => 'data'];
+        $request->responseCalls()->willReturn([]);
+
+        $this->beConstructedWith($body, $headers, $metadata, $request);
+
+        $this->ensureJson()->shouldBe($this->getWrappedObject());
+
+        $this->ensureJson([
+            'foo' => 'bar',
+        ])->shouldBe($this->getWrappedObject());
+
+        $this->ensureJson([
+            'foo' => 'bar',
+        ])->shouldBe($this->getWrappedObject());
+
+        $this->ensureJson([
+            'baz' => []
+        ])->shouldBe($this->getWrappedObject());
+
+        $this->ensureJson([
+            'baz' => [
+                "bing" => 1234
+            ]
+        ])->shouldBe($this->getWrappedObject());
+
+        $this->ensureJson(
+            [
+                'baz' => [
+                    "bing" => '1234'
+                ]
+            ],
+            false
+        )->shouldBe($this->getWrappedObject());
+
+        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\Response\ContentException')->during(
+            'ensureJson',
+            [
+                [
+                    'foo' => 'baz',
+                ]
+            ]
+        );
+        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\Response\ContentException')->during(
+            'ensureJson',
+            [
+                [
+                    'baz' => [
+                        'bing' => '1234',
+                    ],
+                ],
+                true
+            ]
+        );
+    }
+
 }
