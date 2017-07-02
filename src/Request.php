@@ -20,6 +20,10 @@ use Moccalotto\Hayttp\Contracts\Request as RequestContract;
  */
 class Request implements RequestContract
 {
+    use Traits\Extendable {
+        __call as callExtension;
+        __callStatic as callStaticExtension;
+    }
     use Traits\SendsRequest;
     use Traits\HasWithMethods;
     use Traits\HasRequestAccessors;
@@ -255,8 +259,8 @@ class Request implements RequestContract
     /**
      * Mock an end point.
      *
-     * @param string $methodPattern
-     * @param string $urlPattern
+     * @param string   $methodPattern
+     * @param string   $urlPattern
      * @param callable $handler
      *
      * @return RequestContract
@@ -274,15 +278,20 @@ class Request implements RequestContract
         return $this->with('mockedEndpoints', $mockedEndpoints);
     }
 
-
     /**
+     * Magic Method for dynamic method names.
+     *
      * @param string $methodName
      * @param array  $args
      *
-     * @return RequestContract
+     * @return mixed
      */
     public function __call($methodName, $args)
     {
+        if (static::hasExtension($methodName)) {
+            return static::callExtension($methodName, $args);
+        }
+
         return $this->withResponseCall($methodName, $args);
     }
 }

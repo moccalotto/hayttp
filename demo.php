@@ -8,14 +8,18 @@
  * @license MIT
  */
 use Moccalotto\Hayttp\Hayttp;
+use Moccalotto\Hayttp\Request;
+use Moccalotto\Hayttp\Response;
 
 require 'vendor/autoload.php';
 
-$handler = function ($request, $route) {
-    var_dump($request);
-    var_dump($route);
+Request::extend('printme', function () {
+    return print_r($this, true);
+});
 
-    return 666;
+$handler = function ($request, $route) {
+    var_dump($request->printme());
+
     return Hayttp::createMockResponse($request);
 };
 
