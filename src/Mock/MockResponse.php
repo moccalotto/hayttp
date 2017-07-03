@@ -139,10 +139,9 @@ class MockResponse extends BaseResponse
      */
     public function withHeader($name, $value)
     {
-        return $this->withAdditionalHeaders([
-            (string) $name,
-            (string) $value,
-        ]);
+        return $this->withAdditionalHeaders(
+            [(string) $name => (string) $value]
+        );
     }
 
     /**
