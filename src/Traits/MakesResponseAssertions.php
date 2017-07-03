@@ -411,7 +411,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function assertExactJson(array $data) : ResponseContract
+    public function ensureExactJson(array $data) : ResponseContract
     {
         $bodyArray = json_encode(Util::recursiveArraySort(
             json_decode($this->body(), true)
@@ -422,6 +422,7 @@ trait MakesResponseAssertions
         if ($bodyArray === $dataArray) {
             return $this;
         }
+
         throw new R\ContentException(
             $this,
             'Response body does not contain the specified data'
@@ -446,7 +447,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function assertJsonFragment(array $data) : ResponseContract
+    public function ensureJsonFragment(array $data) : ResponseContract
     {
         $actual = json_encode(Util::recursiveArraySort(
             (array) $this->jsonDecoded()
@@ -461,7 +462,9 @@ trait MakesResponseAssertions
                 $actual
             );
 
-            PHPUnit::assertTrue(strpos($actual, $expected) !== false, $error);
+            if (strpos($actual, $expected) === false) {
+                throw new R\ContentException($this, $error);
+            }
         }
 
         return $this;
@@ -474,7 +477,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function assertJsonMissing(array $data) : ResponseContract
+    public function ensureJsonMissing(array $data) : ResponseContract
     {
         $actual = json_encode(Util::recursiveArraySort(
             (array) $this->jsonDecoded()
@@ -489,7 +492,9 @@ trait MakesResponseAssertions
                 $actual
             );
 
-            PHPUnit::assertFalse(strpos($actual, $expected) !== false, $error);
+            if (strpos($actual, $expected) !== false) {
+                throw new R\ContentException($this, $error);
+            }
         }
 
         return $this;
@@ -499,14 +504,15 @@ trait MakesResponseAssertions
      * Assert that the response has a given JSON structure.
      *
      * @param array|null $structure
-     * @param array|null $responseData
+     * @param array|null $data      Data to validate (needed for recursion). If null, the json body of the response
+     *                              is used.
      *
      * @return $this
      */
-    public function assertJsonStructure(array $structure = null, $data = null) : ResponseContract
+    public function ensureJsonStructure(array $structure = null, $data = null) : ResponseContract
     {
         if (is_null($structure)) {
-            return $this->assertJson($this->jsonDecoded());
+            return $this->ensureJson($this->jsonDecoded());
         }
 
         if (is_null($data)) {
@@ -515,7 +521,12 @@ trait MakesResponseAssertions
 
         foreach ($structure as $key => $value) {
             if (is_array($value) && $key === '*') {
-                PHPUnit::assertInternalType('array', $data);
+                if (!is_array($data)) {
+                    throw new R\ContentException($this, sprintf(
+                        'Expected data with key "%s" to be an array',
+                        $key
+                    ));
+                }
 
                 foreach ($data as $entry) {
                     $this->assertJsonStructure($value, $entry);
@@ -525,7 +536,12 @@ trait MakesResponseAssertions
             }
 
             if (is_array($value)) {
-                PHPUnit::assertArrayHasKey($key, $data);
+                if (!array_key_exists($data, $key)) {
+                    throw new R\ContentException($this, sprintf(
+                        'Expected data to have key "%s"',
+                        $key
+                    ));
+                }
 
                 $this->assertJsonStructure($structure[$key], $data[$key]);
 
