@@ -285,7 +285,7 @@ class Response implements ResponseContract
      *               If Content-Type is xml, a SimpleXmlElement is returned.
      *               If Content-Type is json an array or StdClass is returned.
      *               If Content-Type is application/x-www-form-urlencoded, an array is returned.
-     *               Otherwise, return the body without decoding it.
+     *               Otherwise, return the body as a string without decoding it.
      */
     public function decoded()
     {
