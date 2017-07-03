@@ -10,7 +10,7 @@
 
 namespace Moccalotto\Hayttp\Mock;
 
-use PHPUnit\Framework\Assert as PHPUnit;
+use Moccalotto\Hayttp\Exceptions\RouteException;
 
 /**
  * HTTP Mock server.
@@ -20,50 +20,65 @@ class Route
     /**
      * @var array
      */
-    protected $matches;
+    public $params;
 
     /**
      * Constructor.
      *
-     * @param array $matches
+     * @param array $params
      */
-    public function __construct($matches)
+    public function __construct($params)
     {
-        $this->matches = $matches;
+        $this->params = $params;
     }
 
-    public function get($key, $default = null)
+    /**
+     * Get a parameter.
+     *
+     * @param string $paramName
+     * @param mixed  $default
+     *
+     * @return mixed The content of the param with the given key.
+     *               If the key does not exist, the default value is returned.
+     */
+    public function get($paramName, $default = null)
     {
-        return $this->matches[$key] ?? $default;
+        return $this->params[$paramName] ?? $default;
     }
 
-    public function has($key)
+    /**
+     * Does the given parameter exist.
+     *
+     * @return bool
+     */
+    public function has($paramName)
     {
-        return isset($this->matches[$key]);
+        return isset($this->params[$paramName]);
     }
 
-    public function assertHas($key)
+    /**
+     * Throw an exception if the given parameter does not exist.
+     *
+     * @param string $paramName
+     *
+     * @return $this
+     */
+    public function ensureHas($paramName)
     {
-        PHPUnit::assertArrayHasKey($key, $this->matches);
+        if (!$this->has($paramName)) {
+            throw new RouteException($this, "Missing route parameter »{$paramName}«");
+        }
 
         return $this;
     }
 
-    public function assertRegExp($key, $regex)
+    /**
+     * Get all parameters.
+     *
+     * @return array
+     */
+    public function params() : array
     {
-        $this->assertHas($key);
-        PHPUnit::assertRegExp($regex, $this->get($key));
-
-        return $this;
-    }
-
-    public function assertInteger($key)
-    {
-        return $this->assertRegExp($key, '/^\d+$/');
-    }
-
-    public function all() : array
-    {
-        return $this->matches;
+        return $this->params;
     }
 }

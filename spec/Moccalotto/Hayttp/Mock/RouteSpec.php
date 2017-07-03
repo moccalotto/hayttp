@@ -54,31 +54,11 @@ class RouteSpec extends ObjectBehavior
             'foo' => 'value',
         ]);
 
-        $this->assertHas('foo')->shouldHaveType('Moccalotto\Hayttp\Mock\Route');
+        $this->ensureHas('foo')->shouldHaveType('Moccalotto\Hayttp\Mock\Route');
 
-        $this->shouldThrow('PHPUnit\Framework\ExpectationFailedException')->during(
-            'assertHas',
+        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\RouteException')->during(
+            'ensureHas',
             ['bar']
-        );
-    }
-
-    function it_can_assert_that_a_parameter_is_an_integer()
-    {
-        $this->beConstructedWith([
-            'foo' => '1234',
-            'bar' => 'not number',
-        ]);
-
-        $this->assertInteger('foo')->shouldHaveType('Moccalotto\Hayttp\Mock\Route');
-
-        $this->shouldThrow('PHPUnit\Framework\ExpectationFailedException')->during(
-            'assertInteger',
-            ['bar']
-        );
-
-        $this->shouldThrow('PHPUnit\Framework\ExpectationFailedException')->during(
-            'assertInteger',
-            ['baz']
         );
     }
 }

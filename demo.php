@@ -18,7 +18,7 @@ Request::extend('printme', function () {
 });
 
 $handler = function ($request, $route) {
-    var_dump($request->printme());
+    print_r($request->printme());
 
     return Hayttp::createMockResponse($request);
 };
@@ -26,7 +26,7 @@ $handler = function ($request, $route) {
 Hayttp::mockEndpoint('get', 'http://foo.dev/{path}', $handler);
 
 Hayttp::get('http://foo.dev/{path}')->send()
-    ->assertStatus('201');
+    ->ensureStatus('200');
 
 die();
 

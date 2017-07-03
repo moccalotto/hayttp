@@ -12,6 +12,7 @@ namespace Moccalotto\Hayttp\Mock;
 
 use LogicException;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * HTTP Mock server.
@@ -61,19 +62,15 @@ class Endpoint
      *
      * @param RequestContract $request
      *
-     * @return MockResponse
+     * @return ResponseContract
      */
-    public function handle(RequestContract $request) : MockResponse
+    public function handle(RequestContract $request) : ResponseContract
     {
         preg_match($this->urlRegex, $request->url(), $matches);
 
-        $response = call_user_func(
-            $this->handler,
-            clone $request,
-            new Route($matches)
-        );
+        $response = call_user_func($this->handler, clone $request, new Route($matches));
 
-        if (!($response instanceof MockResponse)) {
+        if (!($response instanceof ResponseContract)) {
             throw new LogicException(sprintf(
                 'The handler must return an instance of %s',
                 MockResponse::class

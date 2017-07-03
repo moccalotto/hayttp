@@ -35,7 +35,7 @@ class EndpointSpec extends ObjectBehavior
     {
         $handler = function($request, $route) {
             return hayttp()->createMockResponse($request)
-                ->withJsonBody($route->all());
+                ->withJsonBody($route->params());
         };
 
         $this->beConstructedWith('get', '{scheme}://{domain}.{tld}/{path1}/{path2}', $handler);
