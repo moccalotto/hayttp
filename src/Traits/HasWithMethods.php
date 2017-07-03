@@ -14,6 +14,7 @@ use SimpleXmlElement;
 use Moccalotto\Hayttp\Util;
 use UnexpectedValueException;
 use Moccalotto\Hayttp\Payloads\RawPayload;
+use Moccalotto\Hayttp\Payloads\JsonPayload;
 use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
 use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
 use Moccalotto\Hayttp\Contracts\Request as RequestContract;
@@ -247,10 +248,6 @@ trait HasWithMethods
      */
     public function withRawPayload(string $payload, string $contentType = 'application/octet-stream') : RequestContract
     {
-        if ($this->payload) {
-            throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
-        }
-
         return $this->withPayload(new RawPayload($payload, $contentType));
     }
 
@@ -262,16 +259,14 @@ trait HasWithMethods
      * most browsers' * JSON.stringify() and JSON.parse().
      * However, it is not default output of json_encode.
      *
-     * @param array|object $payload the payload to send - the payload will always be json encoded
+     * @param array|object $payload     the payload to send - the payload will always be json encoded
+     * @param string       $contentType
      *
      * @return RequestContract
      */
-    public function withJsonPayload($payload) : RequestContract
+    public function withJsonPayload($payload, $contentType = 'application/json') : RequestContract
     {
-        return $this->withRawPayload(
-            json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            'application/json'
-        );
+        return $this->withPayload(new JsonPayload($payload, $contentType));
     }
 
     /**

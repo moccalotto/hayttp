@@ -16,27 +16,27 @@ use Moccalotto\Hayttp\Traits\HasCompleteDebugInfo;
 /**
  * Raw (string) body Helper.
  */
-class RawPayload implements PayloadContract
+class JsonPayload implements PayloadContract
 {
     use HasCompleteDebugInfo;
 
     /**
-     * @var string
+     * @var array|object
      */
     protected $contents;
 
     /**
      * @var string
      */
-    protected $contentType;
+    protected $contentType = 'application/json';
 
     /**
      * Constructor.
      *
-     * @param string $contents
-     * @param string $contentType
+     * @param array|object $contents
+     * @param string       $contentType
      */
-    public function __construct(string $contents, string $contentType)
+    public function __construct($contents, string $contentType = 'application/json')
     {
         $this->contents = $contents;
         $this->contentType = $contentType;
@@ -57,7 +57,7 @@ class RawPayload implements PayloadContract
      */
     public function render() : string
     {
-        return $this->contents;
+        return json_encode($this->contents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     /**

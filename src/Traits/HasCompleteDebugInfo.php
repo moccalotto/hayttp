@@ -29,6 +29,10 @@ trait HasCompleteDebugInfo
             $result[$key] = $value;
         }
 
+        if (method_exists($this, 'decoded')) {
+            $result['decoded'] = $this->decoded();
+        }
+
         return $result;
     }
 }
