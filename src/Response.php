@@ -285,9 +285,7 @@ class Response implements ResponseContract
      *               If Content-Type is xml, a SimpleXmlElement is returned.
      *               If Content-Type is json an array or StdClass is returned.
      *               If Content-Type is application/x-www-form-urlencoded, an array is returned.
-     *               If Content-Type is text/* The raw response body is returned
-     *
-     * @throws UnexpectedValueException if the content type could not be determined
+     *               Otherwise, return the body without decoding it.
      */
     public function decoded()
     {
@@ -303,14 +301,7 @@ class Response implements ResponseContract
             return $this->urlDecoded();
         }
 
-        if ($this->isText()) {
-            return $this->body;
-        }
-
-        throw new UnexpectedValueException(sprintf(
-            'Could not determine the response type. Content-Type: %s',
-            $this->contentType() ?: 'unknown'
-        ));
+        return $this->body;
     }
 
     /**
