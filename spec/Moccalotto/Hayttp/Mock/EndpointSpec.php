@@ -34,7 +34,7 @@ class EndpointSpec extends ObjectBehavior
     function it_can_handle_a_request()
     {
         $handler = function($request, $route) {
-            return hayttp()->createMockResponse($request)
+            return hayttp()->createMockResponse($request, $route)
                 ->withJsonBody($route->params());
         };
 
