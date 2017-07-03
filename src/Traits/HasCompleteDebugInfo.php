@@ -28,16 +28,6 @@ trait HasCompleteDebugInfo
     }
 
     /**
-     * Extra debug info to add.
-     *
-     * @return array
-     */
-    public function extraDebugInfo()
-    {
-        return [];
-    }
-
-    /**
      * Return debug info for var_dump, et al.
      *
      * @return array
@@ -46,7 +36,7 @@ trait HasCompleteDebugInfo
     {
         return array_merge(
             $this->instanceVariables(),
-            $this->extraDebugInfo()
+            method_exists($this, 'extraDebugInfo') ? $this->extraDebugInfo() : []
         );
     }
 }
