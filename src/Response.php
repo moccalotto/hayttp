@@ -21,8 +21,8 @@ class Response implements ResponseContract
 {
     use Traits\HasCallbacks;
     use Traits\HasStatusHelpers;
-    use Traits\HasCompleteDebugInfo;
     use Traits\MakesResponseAssertions;
+    use Traits\HasCompleteDebugInfo;
 
     /**
      * @var string
@@ -160,7 +160,7 @@ class Response implements ResponseContract
     /**
      * Get the headers.
      *
-     * @return string[]
+     * @return array
      */
     public function headers() : array
     {
@@ -379,5 +379,17 @@ class Response implements ResponseContract
         }
 
         return $res;
+    }
+
+    public function extraDebugInfo()
+    {
+        return [
+            'statusCode' => $this->statusCode(),
+            'reasonPhrase' => $this->reasonPhrase(),
+            'contentType' => $this->contentType(),
+            'contentTypeWithoutCharset' => $this->contentTypeWithoutCharset(),
+            'location' => $this->header('location'),
+            'decoded' => $this->decoded(),
+        ];
     }
 }

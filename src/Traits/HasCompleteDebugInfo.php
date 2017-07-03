@@ -18,21 +18,35 @@ namespace Moccalotto\Hayttp\Traits;
 trait HasCompleteDebugInfo
 {
     /**
+     * Public accessor for all instance variables.
+     *
+     * @return array
+     */
+    public function instanceVariables()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * Extra debug info to add.
+     *
+     * @return array
+     */
+    public function extraDebugInfo()
+    {
+        return [];
+    }
+
+    /**
      * Return debug info for var_dump, et al.
      *
      * @return array
      */
     public function __debugInfo()
     {
-        $result = [];
-        foreach ($this as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        if (method_exists($this, 'decoded')) {
-            $result['decoded'] = $this->decoded();
-        }
-
-        return $result;
+        return array_merge(
+            $this->instanceVariables(),
+            $this->extraDebugInfo()
+        );
     }
 }
