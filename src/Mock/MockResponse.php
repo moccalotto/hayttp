@@ -12,9 +12,7 @@ namespace Moccalotto\Hayttp\Mock;
 
 use SimpleXmlElement;
 use Moccalotto\Hayttp\Util;
-use PHPUnit\Framework\Assert as PHPUnit;
 use Moccalotto\Hayttp\Response as BaseResponse;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * Mock Request.
@@ -97,7 +95,6 @@ class MockResponse extends BaseResponse
 
         return $this->withHeaders($headers);
     }
-
 
     public function withHeader($name, $value)
     {
