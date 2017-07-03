@@ -20,13 +20,17 @@ Request::extend('printme', function () {
 $handler = function ($request, $route) {
     print_r($request->printme());
 
-    return Hayttp::createMockResponse($request);
+    return Hayttp::createMockResponse($request, $route)
+        ->withJsonBody(['demo' => true])
+        ->withRoute($route);
 };
 
-Hayttp::mockEndpoint('get', 'http://foo.dev/{path}', $handler);
+Hayttp::mockEndpoint('get', '{scheme}://foo.dev/{path}', $handler);
 
-Hayttp::get('http://foo.dev/{path}')->send()
+$response = Hayttp::get('http://foo.dev/foo')->send()
     ->ensureStatus('200');
+
+print_r($response);
 
 die();
 
@@ -56,8 +60,12 @@ $response = Hayttp::post('https://example.org/post')
 // but it does not lock the contents for further
 // updates.
 $response = Hayttp::post('https://example.org/post')
-    ->addMultipartField('file1', base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true), 'r.gif', 'image/gif')
-    ->addMultipartField('file2', '<html><body>Naked</body></html>', 't.html', 'text/html')
+    ->addMultipartField(
+        'file1',
+        base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true),
+        'r.gif',
+        'image/gif'
+    )->addMultipartField('file2', '<html><body>Naked</body></html>', 't.html', 'text/html')
     ->send();
 
 //---------------------------------------------

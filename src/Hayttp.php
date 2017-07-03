@@ -18,13 +18,14 @@ use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 /**
  * Request creation facade.
  *
- * @method \Moccalotto\Hayttp\Contracts\Request get(string $url)     Create a GET request
- * @method \Moccalotto\Hayttp\Contracts\Request post(string $url)    Create a POST request
- * @method \Moccalotto\Hayttp\Contracts\Request put(string $url)     Create a PUT request
- * @method \Moccalotto\Hayttp\Contracts\Request patch(string $url)   Create a PATCH request
- * @method \Moccalotto\Hayttp\Contracts\Request head(string $url)    Create a HEAD request
- * @method \Moccalotto\Hayttp\Contracts\Request delete(string $url)  Create a DELETE request
- * @method \Moccalotto\Hayttp\Contracts\Request options(string $url) Create a OPTIONS request
+ * @method RequestContract get(string $url)     Create a GET request
+ * @method RequestContract post(string $url)    Create a POST request
+ * @method RequestContract put(string $url)     Create a PUT request
+ * @method RequestContract patch(string $url)   Create a PATCH request
+ * @method RequestContract head(string $url)    Create a HEAD request
+ * @method RequestContract delete(string $url)  Create a DELETE request
+ * @method RequestContract options(string $url) Create a OPTIONS request
+ * @method MockResponse    createMockResponse($request, $route) Create a mock response via a request and a route
  */
 class Hayttp
 {
@@ -65,8 +66,8 @@ class Hayttp
     /**
      * Add a mocked end point to all requests created by the global Hayttp facade.
      *
-     * @param string $methodPattern
-     * @param string $urlPattern
+     * @param string   $methodPattern
+     * @param string   $urlPattern
      * @param callable $handler
      *
      * @return Hayttp
@@ -138,7 +139,7 @@ class Hayttp
         }
 
         if ($methodName == 'createMockResponse') {
-            return MockResponse::fromRequest($args[0]);
+            return MockResponse::new($args[0], $args[1]);
         }
 
         throw new BadMethodCallException(sprintf('Unknown method »%s«', $methodName));
@@ -187,8 +188,8 @@ class Hayttp
     /**
      * Add a mocked end point to all requests created.
      *
-     * @param string $methodPattern
-     * @param string $urlPattern
+     * @param string   $methodPattern
+     * @param string   $urlPattern
      * @param callable $handler
      *
      * @return Hayttp

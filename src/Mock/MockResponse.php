@@ -26,7 +26,7 @@ class MockResponse extends BaseResponse
      *
      * Create an empty response from a given request.
      */
-    public static function fromRequest($request)
+    public static function new($request, $route)
     {
         $contentType = $request->headers('accept') ?: 'application/octet-stream';
 
@@ -36,7 +36,10 @@ class MockResponse extends BaseResponse
                 0 => 'HTTP/1.0 200 OK',
                 'Content-Type' => $contentType,
             ],
-            ['Mock' => 'Empty'],
+            [
+                'X-Mock' => 'true',
+                'route' => $route,
+            ],
             $request
         );
     }
@@ -49,7 +52,7 @@ class MockResponse extends BaseResponse
      *
      * @return MockResponse
      */
-    protected function with($property, $value) : MockResponse
+    protected function with($property, $value)
     {
         $clone = clone $this;
 
@@ -58,6 +61,15 @@ class MockResponse extends BaseResponse
         return $clone;
     }
 
+    /**
+     * Set the status code and reason phrase of the http response.
+     *
+     * @param int    $statusCode
+     * @param string $reasonPhrase
+     * @param string $httpVersion
+     *
+     * @return MockResponse
+     */
     public function withStatus($statusCode, $reasonPhrase, $httpVersion = '1.0')
     {
         $clone = clone $this;
@@ -66,12 +78,26 @@ class MockResponse extends BaseResponse
         return $clone;
     }
 
-    public function withHeaders(array $headers)
+    /**
+     * Set headers on the mock response.
+     *
+     * @param array $headers
+     *
+     * @return MockResponse
+     */
+    public function withHeaders($headers)
     {
         return $this->with('headers', Util::normalizeHeaders($headers));
     }
 
-    public function withAdditionalHeaders(array $additionalHeaders)
+    /**
+     * Add headers to the mock response.
+     *
+     * @param array $additionalHeaders
+     *
+     * @return MockResponse
+     */
+    public function withAdditionalHeaders($additionalHeaders)
     {
         $res = $this->headers;
         $additionalHeaders = Util::normalizeHeaders($additionalHeaders);
@@ -87,39 +113,89 @@ class MockResponse extends BaseResponse
         return $this->withHeaders($res);
     }
 
+    /**
+     * Set the content type.
+     *
+     * @param string $contentType
+     *
+     * @return MockResponse
+     */
     public function withContentType($contentType)
     {
         $headers = $this->headers;
 
-        $headers['content-type'] = $contentType;
+        $headers['content-type'] = (string) $contentType;
 
         return $this->withHeaders($headers);
     }
 
+    /**
+     * Add a header to the response.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return MockResponse
+     */
     public function withHeader($name, $value)
     {
-        return $this->withAdditionalHeaders(
-            [$name, $value]
-        );
+        return $this->withAdditionalHeaders([
+            (string) $name,
+            (string) $value,
+        ]);
     }
 
-    public function withBody($body) : MockResponse
+    /**
+     * Set the body of the response.
+     *
+     * @param string $body
+     *
+     * @return MockResponse
+     */
+    public function withBody($body)
     {
         return $this->with('body', $body);
     }
 
+    /**
+     * Set the a json body.
+     *
+     * @param array|object $payload
+     *
+     * @return MockResponse
+     */
     public function withJsonBody($payload)
     {
-        return $this->withBody(json_encode(
-            $payload,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        ))->withContentType('application/json');
+        return $this->withBody(Util::toJson($payload))
+            ->withContentType('application/json');
     }
 
+    /**
+     * Set the a json body.
+     *
+     * @param string|SimpleXmlElement $payload
+     *
+     * @return MockResponse
+     */
     public function withXmlBody($xml)
     {
-        return $this->withBody(json_encode(
+        return $this->withBody(
             $xml instanceof SimpleXmlElement ? $xml->asXml() : $xml
-        ))->withContentType('application/xml');
+        )->withContentType('application/xml');
+    }
+
+    /**
+     * Add information about the route to the response
+     *
+     * @param Route $route
+     *
+     * @return MockResponse
+     */
+    public function withRoute($route)
+    {
+        $metadata = $this->metadata;
+        $metadata['route'] = $route;
+
+        return $this->with('metadata', $metadata);
     }
 }

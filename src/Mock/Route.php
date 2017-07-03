@@ -11,6 +11,7 @@
 namespace Moccalotto\Hayttp\Mock;
 
 use Moccalotto\Hayttp\Exceptions\RouteException;
+use Moccalotto\Hayttp\Util;
 
 /**
  * HTTP Mock server.
@@ -29,7 +30,7 @@ class Route
      */
     public function __construct($params)
     {
-        $this->params = $params;
+        $this->params = array_filter($params, 'is_string', ARRAY_FILTER_USE_KEY);
     }
 
     /**

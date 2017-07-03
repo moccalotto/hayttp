@@ -95,6 +95,30 @@ class Util
     }
 
     /**
+     * Json stringify some data.
+     *
+     * @param mixed $data;
+     *
+     * @return string
+     */
+    public static function toJson($data)
+    {
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Json stringify some data.
+     *
+     * @param mixed $data;
+     *
+     * @return string
+     */
+    public static function toPrettyJson($data)
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
      * Create an assertion/expectation message for assertions.
      *
      * @param string $message
@@ -105,8 +129,8 @@ class Util
      */
     public static function makeExpectationMessage($message, $expected, $actual)
     {
-        $expected = json_encode($expected, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $actual = json_encode($actual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $expected = static::toPrettyJson($expected);
+        $actual   = static::toPrettyJson($actual);
         return $message
             . PHP_EOL
             . PHP_EOL
