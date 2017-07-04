@@ -390,6 +390,8 @@ class Response implements ResponseContract
             'contentTypeWithoutCharset' => $this->contentTypeWithoutCharset(),
             'location' => $this->header('location'),
             'decoded' => $this->decoded(),
+            'json' => $this->isJson() ? $this->jsonDecoded() : null,
+            'formData' => $this->isUrlEncoded() ? $this->urlDecoded() : null,
         ];
     }
 }
