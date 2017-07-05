@@ -131,6 +131,6 @@ You can also use the `hayttp` method to make instant GET requests.
 // All the lines below are equivalent
 $response = Hayttp::get($url)->send();
 $response = hayttp()->get($url)->send();
-$response = hayttp($url);
+$response = hayttp_get($url);
 ```
 
