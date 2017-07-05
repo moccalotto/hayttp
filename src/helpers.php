@@ -50,7 +50,7 @@ if (!function_exists('hayttp_do')) {
      */
     function hayttp_do($method, $url, $data = null)
     {
-        $request = hayttp_request($method, $url);
+        $request = hayttp_request($method, $url)->ensure2xx();
 
         if (is_a($data, 'SimpleXmlElement')) {
             return $request->sendXml();
