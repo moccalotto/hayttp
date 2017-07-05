@@ -125,7 +125,7 @@ $body = hayttp()->withTimeout(10)
     ->decded();
 ```
 
-You can also use the `hayttp_*` method to make instant GET requests.
+You can also use the `hayttp_*` method to make instant requests.
 
 ```php
 // All the calls below are equivalent
