@@ -125,12 +125,69 @@ $body = hayttp()->withTimeout(10)
     ->decded();
 ```
 
-You can also use the `hayttp` method to make instant GET requests.
+You can also use the `hayttp_*` method to make instant requests.
 
 ```php
-// All the lines below are equivalent
-$response = Hayttp::get($url)->send();
-$response = hayttp()->get($url)->send();
-$response = hayttp($url);
+// All the calls below are equivalent
+
+$response = hayttp_get($url);
+
+$response = Hayttp::get($url)
+                ->ensure2xx()
+                ->send();
+
+$response = hayttp()->get($url)
+                ->ensure2xx()
+                ->send();
 ```
 
+Here are other examples of how to use the `hayttp_*` methods:
+
+```php
+// All the calls below are equivalent
+$xml = new SimpleXmlElement('<root><groot>Boot</groot></root>');
+
+$response = hayttp_post($url, $xml);
+
+$response = Hayttp::post($url)
+                ->ensure2xx()
+                ->sendXml($xml);
+
+$response = hayttp()->post($url)
+                ->ensure2xx()
+                ->sendXml($xml);
+```
+
+Posting json
+
+```php
+// All the calls below are equivalent
+$data = ['foo' => ['bar' => ['baz']]];
+
+$response = hayttp_post($url, $data);
+
+$response = Hayttp::post($url)
+                ->ensure2xx()
+                ->sendJson($data);
+
+$response = hayttp()->post($url)
+                ->ensure2xx()
+                ->sendJson($data);
+```
+
+Putting raw text
+
+```php
+// All the calls below are equivalent
+$raw = file_get_contents($path);
+
+$response = hayttp_put($url, $raw);
+
+$response = Hayttp::put($url)
+                ->ensure2xx()
+                ->sendRaw($raw, 'application/octet-stream');
+
+$response = hayttp()->put($url)
+                ->ensure2xx()
+                ->sendRaw($raw, 'application/octet-stream');
+```
