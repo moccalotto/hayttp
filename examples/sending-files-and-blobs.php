@@ -23,7 +23,7 @@ require '../vendor/autoload.php';
 | In this example we make a POST request to an example URL, attaching a
 | field called 'file', containing a single file called foo.xml
 */
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.dev/post')
     ->addFile(
         //
         // ----------------------------------------------------------------
@@ -64,7 +64,7 @@ $response = Hayttp::post('https://example.org/post')
 | Note that when posting BLOBs, no filename will be sent to the
 | remote server.
 */
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.dev/post')
     ->addBlob(
         //
         // ----------------------------------------------------------------
@@ -94,7 +94,7 @@ $response = Hayttp::post('https://example.org/post')
 | In this example we make a POST request to an example URL, attaching a
 | field called 'advanced_blob', containing a single file called foo.gif
 */
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.dev/post')
     ->addMultipartField(
         //
         // ----------------------------------------------------------------
@@ -127,7 +127,7 @@ $response = Hayttp::post('https://example.org/post')
 | We then add two conventional form fields, containing the names
 | of Bob and Alice respectively.
 */
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.dev/post')
     ->addFile('cvs[]', 'cvs/cv1.pdf', 'bob.pdf')
     ->addFile('cvs[]', 'cvs/cv2.pdf', 'alice.pdf')
     ->addFile('cover-letters[]', 'cls/cl1.pdf', 'cover-bob.pdf')
