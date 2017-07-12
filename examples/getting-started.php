@@ -4,13 +4,7 @@ use Moccalotto\Hayttp\Hayttp;
 use Moccalotto\Hayttp\Request;
 use Moccalotto\Hayttp\Response;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-Hayttp::mockEndpoint('.*', '{anything}', function ($request, $route) {
-    return Hayttp::createMockResponse($request, $route)
-        ->withJsonBody(['demo' => true])
-        ->withRoute($route);
-});
+require '_init.php';
 
 /*
 |--------------------------------------------------------------------------

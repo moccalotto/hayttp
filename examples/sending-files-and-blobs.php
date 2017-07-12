@@ -4,8 +4,7 @@ use Moccalotto\Hayttp\Hayttp;
 use Moccalotto\Hayttp\Request;
 use Moccalotto\Hayttp\Response;
 
-require '../vendor/autoload.php';
-
+require '_init.php';
 
 /*
 ---------------------------------------------------------------------------
