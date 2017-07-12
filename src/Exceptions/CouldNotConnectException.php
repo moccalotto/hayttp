@@ -38,7 +38,10 @@ class CouldNotConnectException extends RuntimeException
     {
         $this->request = $request;
         $this->metadata = $metadata;
-        parent::__construct('Could not connect', 0, $previous);
+        parent::__construct(sprintf(
+            'Could not connect to %s',
+            $request->url()
+        ), 0, $previous);
     }
 
     /**
