@@ -12,7 +12,7 @@ require '../vendor/autoload.php';
 |--------------------------------------------------------------------------
 | In the examples below we make a number of requests, each returning
 | objects of the class Moccalotto\Hayttp\Response.
-| 
+|
 | There are static helpers for the following methods:
 | - get
 | - post
@@ -35,6 +35,7 @@ require '../vendor/autoload.php';
 $responseObj = Hayttp::get('http://foo.dev/foo')->send();
 $rawBodyStr  = $responseObj->body();
 $statusCode  = $responseObj->statusCode();
+$contentType = $responseObj->contentType();
 
 
 /*
@@ -63,7 +64,7 @@ $jsonBody = $responseObj->jsonDecoded();
 |--------------------------------------------------------------------------
 | In this example we make a POST request to an example URL and
 | deserialize the response into a SimpleXmlElement object.
-| 
+|
 */
 $responseObj = Hayttp::post('https://example.org')
     ->sendFormData([
@@ -82,7 +83,7 @@ $xmlBody = $responseObj->xmlDecoded();
 | In this example we make a DELETE request to an example URL and
 | automatically infer the response data type by inspecting the 'Content-Type'
 | response header.
-| 
+|
 */
 $responseObj = Hayttp::delete('https://example.org')->send();
 
