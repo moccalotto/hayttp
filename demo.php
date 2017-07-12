@@ -13,24 +13,28 @@ use Moccalotto\Hayttp\Response;
 
 require 'vendor/autoload.php';
 
+// Dynamically add a method to all requests
 Request::extend('printme', function () {
     return print_r($this, true);
 });
 
-$handler = function ($request, $route) {
-    print_r($request->printme());
+Response::extend('printme', function () {
+    return print_r($this, true);
+});
+
+// Create a "controller" for the given end point
+Hayttp::mockEndpoint('get', '{scheme}://foo.dev/{path}', function ($request, $route) {
+    // make a call to the new and fancy end extended method
+    // print $request->printme();
 
     return Hayttp::createMockResponse($request, $route)
         ->withJsonBody(['demo' => true])
         ->withRoute($route);
-};
-
-Hayttp::mockEndpoint('get', '{scheme}://foo.dev/{path}', $handler);
+});
 
 $response = Hayttp::get('http://foo.dev/foo')->send()
-    ->ensureStatus('200');
-
-print_r($response);
+    ->ensureStatus('200')
+    ->printme();
 
 die();
 
