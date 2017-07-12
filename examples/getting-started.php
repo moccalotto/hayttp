@@ -4,7 +4,13 @@ use Moccalotto\Hayttp\Hayttp;
 use Moccalotto\Hayttp\Request;
 use Moccalotto\Hayttp\Response;
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+Hayttp::mockEndpoint('.*', '{anything}', function ($request, $route) {
+    return Hayttp::createMockResponse($request, $route)
+        ->withJsonBody(['demo' => true])
+        ->withRoute($route);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +51,7 @@ $contentType = $responseObj->contentType();
 | In this example we make a PUT request to an example URL and
 | deserialize the response body into a native PHP data structure.
 */
-$responseObj = Hayttp::put('https://example.org')
+$responseObj = Hayttp::put('https://foo.dev')
     ->sendJson([
         'this' => 'array',
         'will' => 'be',
@@ -55,7 +61,9 @@ $responseObj = Hayttp::put('https://example.org')
 
 // The body of the response is json decoded into php arrays
 // and StdClass objects.
-$jsonBody = $responseObj->jsonDecoded();
+if ($responseObj->isJson()) {
+    $jsonBody = $responseObj->jsonDecoded();
+}
 
 
 /*
@@ -66,7 +74,7 @@ $jsonBody = $responseObj->jsonDecoded();
 | deserialize the response into a SimpleXmlElement object.
 |
 */
-$responseObj = Hayttp::post('https://example.org')
+$responseObj = Hayttp::post('https://foo.dev')
     ->sendFormData([
         'this' => 'array',
         'will' => 'be',
@@ -74,7 +82,9 @@ $responseObj = Hayttp::post('https://example.org')
         'as' => 'application/x-www-form-urlencoded'
     ]);
 
-$xmlBody = $responseObj->xmlDecoded();
+if ($responseObj->isXml()) {
+    $xmlBody = $responseObj->xmlDecoded();
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +95,7 @@ $xmlBody = $responseObj->xmlDecoded();
 | response header.
 |
 */
-$responseObj = Hayttp::delete('https://example.org')->send();
+$responseObj = Hayttp::delete('https://foo.dev')->send();
 
 // the resposne body may be a string, PHP array, StdClass object
 // or SimpleXmlElement object, depending on the Content-Type
