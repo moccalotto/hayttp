@@ -19,6 +19,7 @@ use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 class Response implements ResponseContract
 {
+    use Traits\Extendable;
     use Traits\HasCallbacks;
     use Traits\HasStatusHelpers;
     use Traits\MakesResponseAssertions;
