@@ -77,13 +77,13 @@ class NativeEngine implements EngineContract
         } catch (ErrorException $e) {
             // Reached if fancy php error-exception handler is running
             // and fopen fails
-            throw new CouldNotConnectException($request, $e);
+            throw new CouldNotConnectException($request, [], $e);
         }
 
         if ($stream === false) {
             // reached if error-exception handler isnt running
             // and fopen fails
-            throw new CouldNotConnectException($request, error_get_last());
+            throw new CouldNotConnectException($request, ['error_get_last' => error_get_last()]);
         }
 
         $body = stream_get_contents($stream);
