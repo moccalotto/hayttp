@@ -15,7 +15,10 @@ use Moccalotto\Hayttp\Contracts\Request as RequestContract;
 use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
 
 /**
- * HTTP Mock server.
+ * Mock Endpoint.
+ *
+ * Simulates a HTTP server that can handle a given set of
+ * methods and urls.
  */
 class Endpoint
 {
@@ -35,6 +38,13 @@ class Endpoint
         $this->handler = $handler;
     }
 
+    /**
+     * Convert a url pattern into a regular expression.
+     *
+     * @param string $urlPattern A url patterl like http://{domain}.{tld}/foo/{id}
+     *
+     * @return string
+     */
     protected function makeUrlRegex($urlPattern)
     {
         return preg_replace(
