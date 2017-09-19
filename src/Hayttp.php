@@ -66,9 +66,19 @@ class Hayttp
     /**
      * Add a mocked end point to all requests created by the global Hayttp facade.
      *
-     * @param string   $methodPattern
-     * @param string   $urlPattern
-     * @param callable $handler
+     * Mocking end points does not necessarily mean that all HTTP calls will be
+     * intercepted. In order to mock all end points, you must add a catch-all
+     * end point. Like
+     *      mockEndpoint(
+     *          '.*',          // match any method
+     *          '{anything}',  // match any URL
+     *          $handler
+     *      )
+     *
+     *
+     * @param string   $methodPattern a regular expression to match the method(s) of the call
+     * @param string   $urlPattern    A url "pattern". For instance {protocol}://example.{tld}/foo/{dir1}/{dir2}
+     * @param callable $handler       A callable that returns a ResponseContract object
      *
      * @return Hayttp
      */
@@ -129,6 +139,13 @@ class Hayttp
 
     /**
      * Easy request construction.
+     *
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return mixed
+     *
+     * @throws BadMethodCallException if $methodName is incorrect.
      */
     public function __call($methodName, $args)
     {
@@ -147,6 +164,13 @@ class Hayttp
 
     /**
      * Forward calls to default instance.
+     *
+     * @param string $methodName
+     * @param array  $args
+     *
+     * @return mixed
+     *
+     * @throws BadMethodCallException if $methodName is incorrect.
      */
     public static function __callStatic($methodName, $args)
     {
