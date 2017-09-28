@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Exceptions;
+namespace Hayttp\Exceptions;
 
 use RuntimeException;
-use Moccalotto\Hayttp\Mock\Route;
+use Hayttp\Mock\Route;
 
 /**
  * Http connection exception.

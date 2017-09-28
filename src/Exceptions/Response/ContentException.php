@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Exceptions\Response;
+namespace Hayttp\Exceptions\Response;
 
-use Moccalotto\Hayttp\Exceptions\ResponseException;
+use Hayttp\Exceptions\ResponseException;
 
 /**
  * Http connection exception.

@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Request as RequestContract;
 
 trait ExpectsCommonMimeTypes
 {

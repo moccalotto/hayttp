@@ -8,14 +8,14 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp;
+namespace Hayttp;
 
+use Hayttp\Util;
 use LogicException;
 use SimpleXmlElement;
-use Moccalotto\Hayttp\Util;
 use UnexpectedValueException;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
 
 class Response implements ResponseContract
 {

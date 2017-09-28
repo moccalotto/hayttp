@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
-use Moccalotto\Hayttp\Engines\NativeEngine;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Engines\NativeEngine;
+use Hayttp\Contracts\Response as ResponseContract;
 
 trait SendsRequest
 {

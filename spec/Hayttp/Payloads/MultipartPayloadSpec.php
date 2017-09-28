@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace spec\Moccalotto\Hayttp\Payloads;
+namespace spec\Hayttp\Payloads;
 
 use PhpSpec\ObjectBehavior;
 
@@ -21,13 +21,13 @@ class MultipartPayloadSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Moccalotto\Hayttp\Payloads\MultipartPayload');
+        $this->shouldHaveType('Hayttp\Payloads\MultipartPayload');
     }
 
     public function it_implements_contract()
     {
         $this->beConstructedWith('', 'text/plain');
-        $this->shouldHaveType('Moccalotto\Hayttp\Contracts\Payload');
+        $this->shouldHaveType('Hayttp\Contracts\Payload');
     }
 
     public function it_has_correct_content_type()

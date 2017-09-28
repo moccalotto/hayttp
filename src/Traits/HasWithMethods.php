@@ -8,17 +8,17 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
 use SimpleXmlElement;
-use Moccalotto\Hayttp\Util;
+use Hayttp\Util;
 use UnexpectedValueException;
-use Moccalotto\Hayttp\Payloads\RawPayload;
-use Moccalotto\Hayttp\Payloads\JsonPayload;
-use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Payloads\RawPayload;
+use Hayttp\Payloads\JsonPayload;
+use Hayttp\Contracts\Engine as EngineContract;
+use Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
 
 trait HasWithMethods
 {

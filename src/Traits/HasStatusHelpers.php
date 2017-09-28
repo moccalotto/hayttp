@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
 trait HasStatusHelpers
 {

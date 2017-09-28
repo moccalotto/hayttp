@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace spec\Moccalotto\Hayttp\Engines;
+namespace spec\Hayttp\Engines;
 
 use PhpSpec\ObjectBehavior;
 
@@ -17,15 +17,15 @@ use PhpSpec\ObjectBehavior;
  *
  * @codingStandardsIgnoreStart
  */
-class CurlEngineSpec extends ObjectBehavior
+class NativeEngineSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Moccalotto\Hayttp\Engines\CurlEngine');
+        $this->shouldHaveType('Hayttp\Engines\NativeEngine');
     }
 
     public function it_implements_engine_contract()
     {
-        $this->shouldHaveType('Moccalotto\Hayttp\Contracts\Engine');
+        $this->shouldHaveType('Hayttp\Contracts\Engine');
     }
 }

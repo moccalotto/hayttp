@@ -8,11 +8,11 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Exceptions;
+namespace Hayttp\Exceptions;
 
 use Exception;
 use RuntimeException;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Http connection exception.

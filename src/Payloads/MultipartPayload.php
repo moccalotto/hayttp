@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Payloads;
+namespace Hayttp\Payloads;
 
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Contracts\Payload as PayloadContract;
 
 /**
  * Multipart Body Helper.

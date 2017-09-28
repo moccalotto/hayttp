@@ -1,8 +1,8 @@
 <?php
 
-use Moccalotto\Hayttp\Hayttp;
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Response;
+use Hayttp\Hayttp;
+use Hayttp\Request;
+use Hayttp\Response;
 
 require '_init.php';
 
@@ -11,7 +11,7 @@ require '_init.php';
 | MAKING REQUESTS
 |--------------------------------------------------------------------------
 | In the examples below we make a number of requests, each returning
-| objects of the class Moccalotto\Hayttp\Response.
+| objects of the class Hayttp\Response.
 |
 | There are static helpers for the following methods:
 | - get

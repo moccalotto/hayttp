@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Contracts;
+namespace Hayttp\Contracts;
 
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
 
 interface Engine
 {

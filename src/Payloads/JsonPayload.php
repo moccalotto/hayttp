@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Payloads;
+namespace Hayttp\Payloads;
 
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
-use Moccalotto\Hayttp\Traits\HasCompleteDebugInfo;
+use Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Traits\HasCompleteDebugInfo;
 
 /**
  * Raw (string) body Helper.

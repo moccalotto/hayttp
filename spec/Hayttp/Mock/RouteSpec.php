@@ -1,6 +1,14 @@
 <?php
 
-namespace spec\Moccalotto\Hayttp\Mock;
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2017
+ * @license MIT
+ */
+
+namespace spec\Hayttp\Mock;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -16,7 +24,7 @@ class RouteSpec extends ObjectBehavior
     {
         $this->beConstructedWith([]);
 
-        $this->shouldHaveType('Moccalotto\Hayttp\Mock\Route');
+        $this->shouldHaveType('Hayttp\Mock\Route');
     }
 
     function it_can_fetch_a_parameter()
@@ -54,9 +62,9 @@ class RouteSpec extends ObjectBehavior
             'foo' => 'value',
         ]);
 
-        $this->ensureHas('foo')->shouldHaveType('Moccalotto\Hayttp\Mock\Route');
+        $this->ensureHas('foo')->shouldHaveType('Hayttp\Mock\Route');
 
-        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\RouteException')->during(
+        $this->shouldThrow('Hayttp\Exceptions\RouteException')->during(
             'ensureHas',
             ['bar']
         );

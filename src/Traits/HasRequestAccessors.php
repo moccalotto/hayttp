@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
-use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Contracts\Engine as EngineContract;
+use Hayttp\Contracts\Payload as PayloadContract;
 
 trait HasRequestAccessors
 {

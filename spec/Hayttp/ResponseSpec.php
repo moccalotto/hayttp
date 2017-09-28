@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace spec\Moccalotto\Hayttp;
+namespace spec\Hayttp;
 
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Util;
+use Hayttp\Request;
+use Hayttp\Util;
 use PhpSpec\ObjectBehavior;
 
 /**
@@ -25,14 +25,14 @@ class ResponseSpec extends ObjectBehavior
     {
         $request->responseCalls()->willReturn([]);
         $this->beConstructedWith('body', [], [], $request);
-        $this->shouldHaveType('Moccalotto\Hayttp\Response');
+        $this->shouldHaveType('Hayttp\Response');
     }
 
     public function it_implements_contract(Request $request)
     {
         $request->responseCalls()->willReturn([]);
         $this->beConstructedWith('body', [], [], $request);
-        $this->shouldHaveType('Moccalotto\Hayttp\Contracts\Response');
+        $this->shouldHaveType('Hayttp\Contracts\Response');
     }
 
     public function it_has_accessors(Request $request)
@@ -130,8 +130,8 @@ class ResponseSpec extends ObjectBehavior
             return [$response, $request];
         });
 
-        $result[0]->shouldHaveType('Moccalotto\Hayttp\Contracts\Response');
-        $result[1]->shouldHaveType('Moccalotto\Hayttp\Contracts\Request');
+        $result[0]->shouldHaveType('Hayttp\Contracts\Response');
+        $result[1]->shouldHaveType('Hayttp\Contracts\Request');
 
         $result[0]->request()->shouldBe($result[1]);
     }
@@ -291,7 +291,7 @@ EOF;
         ]);
         $this->beConstructedWith($body, $headers, $metadata, $request);
 
-        $this->shouldThrow('\Moccalotto\Hayttp\Exceptions\ResponseException')->duringInstantiation();
+        $this->shouldThrow('\Hayttp\Exceptions\ResponseException')->duringInstantiation();
     }
 
     public function it_throws_exception_in_case_of_invalid_deferred_call(Request $request)
@@ -360,7 +360,7 @@ JSON;
             false
         )->shouldBe($this->getWrappedObject());
 
-        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\Response\ContentException')->during(
+        $this->shouldThrow('Hayttp\Exceptions\Response\ContentException')->during(
             'ensureJson',
             [
                 [
@@ -368,7 +368,7 @@ JSON;
                 ]
             ]
         );
-        $this->shouldThrow('Moccalotto\Hayttp\Exceptions\Response\ContentException')->during(
+        $this->shouldThrow('Hayttp\Exceptions\Response\ContentException')->during(
             'ensureJson',
             [
                 [

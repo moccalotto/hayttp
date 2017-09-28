@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Contracts;
+namespace Hayttp\Contracts;
 
 use SimpleXmlElement;
 

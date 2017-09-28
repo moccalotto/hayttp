@@ -8,11 +8,11 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Mock;
+namespace Hayttp\Mock;
 
 use SimpleXmlElement;
-use Moccalotto\Hayttp\Util;
-use Moccalotto\Hayttp\Response as BaseResponse;
+use Hayttp\Util;
+use Hayttp\Response as BaseResponse;
 
 /**
  * Mock Request.

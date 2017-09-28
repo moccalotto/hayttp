@@ -8,11 +8,11 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Mock;
+namespace Hayttp\Mock;
 
 use LogicException;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * Mock Endpoint.

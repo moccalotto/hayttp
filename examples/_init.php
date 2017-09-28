@@ -1,8 +1,8 @@
 <?php
 
-use Moccalotto\Hayttp\Hayttp;
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Mock\Route;
+use Hayttp\Hayttp;
+use Hayttp\Request;
+use Hayttp\Mock\Route;
 
 require __DIR__ . '/../vendor/autoload.php';
 

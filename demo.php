@@ -7,9 +7,9 @@
  * @copyright 2017
  * @license MIT
  */
-use Moccalotto\Hayttp\Hayttp;
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Response;
+use Hayttp\Hayttp;
+use Hayttp\Request;
+use Hayttp\Response;
 
 require 'vendor/autoload.php';
 
@@ -101,7 +101,7 @@ $cats = Hayttp::get('https://example.com/cats')
 // content type is not json and if the http status code is not 200
 // once we have the response, we transform it.
 $friends = Hayttp::get('https://example.com/friends')
-    ->withEngine(new Moccalotto\Hayttp\Engines\CurlEngine())
+    ->withEngine(new Hayttp\Engines\CurlEngine())
     ->withCryptoMethod('tlsv1.2')   // send data via TLS version 1.2.
     ->withTimeout(10.0)             // set a 10-second timeout.
     ->ensure200()                   // Ensure that the response code is 200.

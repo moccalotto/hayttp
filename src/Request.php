@@ -8,12 +8,12 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp;
+namespace Hayttp;
 
 use LogicException;
-use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Engine as EngineContract;
+use Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * HTTP Request class.

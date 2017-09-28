@@ -1,10 +1,18 @@
 <?php
 
-namespace spec\Moccalotto\Hayttp\Mock;
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2017
+ * @license MIT
+ */
+
+namespace spec\Hayttp\Mock;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Moccalotto\Hayttp\Request;
+use Hayttp\Request;
 
 /**
  * Test.
@@ -21,7 +29,7 @@ class MockResponseSpec extends ObjectBehavior
             ['meta' => 'data'],
             hayttp()->get('https://foo.bar')
         );
-        $this->shouldHaveType('Moccalotto\Hayttp\Mock\MockResponse');
+        $this->shouldHaveType('Hayttp\Mock\MockResponse');
     }
 
     function it_can_be_modified()

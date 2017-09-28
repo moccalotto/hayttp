@@ -1,6 +1,14 @@
 <?php
 
-namespace spec\Moccalotto\Hayttp\Mock;
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2017
+ * @license MIT
+ */
+
+namespace spec\Hayttp\Mock;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -20,7 +28,7 @@ class EndpointSpec extends ObjectBehavior
             function () { return null; }
         );
 
-        $this->shouldHaveType('Moccalotto\Hayttp\Mock\Endpoint');
+        $this->shouldHaveType('Hayttp\Mock\Endpoint');
     }
 
     function it_can_detect_if_it_can_handle_a_request()
@@ -42,7 +50,7 @@ class EndpointSpec extends ObjectBehavior
 
         $response = $this->handle(hayttp()->get('https://foo.bar/baz/bing'));
 
-        $response->shouldHaveType('Moccalotto\Hayttp\Mock\MockResponse');
+        $response->shouldHaveType('Hayttp\Mock\MockResponse');
 
         $response->statusCode()->shouldBe('200');
 

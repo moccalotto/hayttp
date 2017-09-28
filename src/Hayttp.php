@@ -8,12 +8,12 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp;
+namespace Hayttp;
 
 use BadMethodCallException;
-use Moccalotto\Hayttp\Mock\MockResponse;
-use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Mock\MockResponse;
+use Hayttp\Contracts\Engine as EngineContract;
+use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Request creation facade.

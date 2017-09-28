@@ -8,10 +8,10 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Mock;
+namespace Hayttp\Mock;
 
-use Moccalotto\Hayttp\Exceptions\RouteException;
-use Moccalotto\Hayttp\Util;
+use Hayttp\Exceptions\RouteException;
+use Hayttp\Util;
 
 /**
  * HTTP Mock server.

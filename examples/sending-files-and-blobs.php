@@ -1,8 +1,8 @@
 <?php
 
-use Moccalotto\Hayttp\Hayttp;
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Response;
+use Hayttp\Hayttp;
+use Hayttp\Request;
+use Hayttp\Response;
 
 require '_init.php';
 

@@ -8,13 +8,13 @@
  * @license MIT
  */
 
-namespace spec\Moccalotto\Hayttp;
+namespace spec\Hayttp;
 
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Engines\CurlEngine;
-use Moccalotto\Hayttp\Engines\NativeEngine;
-use Moccalotto\Hayttp\Request;
-use Moccalotto\Hayttp\Response;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Engines\CurlEngine;
+use Hayttp\Engines\NativeEngine;
+use Hayttp\Request;
+use Hayttp\Response;
 use PhpSpec\ObjectBehavior;
 use SimpleXmlElement;
 

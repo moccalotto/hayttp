@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace spec\Moccalotto\Hayttp\Payloads;
+namespace spec\Hayttp\Payloads;
 
 use PhpSpec\ObjectBehavior;
 
@@ -22,13 +22,13 @@ class RawPayloadSpec extends ObjectBehavior
     public function it_is_initializable()
     {
         $this->beConstructedWith('', 'text/plain');
-        $this->shouldHaveType('Moccalotto\Hayttp\Payloads\RawPayload');
+        $this->shouldHaveType('Hayttp\Payloads\RawPayload');
     }
 
     public function it_implements_contract()
     {
         $this->beConstructedWith('', 'text/plain');
-        $this->shouldHaveType('Moccalotto\Hayttp\Contracts\Payload');
+        $this->shouldHaveType('Hayttp\Contracts\Payload');
     }
 
     public function it_renders_contents()

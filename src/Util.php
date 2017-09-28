@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp;
+namespace Hayttp;
 
 use UnexpectedValueException;
 

@@ -8,13 +8,13 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Engines;
+namespace Hayttp\Engines;
 
-use Moccalotto\Hayttp\Contracts\Engine as EngineContract;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
-use Moccalotto\Hayttp\Exceptions\CouldNotConnectException;
-use Moccalotto\Hayttp\Response as Response;
+use Hayttp\Contracts\Engine as EngineContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Exceptions\CouldNotConnectException;
+use Hayttp\Response as Response;
 use UnexpectedValueException;
 
 class CurlEngine implements EngineContract

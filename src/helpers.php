@@ -1,9 +1,17 @@
 <?php
 
-use Moccalotto\Hayttp\Hayttp;
-use Moccalotto\Hayttp\Contracts\Request as RequestContract;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
-use Moccalotto\Hayttp\Contracts\Payload as PayloadContract;
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2017
+ * @license MIT
+ */
+
+use Hayttp\Hayttp;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Contracts\Payload as PayloadContract;
 
 if (!function_exists('hayttp')) {
 
@@ -46,7 +54,7 @@ if (!function_exists('hayttp_do')) {
      *                     If $data is an array or StdClass, it will be sent as application/json payload
      *                     If $data is a scalar value, it will be sent as application/octet-stream
      *                     If $data is null, no body will be attached
-     *                     If $data implements the Moccalotto\Hayttp\Contracts\Payload interface, it will
+     *                     If $data implements the Hayttp\Contracts\Payload interface, it will
      *                     be attached to the the __toString() and contentType() methods on the object
      *                     dictate.
      *

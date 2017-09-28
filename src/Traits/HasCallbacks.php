@@ -1,9 +1,17 @@
 <?php
 
-namespace Moccalotto\Hayttp\Traits;
+/**
+ * This file is part of the Hayttp package.
+ *
+ * @author Kim Ravn Hansen <moccalotto@gmail.com>
+ * @copyright 2017
+ * @license MIT
+ */
 
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
-use Moccalotto\Hayttp\Contracts\Requestas as RequestContract;
+namespace Hayttp\Traits;
+
+use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Contracts\Requestas as RequestContract;
 
 trait HasCallbacks
 {

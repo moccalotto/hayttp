@@ -37,7 +37,7 @@ composer require moccalotto/hayttp
 ## Usage
 
 ```php
-use Moccalotto\Hayttp\Hayttp;
+use Hayttp\Hayttp;
 
 $response = Hayttp::get($url)->send();
 ```

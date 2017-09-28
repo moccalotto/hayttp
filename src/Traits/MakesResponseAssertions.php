@@ -8,12 +8,12 @@
  * @license MIT
  */
 
-namespace Moccalotto\Hayttp\Traits;
+namespace Hayttp\Traits;
 
-use Moccalotto\Hayttp\Util;
-use Moccalotto\Hayttp\Exceptions\Response as R;
-use Moccalotto\Hayttp\Exceptions\ResponseException;
-use Moccalotto\Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Util;
+use Hayttp\Exceptions\Response as R;
+use Hayttp\Exceptions\ResponseException;
+use Hayttp\Contracts\Response as ResponseContract;
 
 trait MakesResponseAssertions
 {
