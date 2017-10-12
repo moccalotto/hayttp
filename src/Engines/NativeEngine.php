@@ -15,6 +15,7 @@ use Hayttp\Contracts\Request as RequestContract;
 use Hayttp\Contracts\Response as ResponseContract;
 use Hayttp\Exceptions\CouldNotConnectException;
 use Hayttp\Response as Response;
+use ErrorException;
 
 class NativeEngine implements EngineContract
 {
@@ -73,17 +74,27 @@ class NativeEngine implements EngineContract
     public function send(RequestContract $request) : ResponseContract
     {
         try {
-            $stream = @fopen($request->url(), 'r', false, $this->buildContext($request));
+            set_error_handler(function ($errorNumber, $errorMessage, $file, $line) use ($request) {
+                throw new ErrorException(
+                    $errorMessage,
+                    $errorNumber,
+                    E_ERROR,
+                    $file,
+                    $line
+                );
+            });
+
+            $stream = fopen($request->url(), 'r', false, $this->buildContext($request));
+
+            restore_error_handler();
+
+            if (!$stream) {
+                throw new CouldNotConnectException($request);
+            }
         } catch (ErrorException $e) {
             // Reached if fancy php error-exception handler is running
             // and fopen fails
             throw new CouldNotConnectException($request, [], $e);
-        }
-
-        if ($stream === false) {
-            // reached if error-exception handler isnt running
-            // and fopen fails
-            throw new CouldNotConnectException($request, ['error_get_last' => error_get_last()]);
         }
 
         $body = stream_get_contents($stream);
