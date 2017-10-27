@@ -273,16 +273,17 @@ trait HasWithMethods
      * Set an XML payload.
      *
      * @param SimpleXmlElement|string $xml
+     * @param string                  $contentType
      *
      * @return RequestContract
      */
-    public function withXmlPayload($xml) : RequestContract
+    public function withXmlPayload($xml, $contentType = 'application/xml') : RequestContract
     {
         if ($xml instanceof SimpleXmlElement) {
             $xml = $xml->asXml();
         }
 
-        return $this->withRawPayload($xml, 'application/xml');
+        return $this->withRawPayload($xml, $contentType);
     }
 
     /**
