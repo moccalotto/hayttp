@@ -21,7 +21,7 @@ trait Extendable
     /**
      * @var array
      */
-    protected static $extensions;
+    protected static $extensions = [];
 
     public static function hasExtension($methodName)
     {
