@@ -228,7 +228,7 @@ trait HasWithMethods
             throw new UnexpectedValueException(sprintf(
                 'Method »%s« does not exist on class %s',
                 $methodName,
-                Response::class
+                ResponseContract::class
             ));
         }
 
