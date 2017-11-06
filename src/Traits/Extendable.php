@@ -23,7 +23,14 @@ trait Extendable
      */
     protected static $extensions = [];
 
-    public static function hasExtension($methodName)
+    /**
+     * Has this class been extended with a given method?
+     *
+     * @param string $methodName The name of the method
+     *
+     * @return bool
+     */
+    public static function hasExtension($methodName) : bool
     {
         return isset(static::$extensions[$methodName]);
     }
