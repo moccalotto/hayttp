@@ -35,7 +35,6 @@ trait Extendable
         return isset(static::$extensions[$methodName]);
     }
 
-
     /**
      * Add a method to the class.
      *
