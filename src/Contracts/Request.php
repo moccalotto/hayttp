@@ -282,7 +282,7 @@ interface Request
     /**
      * The request payload.
      *
-     * @return PayloadContract
+     * @return Payload
      */
     public function payload();
 
