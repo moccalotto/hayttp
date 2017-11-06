@@ -19,7 +19,7 @@ use UnexpectedValueException;
 
 class CurlEngine implements EngineContract
 {
-    protected function curlCryptoMethod($cryptoMethod)
+    protected function curlCryptoMethod(string $cryptoMethod) : int
     {
         switch ($cryptoMethod) {
             case RequestContract::CRYPTO_ANY:
