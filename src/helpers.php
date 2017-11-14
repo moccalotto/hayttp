@@ -7,16 +7,13 @@
  * @copyright 2017
  * @license MIT
  */
-
 use Hayttp\Hayttp;
-use Hayttp\Contracts\Request as RequestContract;
 use Hayttp\Contracts\Response as ResponseContract;
 use Hayttp\Contracts\Payload as PayloadContract;
 
 if (!function_exists('hayttp')) {
-
     /**
-     * Get the default Hayttp instance
+     * Get the default Hayttp instance.
      *
      * @return Hayttp
      */
@@ -27,9 +24,8 @@ if (!function_exists('hayttp')) {
 }
 
 if (!function_exists('hayttp_request')) {
-
     /**
-     * Create a Hayttp request
+     * Create a Hayttp request.
      *
      * @param string $method
      * @param string $url
@@ -43,20 +39,19 @@ if (!function_exists('hayttp_request')) {
 }
 
 if (!function_exists('hayttp_do')) {
-
     /**
-     * Create a Hayttp and send a Http Request
+     * Create a Hayttp and send a Http Request.
      *
      * @param string $method
      * @param string $url
-     * @param mixed  $data Data payload.
-     *                     If $data is instance of SimpleXmlElement, it will be sent as application/xml payload
-     *                     If $data is an array or StdClass, it will be sent as application/json payload
-     *                     If $data is a scalar value, it will be sent as application/octet-stream
-     *                     If $data is null, no body will be attached
-     *                     If $data implements the Hayttp\Contracts\Payload interface, it will
-     *                     be attached to the the __toString() and contentType() methods on the object
-     *                     dictate.
+     * @param mixed  $data   Data payload.
+     *                       If $data is instance of SimpleXmlElement, it will be sent as application/xml payload
+     *                       If $data is an array or StdClass, it will be sent as application/json payload
+     *                       If $data is a scalar value, it will be sent as application/octet-stream
+     *                       If $data is null, no body will be attached
+     *                       If $data implements the Hayttp\Contracts\Payload interface, it will
+     *                       be attached to the the __toString() and contentType() methods on the object
+     *                       dictate.
      *
      * @return ResponseContract
      */
@@ -85,7 +80,6 @@ if (!function_exists('hayttp_do')) {
 }
 
 if (!function_exists('hayttp_get')) {
-
     /**
      * Execute a Hayttp »get« request.
      *
@@ -100,7 +94,6 @@ if (!function_exists('hayttp_get')) {
 }
 
 if (!function_exists('hayttp_post')) {
-
     /**
      * Execute a Hayttp »post« request.
      *
@@ -120,7 +113,6 @@ if (!function_exists('hayttp_post')) {
 }
 
 if (!function_exists('hayttp_put')) {
-
     /**
      * Execute a Hayttp »put« request.
      *
@@ -140,7 +132,6 @@ if (!function_exists('hayttp_put')) {
 }
 
 if (!function_exists('hayttp_patch')) {
-
     /**
      * Execute a Hayttp »patch« request.
      *
@@ -160,7 +151,6 @@ if (!function_exists('hayttp_patch')) {
 }
 
 if (!function_exists('hayttp_delete')) {
-
     /**
      * Execute a Hayttp »delete« request.
      *
@@ -180,7 +170,6 @@ if (!function_exists('hayttp_delete')) {
 }
 
 if (!function_exists('hayttp_head')) {
-
     /**
      * Execute a Hayttp »head« request.
      *
@@ -195,7 +184,6 @@ if (!function_exists('hayttp_head')) {
 }
 
 if (!function_exists('hayttp_options')) {
-
     /**
      * Execute a Hayttp »options« request.
      *

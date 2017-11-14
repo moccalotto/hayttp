@@ -407,7 +407,7 @@ interface Response
     public function ensureXml();
 
     /**
-     * Ensure that the response has a given content type
+     * Ensure that the response has a given content type.
      *
      * @param string|strings[] $contentType
      *

@@ -72,7 +72,7 @@ trait Extendable
      * Execute a static call with the correct class scope.
      *
      * @param callable $callable
-     * @param array $args
+     * @param array    $args
      *
      * @return mixed
      */
@@ -89,7 +89,7 @@ trait Extendable
      * Execute a static call with the correct class scope.
      *
      * @param callable $callable
-     * @param array $args
+     * @param array    $args
      *
      * @return mixed
      */

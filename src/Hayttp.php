@@ -145,7 +145,7 @@ class Hayttp
      *
      * @return mixed
      *
-     * @throws BadMethodCallException if $methodName is incorrect.
+     * @throws BadMethodCallException if $methodName is incorrect
      */
     public function __call($methodName, $args)
     {
@@ -170,7 +170,7 @@ class Hayttp
      *
      * @return mixed
      *
-     * @throws BadMethodCallException if $methodName is incorrect.
+     * @throws BadMethodCallException if $methodName is incorrect
      */
     public static function __callStatic($methodName, $args)
     {

@@ -11,7 +11,6 @@
 namespace Hayttp\Mock;
 
 use Hayttp\Exceptions\RouteException;
-use Hayttp\Util;
 
 /**
  * HTTP Mock server.

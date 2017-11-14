@@ -184,7 +184,7 @@ class MockResponse extends BaseResponse
     }
 
     /**
-     * Add information about the route to the response
+     * Add information about the route to the response.
      *
      * @param Route $route
      *

@@ -10,7 +10,6 @@
 
 namespace Hayttp;
 
-use Hayttp\Util;
 use LogicException;
 use SimpleXmlElement;
 use UnexpectedValueException;
@@ -255,7 +254,7 @@ class Response implements ResponseContract
         }
 
         $expected = explode(';', $contentType);
-        $actual   = explode(';', $this->contentType());
+        $actual = explode(';', $this->contentType());
 
         foreach (array_keys($expected) as $idx) {
             if ($expected[$idx] != $actual[$idx]) {
@@ -265,7 +264,6 @@ class Response implements ResponseContract
 
         return true;
     }
-
 
     /**
      * Get the response body.
@@ -363,7 +361,6 @@ class Response implements ResponseContract
 
     /**
      * Render headers in to a well-formatted string.
-     *
      */
     protected function renderHeaders()
     {

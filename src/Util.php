@@ -122,15 +122,16 @@ class Util
      * Create an assertion/expectation message for assertions.
      *
      * @param string $message
-     * @param mixed $expected
-     * @param mixed $actual
+     * @param mixed  $expected
+     * @param mixed  $actual
      *
      * @return string
      */
     public static function makeExpectationMessage($message, $expected, $actual)
     {
         $expected = static::toPrettyJson($expected);
-        $actual   = static::toPrettyJson($actual);
+        $actual = static::toPrettyJson($actual);
+
         return $message
             . PHP_EOL
             . PHP_EOL
