@@ -124,7 +124,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function apply(callable $callback, &$result = null) : Response;
+    public function apply(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if statusCode is 5xx.
@@ -134,7 +134,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function on5xx(callable $callback, &$result = null) : Response;
+    public function on5xx(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if statusCode is 4xx.
@@ -144,7 +144,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function on4xx(callable $callback, &$result = null) : Response;
+    public function on4xx(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if statusCode is 3xx.
@@ -154,7 +154,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function on3xx(callable $callback, &$result = null) : Response;
+    public function on3xx(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if status code is 2xx.
@@ -164,7 +164,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function on2xx(callable $callback, &$result = null) : Response;
+    public function on2xx(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if status code is 4xx or 5xx.
@@ -176,7 +176,7 @@ interface Response
      *
      * @see RequestContract::isError()
      */
-    public function onError(callable $callback, &$result = null) : Response;
+    public function onError(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if status code indicates a success.
@@ -188,7 +188,7 @@ interface Response
      *
      * @see RequestContract::isSuccess()
      */
-    public function onSuccess(callable $callback, &$result = null) : Response;
+    public function onSuccess(callable $callback, &$result = null) : self;
 
     /**
      * Execute a callback if status code === $statusCode.
@@ -199,7 +199,7 @@ interface Response
      *
      * @return Response A clone of $this
      */
-    public function onStatusCode(int $statusCode, callable $callback, &$result = null) : Response;
+    public function onStatusCode(int $statusCode, callable $callback, &$result = null) : self;
 
     /**
      * Is the status code 2xx ?
@@ -308,7 +308,7 @@ interface Response
      *
      * @throws ResponseException
      */
-    public function ensureStatusInRange($min, $max) : Response;
+    public function ensureStatusInRange($min, $max) : self;
 
     /**
      * Ensure that the status code is in a given et of codes.
@@ -319,7 +319,7 @@ interface Response
      *
      * @throws ResponseException
      */
-    public function ensureStatusIn(array $validCodes) : Response;
+    public function ensureStatusIn(array $validCodes) : self;
 
     /**
      * Ensure that the status code equals $validCode.

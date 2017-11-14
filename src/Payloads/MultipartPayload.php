@@ -57,7 +57,7 @@ class MultipartPayload implements PayloadContract
      *
      * @return MultipartPayload
      */
-    public function withField(string $name, string $data, $filename, $contentType) : MultipartPayload
+    public function withField(string $name, string $data, $filename, $contentType) : self
     {
         $clone = clone $this;
         $clone->entries[] = [

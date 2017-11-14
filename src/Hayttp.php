@@ -54,7 +54,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public static function instance() : Hayttp
+    public static function instance() : self
     {
         if (self::$defaultInstance === null) {
             self::$defaultInstance = new static(Request::class);
@@ -185,7 +185,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    protected function with(string $property, $value) : Hayttp
+    protected function with(string $property, $value) : self
     {
         $clone = clone $this;
         $clone->$property = $value;
@@ -201,7 +201,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withDeferredCall(string $methodName, array $args = []) : Hayttp
+    public function withDeferredCall(string $methodName, array $args = []) : self
     {
         $tmp = $this->deferredCalls;
         $tmp[] = [$methodName, $args];
@@ -230,7 +230,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withMountPoint(string $url) : Hayttp
+    public function withMountPoint(string $url) : self
     {
         return $this->with(
             'mountPoint',
@@ -245,7 +245,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withTimeout() : Hayttp
+    public function withTimeout() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -257,7 +257,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withUserAgent() : Hayttp
+    public function withUserAgent() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -271,7 +271,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withCryptoMethod() : Hayttp
+    public function withCryptoMethod() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -281,7 +281,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withInsecureSsl() : Hayttp
+    public function withInsecureSsl() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -293,7 +293,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withEngine() : Hayttp
+    public function withEngine() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -305,7 +305,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withHeaders() : Hayttp
+    public function withHeaders() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -317,7 +317,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withAdditionalHeaders() : Hayttp
+    public function withAdditionalHeaders() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -329,7 +329,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withProxy() : Hayttp
+    public function withProxy() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -342,7 +342,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withHeader() : Hayttp
+    public function withHeader() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -354,7 +354,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withTls() : Hayttp
+    public function withTls() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -367,7 +367,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withBasicAuth() : Hayttp
+    public function withBasicAuth() : self
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }

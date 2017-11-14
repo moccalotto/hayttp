@@ -63,7 +63,7 @@ interface Request
      *
      * @return Request
      */
-    public function withCryptoMethod($cryptoMethod) : Request;
+    public function withCryptoMethod($cryptoMethod) : self;
 
     /**
      * Set all headers.
@@ -72,7 +72,7 @@ interface Request
      *
      * @return Request
      */
-    public function withHeaders(array $headers) : Request;
+    public function withHeaders(array $headers) : self;
 
     /**
      * Add an array of headers.
@@ -81,7 +81,7 @@ interface Request
      *
      * @return Request
      */
-    public function withAdditionalHeaders(array $headers) : Request;
+    public function withAdditionalHeaders(array $headers) : self;
 
     /**
      * Set the proxy server.
@@ -90,7 +90,7 @@ interface Request
      *
      * @return Request
      */
-    public function withProxy($proxy) : Request;
+    public function withProxy($proxy) : self;
 
     /**
      * Add a header to the request.
@@ -100,14 +100,14 @@ interface Request
      *
      * @return Request
      */
-    public function withHeader($name, $value) : Request;
+    public function withHeader($name, $value) : self;
 
     /**
      * Disable all SSL certificate checks.
      *
      * @return Request
      */
-    public function withInsecureSsl() : Request;
+    public function withInsecureSsl() : self;
 
     /**
      * Set the transfer engine.
@@ -116,7 +116,7 @@ interface Request
      *
      * @return Request
      */
-    public function withEngine(Engine $engine) : Request;
+    public function withEngine(Engine $engine) : self;
 
     /**
      * Set the raw body of the request.
@@ -126,7 +126,7 @@ interface Request
      *
      * @return Request
      */
-    public function withRawPayload(string $body, string $contentType = 'application/octet-stream') : Request;
+    public function withRawPayload(string $body, string $contentType = 'application/octet-stream') : self;
 
     /**
      * Set a JSON payload.
@@ -135,7 +135,7 @@ interface Request
      *
      * @return Request
      */
-    public function withJsonPayload($body) : Request;
+    public function withJsonPayload($body) : self;
 
     /**
      * Set a XML payload.
@@ -144,7 +144,7 @@ interface Request
      *
      * @return Request
      */
-    public function withXmlPayload($xml) : Request;
+    public function withXmlPayload($xml) : self;
 
     /**
      * Set a URL-encoded payload.
@@ -153,7 +153,7 @@ interface Request
      *
      * @return Request
      */
-    public function withFormDataPayload(array $data) : Request;
+    public function withFormDataPayload(array $data) : self;
 
     /**
      * Add Accept header.
@@ -162,7 +162,7 @@ interface Request
      *
      * @return Request
      */
-    public function expects(string $mimeType) : Request;
+    public function expects(string $mimeType) : self;
 
     /**
      * Add Accept header with many types.
@@ -171,26 +171,26 @@ interface Request
      *
      * @return Request
      */
-    public function expectsMany(array $types) : Request;
+    public function expectsMany(array $types) : self;
 
     /**
      * Accept application/json.
      *
      * @return Request
      */
-    public function expectsJson() : Request;
+    public function expectsJson() : self;
 
     /**
      * Accept application/xml.
      */
-    public function expectsXml() : Request;
+    public function expectsXml() : self;
 
     /**
      * * Accept * / *.
      *
      * @return Request
      */
-    public function expectsAny() : Request;
+    public function expectsAny() : self;
 
     /**
      * Add a multipart entry.
@@ -207,7 +207,7 @@ interface Request
         string $data,
         string $filename = null,
         string $contentType = null
-    ) : Request;
+    ) : self;
 
     /**
      * Add a file to the multipart body.
@@ -219,7 +219,7 @@ interface Request
      *
      * @return Request
      */
-    public function addFile(string $name, string $file, string $filename = null, string $contentType = null) : Request;
+    public function addFile(string $name, string $file, string $filename = null, string $contentType = null) : self;
 
     /**
      * Add a data field to the multipart body.
@@ -230,7 +230,7 @@ interface Request
      *
      * @return Request
      */
-    public function addBlob(string $name, string $data, $contentType = null) : Request;
+    public function addBlob(string $name, string $data, $contentType = null) : self;
 
     /**
      * Send/execute the request.
@@ -322,7 +322,7 @@ interface Request
      *
      * @return RequestContract
      */
-    public function withResponseCall(string $methodName, array $args = []) : Request;
+    public function withResponseCall(string $methodName, array $args = []) : self;
 
     /**
      * Get the calls that are to be executed on the response
