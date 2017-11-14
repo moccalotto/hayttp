@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "phpspec/phpspec": "^3.4",
-        "friendsofphp/php-cs-fixer": "^1.11",
+        "friendsofphp/php-cs-fixer": "^2.1.0",
         "ext-curl" : "*",
         "phpunit/phpunit": "^6.2"
     },
