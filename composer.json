@@ -26,5 +26,17 @@
             "Hayttp\\": "src/"
         },
         "files": ["src/helpers.php"]
+    },
+    "scripts": {
+        "test-code-style": [
+            "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
+        ],
+        "test-bdd": [
+            "@php vendor/bin/phpspec run --format=pretty"
+        ],
+        "test": [
+            "@test-code-style",
+            "@test-bdd"
+        ]
     }
 }

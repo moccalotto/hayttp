@@ -9,4 +9,4 @@ $rules = [
 
 return PhpCsFixer\Config::create()
     ->setRules($rules)
-    ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__));
+    ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__ . '/src'));
