@@ -55,7 +55,7 @@ trait Extendable
      *
      * @return $this
      */
-    public static function mixin(object $object)
+    public static function mixin($object)
     {
         $refObject = new ReflectionObject($object);
 
