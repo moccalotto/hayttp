@@ -13,4 +13,4 @@ before_script:
 
 script:
   - vendor/bin/phpspec run --format=pretty -vvv
-  - vendor/bin/php-cs-fixer fix src --dry-run --diff
+  - vendor/bin/php-cs-fixer fix --dry-run --diff
