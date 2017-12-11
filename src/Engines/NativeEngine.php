@@ -46,7 +46,7 @@ class NativeEngine implements EngineContract
                 'protocol_version' => 1.0,
                 'ignore_errors' => true,
                 'header' => $request->preparedHeaders(),
-                'content' => (string) $request->body(),
+                'content' => $request->body(),
             ],
             'ssl' => [ // http://php.net/manual/en/context.ssl.php
                 'verify_peer' => $request->secureSsl(),
@@ -74,7 +74,7 @@ class NativeEngine implements EngineContract
     public function send(RequestContract $request) : ResponseContract
     {
         try {
-            set_error_handler(function ($errorNumber, $errorMessage, $file, $line) use ($request) {
+            set_error_handler(function ($errorNumber, $errorMessage, $file, $line) {
                 throw new ErrorException(
                     $errorMessage,
                     $errorNumber,
