@@ -331,4 +331,11 @@ interface Request
      * @return array
      */
     public function responseCalls() : array;
+
+    /**
+     * The request body.
+     *
+     * @return string
+     */
+    public function body();
 }
