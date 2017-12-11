@@ -8,8 +8,9 @@
  * @license MIT
  */
 use Hayttp\Hayttp;
-use Hayttp\Contracts\Response as ResponseContract;
 use Hayttp\Contracts\Payload as PayloadContract;
+use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Response as ResponseContract;
 
 if (!function_exists('hayttp')) {
     /**
@@ -30,7 +31,7 @@ if (!function_exists('hayttp_request')) {
      * @param string $method
      * @param string $url
      *
-     * @return ResponseContract
+     * @return RequestContract
      */
     function hayttp_request($method, $url)
     {
