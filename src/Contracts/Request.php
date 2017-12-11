@@ -251,7 +251,7 @@ interface Request
      *
      * @return Engine
      */
-    public function engine();
+    public function engine() : Engine;
 
     /**
      * All registered event hooks.
