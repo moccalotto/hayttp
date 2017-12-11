@@ -20,7 +20,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function method()
+    public function method() : string
     {
         return $this->method;
     }
@@ -40,7 +40,7 @@ trait HasRequestAccessors
      *
      * @return array
      */
-    public function events()
+    public function events() : array
     {
         return $this->events;
     }
@@ -50,7 +50,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function userAgent()
+    public function userAgent() : string
     {
         return $this->userAgent;
     }
@@ -60,7 +60,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function url()
+    public function url() : string
     {
         return $this->url;
     }
@@ -68,7 +68,7 @@ trait HasRequestAccessors
     /**
      * @return array
      */
-    public function headers()
+    public function headers() : array
     {
         return $this->headers;
     }
@@ -92,7 +92,7 @@ trait HasRequestAccessors
      *
      * @return PayloadContract
      */
-    public function payload()
+    public function payload() : PayloadContract
     {
         return $this->payload;
     }
@@ -112,7 +112,7 @@ trait HasRequestAccessors
      *
      * @return bool
      */
-    public function secureSsl()
+    public function secureSsl() : bool
     {
         return $this->secureSsl;
     }
@@ -122,7 +122,7 @@ trait HasRequestAccessors
      *
      * @return float
      */
-    public function timeout()
+    public function timeout() : float
     {
         return $this->timeout;
     }
@@ -130,9 +130,9 @@ trait HasRequestAccessors
     /**
      * Cryptographic transport method.
      *
-     * @return array
+     * @return string
      */
-    public function cryptoMethod()
+    public function cryptoMethod() : string
     {
         return $this->cryptoMethod;
     }
@@ -142,7 +142,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function body()
+    public function body() : string
     {
         return (string) $this->payload;
     }

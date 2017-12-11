@@ -79,7 +79,7 @@ class Request implements RequestContract
     protected $timeout = 5;
 
     /**
-     * @var array
+     * @var string
      */
     protected $cryptoMethod = 'tlsv1.2';
 

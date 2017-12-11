@@ -244,7 +244,7 @@ interface Request
      *
      * @return string
      */
-    public function method();
+    public function method() : string;
 
     /**
      * The request engine.
@@ -258,33 +258,33 @@ interface Request
      *
      * @return array
      */
-    public function events();
+    public function events() : array;
 
     /**
      * The user agent string.
      *
      * @return string
      */
-    public function userAgent();
+    public function userAgent() : string;
 
     /**
      * The target url.
      *
      * @return string
      */
-    public function url();
+    public function url() : string;
 
     /**
      * @return array
      */
-    public function headers();
+    public function headers() : array;
 
     /**
      * The request payload.
      *
      * @return Payload
      */
-    public function payload();
+    public function payload() : Payload;
 
     /**
      * The proxy to use.
@@ -298,21 +298,21 @@ interface Request
      *
      * @return bool
      */
-    public function secureSsl();
+    public function secureSsl() : bool;
 
     /**
      * Timeout in seconds.
      *
      * @return float
      */
-    public function timeout();
+    public function timeout() : float;
 
     /**
      * Cryptographic transport method.
      *
-     * @return array
+     * @return string
      */
-    public function cryptoMethod();
+    public function cryptoMethod() : string;
 
     /**
      * Execute the $response->$methodName(...$args) as soon as we have a response.
@@ -337,5 +337,12 @@ interface Request
      *
      * @return string
      */
-    public function body();
+    public function body() : string;
+
+    /**
+     * Get the contents of the Content-Type header.
+     *
+     * @return string|null
+     */
+    public function contentType();
 }
