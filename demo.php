@@ -14,25 +14,24 @@ use Hayttp\Response;
 require 'vendor/autoload.php';
 
 // Dynamically add a method to all requests
-Response::extend('printme', function () {
+Response::extend('printed', function () {
     return print_r($this, true);
 });
-
 // Create a "controller" for the given end point
-Hayttp::mockEndpoint('get', '{scheme}://foo.dev/{path}', function ($request, $route) {
-    // make a call to the new and fancy end extended method
-    // print $request->printme();
-
+Hayttp::mockEndpoint('.*', '{scheme}://foo.bar/{path}', function ($request, $route) {
     return Hayttp::createMockResponse($request, $route)
-        ->withJsonBody(['demo' => true])
+        ->withJsonBody(
+            [
+                'demo' => true,
+                $route->get('path') => $route->params(),
+            ]
+        )
         ->withRoute($route);
 });
 
-$response = Hayttp::get('http://foo.dev/foo')->send()
+$printedResponse = Hayttp::get('http://foo.bar/foo')->send()
     ->ensureStatus('200')
-    ->printme();
-
-die();
+    ->printed();
 
 //--------------------------------
 // Send some json
@@ -40,16 +39,17 @@ die();
 // In this scenario, we send  some json,
 // this puts the request into "raw" mode, and it also
 // locks the content. We cannot overwrite the content now
-$response = Hayttp::post('https://example.org')
+$response = Hayttp::post('https://foo.bar/baz')
      ->sendJson(['this' => 'object', 'will' => 'be', 'converted' => 'to json', 'foreign' => 'lommel']);
+
 
 // Send raw blob
 // going into raw mode always locks the contents
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.bar/post')
      ->sendRaw("csv;data\nkey1;value1\nkey2;value2", 'text/csv');
 
 // Send traditional post data
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.bar/post')
     ->sendFormData(['Friends' => ['Lisa', 'Danni']]);
 
 //---------------------------------------------
@@ -59,7 +59,7 @@ $response = Hayttp::post('https://example.org/post')
 // This puts the request into "multipart" mode,
 // but it does not lock the contents for further
 // updates.
-$response = Hayttp::post('https://example.org/post')
+$response = Hayttp::post('https://foo.bar/post')
     ->addMultipartField(
         'file1',
         base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', true),
@@ -74,16 +74,16 @@ $response = Hayttp::post('https://example.org/post')
 // You can use the transform method on responses
 // to convert the response in a structured way.
 $jsonArray = function ($response) {
-    return json_decode($response->body, true);
+    return json_decode($response->body(), true);
 };
 
-$friends = Hayttp::get('https://example.com/friends')
-    ->expectJson()
+$friends = Hayttp::get('https://foo.bar/friends')
+    ->expectsJson()
     ->send()
     ->transform($jsonArray)['friends'];
 
-$cats = Hayttp::get('https://example.com/cats')
-    ->expectJson()
+$cats = Hayttp::get('https://foo.bar/cats')
+    ->expectsJson()
     ->send()
     ->transform($jsonArray)['cats'];
 
@@ -96,8 +96,8 @@ $cats = Hayttp::get('https://example.com/cats')
 // we make Hayttp throw a ResponseException if the
 // content type is not json and if the http status code is not 200
 // once we have the response, we transform it.
-$friends = Hayttp::get('https://example.com/friends')
-    ->withEngine(new Hayttp\Engines\CurlEngine())
+$friends = Hayttp::get('https://foo.bar/friends')
+    ->withEngine(new \Hayttp\Engines\CurlEngine)
     ->withCryptoMethod('tlsv1.2')   // send data via TLS version 1.2.
     ->withTimeout(10.0)             // set a 10-second timeout.
     ->ensure200()                   // Ensure that the response code is 200.
