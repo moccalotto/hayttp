@@ -14,10 +14,6 @@ use Hayttp\Response;
 require 'vendor/autoload.php';
 
 // Dynamically add a method to all requests
-Request::extend('printme', function () {
-    return print_r($this, true);
-});
-
 Response::extend('printme', function () {
     return print_r($this, true);
 });
