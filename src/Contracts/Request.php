@@ -84,6 +84,15 @@ interface Request
     public function withAdditionalHeaders(array $headers) : self;
 
     /**
+     * Set the timeout.
+     *
+     * @param float $seconds
+     *
+     * @return RequestContract
+     */
+    public function withTimeout(float $seconds) : self;
+
+    /**
      * Set the proxy server.
      *
      * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).
@@ -345,4 +354,41 @@ interface Request
      * @return string|null
      */
     public function contentType();
+
+    /**
+     * Set the raw payload of the request and send/execute the request.
+     *
+     * @param string $payload
+     * @param string $contentType
+     *
+     * @return Response
+     */
+    public function sendRaw(string $payload, string $contentType = 'application/octet-stream') : Response;
+
+    /**
+     * Set a JSON payload and send/execute the request.
+     *
+     * @param array|object $payload the payload to send - the payload will always be json encoded
+     *
+     * @return Response
+     */
+    public function sendJson($json) : Response;
+
+    /**
+     * Set an XML payload and send/execute the request.
+     *
+     * @param SimpleXmlElement|string $xml
+     *
+     * @return Response
+     */
+    public function sendXml($xml) : Response;
+
+    /**
+     * Set a URL-encoded payload and send/execute the request.
+     *
+     * @param array $data key/value pairs to post as normal urlencoded fields
+     *
+     * @return Response
+     */
+    public function sendFormData(array $data) : Response;
 }

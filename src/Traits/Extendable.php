@@ -11,6 +11,8 @@
 namespace Hayttp\Traits;
 
 use Closure;
+use ReflectionObject;
+use ReflectionMethod;
 use BadMethodCallException;
 
 /**
@@ -53,7 +55,7 @@ trait Extendable
      *
      * @param object $object
      *
-     * @return $this
+     * @return $object
      */
     public static function mixin($object)
     {
@@ -62,10 +64,10 @@ trait Extendable
         $methods = $refObject->getMethods(ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $refMethod) {
-            $this->extend($refMethod->name, $refMethod->getClosure($object));
+            static::extend($refMethod->name, $refMethod->getClosure($object));
         }
 
-        return $this;
+        return $object;
     }
 
     /**
@@ -116,7 +118,8 @@ trait Extendable
             return $this->execDynamicCallable(static::$extensions[$methodName], $args);
         }
 
-        if (is_callable([parent::class, '__call'])) {
+        $parent = get_parent_class(static::class);
+        if ($parent && method_exists($parent, '__call')) {
             return parent::__call($methodName, $args);
         }
 
@@ -137,8 +140,9 @@ trait Extendable
             return static::execStaticCallable(static::$extensions[$methodName], $args);
         }
 
-        if (is_callable([parent::class, '__callStatic'])) {
-            return parent::__callStatic($methodName, $args);
+        $parent = get_parent_class(static::class);
+        if ($parent && method_exists($parent, '__callStatic')) {
+            return $parent::__callStatic($methodName, $args);
         }
 
         throw new BadMethodCallException("Static method $methodName does not exist.");

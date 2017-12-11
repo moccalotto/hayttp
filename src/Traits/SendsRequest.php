@@ -24,7 +24,7 @@ trait SendsRequest
      */
     public function send() : ResponseContract
     {
-        $clone = $this->with('engine', $this->engine ?: new NativeEngine());
+        $clone = $this->withEngine($this->engine ?: new NativeEngine());
 
         foreach ($this->mockedEndpoints as $endpoint) {
             if ($endpoint->handles($clone)) {

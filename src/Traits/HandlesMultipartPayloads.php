@@ -10,8 +10,9 @@
 
 namespace Hayttp\Traits;
 
-use Hayttp\Contracts\Request as RequestContract;
+use LogicException;
 use Hayttp\Payloads;
+use Hayttp\Contracts\Request as RequestContract;
 
 trait HandlesMultipartPayloads
 {
@@ -25,8 +26,12 @@ trait HandlesMultipartPayloads
      *
      * @return RequestContract
      */
-    public function addMultipartField(string $name, string $data, string $filename = null, string $contentType = null) : RequestContract
-    {
+    public function addMultipartField(
+        string $name,
+        string $data,
+        string $filename = null,
+        string $contentType = null
+    ) : RequestContract {
         if ($this->payload && !$this->payload instanceof Payloads\MultipartPayload) {
             throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
         }
@@ -42,7 +47,8 @@ trait HandlesMultipartPayloads
      * @param string $name        The posted field name
      * @param string $file        The filename on the physical HD
      * @param string $filename    The filename to post. If null, the basename of $filename will be used.
-     * @param string $contentType The content type of the file. If null, the content type will be inferred via mime_content_type()
+     * @param string $contentType The content type of the file.
+     *                            If null, the content type will be inferred via mime_content_type()
      *
      * @return RequestContract
      */

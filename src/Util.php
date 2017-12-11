@@ -174,6 +174,9 @@ class Util
         $res = [];
 
         foreach ($headers as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(';', array_map('trim', $value));
+            }
             if (is_int($key) && strpos($value, ':') === false) {
                 $res[] = trim($value);
                 continue;
