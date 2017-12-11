@@ -249,7 +249,7 @@ interface Request
     /**
      * The request engine.
      *
-     * @return EngineContract
+     * @return Engine
      */
     public function engine();
 
