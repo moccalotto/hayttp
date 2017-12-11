@@ -30,7 +30,7 @@ trait HasRequestAccessors
      *
      * @return EngineContract
      */
-    public function engine()
+    public function engine() : EngineContract
     {
         return $this->engine;
     }
