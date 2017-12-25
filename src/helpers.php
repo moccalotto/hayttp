@@ -58,10 +58,10 @@ if (!function_exists('hayttp_do')) {
      */
     function hayttp_do($method, $url, $data = null)
     {
-        $request = hayttp_request($method, $url)->ensure2xx();
+        $request = hayttp_request($method, $url);
 
         if (is_a($data, 'SimpleXmlElement')) {
-            return $request->sendXml();
+            return $request->sendXml($data);
         }
 
         if (is_array($data) || is_a($data, 'StdClass')) {
@@ -76,7 +76,7 @@ if (!function_exists('hayttp_do')) {
             return $request->sendRaw($data);
         }
 
-        return $request->send();
+        return $request->send()->ensure2xx();
     }
 }
 
