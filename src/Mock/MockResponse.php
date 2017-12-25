@@ -10,9 +10,10 @@
 
 namespace Hayttp\Mock;
 
-use SimpleXmlElement;
 use Hayttp\Util;
+use SimpleXmlElement;
 use Hayttp\Response as BaseResponse;
+use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Mock Request.
@@ -25,10 +26,15 @@ class MockResponse extends BaseResponse
      * Factory.
      *
      * Create an empty response from a given request.
+     *
+     * @param RequestContract $request
+     * @param Route           $route   Routing of parameters passed to the handler
+     *
+     * @return self
      */
     public static function new($request, $route)
     {
-        $contentType = $request->headers('accept') ?: 'application/octet-stream';
+        $contentType = $request->header('accept') ?: 'application/octet-stream';
 
         return new static(
             '',
