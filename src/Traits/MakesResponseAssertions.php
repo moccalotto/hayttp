@@ -243,7 +243,7 @@ trait MakesResponseAssertions
     /**
      * Ensure that the response has a given content type.
      *
-     * @param string|strings[] $contentType
+     * @param string|string[] $contentType
      *
      * @return $this
      *

@@ -304,18 +304,30 @@ interface Response
      * @param int $min
      * @param int $max
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
     public function ensureStatusInRange($min, $max) : self;
 
     /**
+     * Asserts that the response contains the given header and equals the optional value.
+     *
+     * @param string $headerName
+     * @param mixed  $expectedValue
+     *
+     * @return $this
+     *
+     * @throws ResponseException
+     */
+    public function ensureHasHeader($headerName, $expectedValue = null) : self;
+
+    /**
      * Ensure that the status code is in a given et of codes.
      *
      * @param int[] $validCodes
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -326,7 +338,7 @@ interface Response
      *
      * @param int $validCode
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -337,7 +349,7 @@ interface Response
      *
      * @param int $validCode
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -346,7 +358,7 @@ interface Response
     /**
      * Ensure that the status code is 200.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -355,7 +367,7 @@ interface Response
     /**
      * Ensure that the status code is 201.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -364,7 +376,7 @@ interface Response
     /**
      * Ensure that the status code is 204.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -373,7 +385,7 @@ interface Response
     /**
      * Ensure that the status code is 301.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -382,7 +394,7 @@ interface Response
     /**
      * Ensure that the status code is 302.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -391,7 +403,7 @@ interface Response
     /**
      * Ensure that the content type is application/json.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -400,7 +412,7 @@ interface Response
     /**
      * Ensure that the content type is application/xml.
      *
-     * @return Response
+     * @return $this
      *
      * @throws ResponseException
      */
@@ -409,9 +421,9 @@ interface Response
     /**
      * Ensure that the response has a given content type.
      *
-     * @param string|strings[] $contentType
+     * @param string|string[] $contentType
      *
-     * @return ResponseContract
+     * @return $this
      *
      * @throws R\ContentTypeException
      */
