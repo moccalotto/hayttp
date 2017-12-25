@@ -165,7 +165,7 @@ interface Request
     public function withFormDataPayload(array $data) : self;
 
     /**
-     * Set a custom payload
+     * Set a custom payload.
      *
      * @param Payload $payload
      *
