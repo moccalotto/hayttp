@@ -10,6 +10,7 @@
 
 namespace Hayttp;
 
+use Hayttp\Mock\Route;
 use BadMethodCallException;
 use Hayttp\Mock\MockResponse;
 use Hayttp\Contracts\Engine as EngineContract;
@@ -155,10 +156,6 @@ class Hayttp
             return $this->createRequest($method, $args[0]);
         }
 
-        if ($methodName == 'createMockResponse') {
-            return MockResponse::new($args[0], $args[1]);
-        }
-
         throw new BadMethodCallException(sprintf('Unknown method »%s«', $methodName));
     }
 
@@ -175,6 +172,19 @@ class Hayttp
     public static function __callStatic($methodName, $args)
     {
         return call_user_func_array([static::instance(), $methodName], $args);
+    }
+
+    /**
+     * Create an empty mock response from a given request and route.
+     *
+     * @param RequestContract $request The request made to the mocked end point.
+     * @param Route           $route   Routing of parameters passed to the handler
+     *
+     * @return MockResponse
+     */
+    public static function createMockResponse(RequestContract $request, Route $route)
+    {
+        return MockResponse::new($request, $route);
     }
 
     /**

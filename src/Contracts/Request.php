@@ -298,6 +298,15 @@ interface Request
     public function headers() : array;
 
     /**
+     * Get the contents of a given header.
+     *
+     * @param string $headerName The name of the header to search for
+     *
+     * @return string|null the contents of the header or null if it was not found
+     */
+    public function header($headerName);
+
+    /**
      * The request payload.
      *
      * @return Payload
