@@ -262,28 +262,6 @@ class Request implements RequestContract
     }
 
     /**
-     * Mock an end point.
-     *
-     * @param string   $methodPattern
-     * @param string   $urlPattern
-     * @param callable $handler
-     *
-     * @return RequestContract
-     */
-    public function withMockedEndpoint($methodPattern, $urlPattern, $handler)
-    {
-        $mockedEndpoints = $this->mockedEndpoints;
-
-        $mockedEndpoints[] = new Mock\Endpoint(
-            $methodPattern,
-            $urlPattern,
-            $handler
-        );
-
-        return $this->with('mockedEndpoints', $mockedEndpoints);
-    }
-
-    /**
      * Magic Method for dynamic method names.
      *
      * @param string $methodName
