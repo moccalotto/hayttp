@@ -10,6 +10,8 @@
 
 namespace Hayttp\Traits\Common;
 
+use Hayttp\Util;
+
 /**
  * Add __debugInfo support.
  *
@@ -34,14 +36,18 @@ trait DebugInfo
      */
     public function __debugInfo()
     {
-        $extraDebugFunc = [$this, 'extraDebugInfo'];
-        $extraDebugInfo = is_callable($extraDebugFunc)
-            ? $extraDebugFunc()
+        $extraDebugInfo = method_exists($this, 'extraDebugInfo') && is_callable([$this, 'extraDebugInfo'])
+            ? $this->extraDebugInfo()
             : [];
 
-        return array_merge(
-            $this->instanceVariables(),
-            $extraDebugInfo
-        );
+        if (!is_array($extraDebugInfo)) {
+            throw new UnexpectedValueException(sprintf(
+                'Result of calling %s::extraDebugInfo() must be an array!. The actual return type was %s',
+                get_class($this),
+                gettype($extraDebugInfo)
+            ));
+        }
+
+        return array_merge($this->instanceVariables(), $extraDebugInfo);
     }
 }
