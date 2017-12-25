@@ -88,7 +88,7 @@ class Request
     /**
      * @var string
      */
-    protected $cryptoMethod = 'tlsv1.2';
+    protected $cryptoMethod = self::CRYPTO_TLS_1_2;
 
     /**
      * @var array

@@ -19,7 +19,7 @@ trait ExpectsCommonMimeTypes
      *
      * @return self
      */
-    public function expects($mimeType)
+    public function accept($mimeType)
     {
         return $this->withHeader('Accept', $mimeType);
     }
@@ -31,7 +31,7 @@ trait ExpectsCommonMimeTypes
      *
      * @return self
      */
-    public function expectsMany($types)
+    public function acceptMany($types)
     {
         $parts = [];
 
@@ -48,9 +48,9 @@ trait ExpectsCommonMimeTypes
      *
      * @return self
      */
-    public function expectsJson()
+    public function acceptJson()
     {
-        return $this->expects('application/json');
+        return $this->accept('application/json');
     }
 
     /**
@@ -58,9 +58,9 @@ trait ExpectsCommonMimeTypes
      *
      * @return self
      */
-    public function expectsXml()
+    public function acceptXml()
     {
-        return $this->expects('application/xml');
+        return $this->accept('application/xml');
     }
 
     /**
@@ -68,9 +68,9 @@ trait ExpectsCommonMimeTypes
      *
      * @return self
      */
-    public function expectsAny()
+    public function acceptAny()
     {
-        return $this->expects('*/*');
+        return $this->accept('*/*');
     }
 
     /**
@@ -80,7 +80,7 @@ trait ExpectsCommonMimeTypes
      */
     public function ensureJson()
     {
-        return $this->expectsJson()
+        return $this->acceptJson()
             ->withResponseCall('ensureJson');
     }
 
@@ -91,7 +91,7 @@ trait ExpectsCommonMimeTypes
      */
     public function ensureXml()
     {
-        return $this->expectsXml()
+        return $this->acceptXml()
             ->withResponseCall('ensureXml');
     }
 }

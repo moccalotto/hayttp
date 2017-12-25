@@ -93,6 +93,7 @@ class NativeEngine implements Engine
         } catch (ErrorException $e) {
             // Reached if fancy php error-exception handler is running
             // and fopen fails
+            print $e;
             throw new CouldNotConnectException($request, [], $e);
         }
 

@@ -23,7 +23,7 @@ To add this package as a local, per-project dependency to your project, simply a
 ```json
 {
     "require": {
-        "moccalotto/hayttp": "~1.0"
+        "moccalotto/hayttp": "~2.0"
     }
 }
 ```
@@ -56,7 +56,7 @@ A more interesting POST example.
 
 ```php
 $response = Hayttp::post($url)
-    ->expectsJson()
+    ->acceptJson()
     ->sendJson([
         'this' => 'associative',
         'array' => 'will',
@@ -66,11 +66,11 @@ $response = Hayttp::post($url)
     ]);
 ```
 
-A DELETE request that expects an XML body in the response.
+A DELETE request that accept an XML body in the response.
 
 ```php
 $response = Hayttp::delete($url)
-    ->expectsXml()
+    ->acceptXml()
     ->send();
 ```
 
@@ -85,7 +85,7 @@ Json objects are converted to `stdClass` objects, and json arrays are converted 
 
 ```php
 $stdClass = Hayttp::get($url)
-    ->expectsJson()
+    ->acceptJson()
     ->send()
     ->jsonDecoded();
 ```
@@ -94,7 +94,7 @@ Here is an example of a response decoded into a `SimpleXmlElement`:
 
 ```php
 $simpleXmlElement = Hayttp::get($url)
-    ->expectsXml()
+    ->acceptXml()
     ->send()
     ->xmlDecoded();
 ```

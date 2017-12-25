@@ -78,12 +78,12 @@ $jsonArray = function ($response) {
 };
 
 $friends = Hayttp::get('https://foo.bar/friends')
-    ->expectsJson()
+    ->acceptJson()
     ->send()
     ->transform($jsonArray)['friends'];
 
 $cats = Hayttp::get('https://foo.bar/cats')
-    ->expectsJson()
+    ->acceptJson()
     ->send()
     ->transform($jsonArray)['cats'];
 
@@ -98,7 +98,7 @@ $cats = Hayttp::get('https://foo.bar/cats')
 // once we have the response, we transform it.
 $friends = Hayttp::get('https://foo.bar/friends')
     ->withEngine(new \Hayttp\Engines\CurlEngine)
-    ->withCryptoMethod('tlsv1.2')   // send data via TLS version 1.2.
+    ->withTls('1.2')                // send data via TLS version 1.2.
     ->withTimeout(10.0)             // set a 10-second timeout.
     ->ensure200()                   // Ensure that the response code is 200.
     ->ensureJson()                  // Throw exception if valid json data is not returned.
