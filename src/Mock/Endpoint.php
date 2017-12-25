@@ -10,6 +10,7 @@
 
 namespace Hayttp\Mock;
 
+use Closure;
 use LogicException;
 use Hayttp\Contracts\Request as RequestContract;
 use Hayttp\Contracts\Response as ResponseContract;
@@ -23,6 +24,21 @@ use Hayttp\Contracts\Response as ResponseContract;
 class Endpoint
 {
     /**
+     * @var string
+     */
+    public $methodRegex;
+
+    /**
+     * @var string
+     */
+    public $urlRegex;
+
+    /**
+     * @var Closure
+     */
+    public $handler;
+
+    /**
      * Constructor.
      *
      * @param string   $methodPattern
@@ -35,7 +51,7 @@ class Endpoint
 
         $this->methodRegex = "/^($methodPattern)$/i";
         $this->urlRegex = "#^{$urlRegex}$#i";
-        $this->handler = $handler;
+        $this->handler = Closure::fromCallable($handler);
     }
 
     /**
