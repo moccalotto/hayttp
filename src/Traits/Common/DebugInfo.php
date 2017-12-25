@@ -10,7 +10,6 @@
 
 namespace Hayttp\Traits\Common;
 
-use Hayttp\Util;
 use UnexpectedValueException;
 
 /**
