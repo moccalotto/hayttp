@@ -38,7 +38,7 @@ trait DebugInfo
     public function __debugInfo()
     {
         $extraDebugInfo = method_exists($this, 'extraDebugInfo') && is_callable([$this, 'extraDebugInfo'])
-            ? $this->extraDebugInfo()
+            ? call_user_func([$this, 'extraDebugInfo'])
             : [];
 
         if (!is_array($extraDebugInfo)) {
