@@ -34,9 +34,14 @@ trait HasCompleteDebugInfo
      */
     public function __debugInfo()
     {
+        $extraDebugFunc = [$this, 'extraDebugInfo'];
+        $extraDebugInfo = is_callable($extraDebugFunc)
+            ? $extraDebugFunc()
+            : [];
+
         return array_merge(
             $this->instanceVariables(),
-            method_exists($this, 'extraDebugInfo') ? $this->extraDebugInfo() : []
+            $extraDebugInfo
         );
     }
 }
