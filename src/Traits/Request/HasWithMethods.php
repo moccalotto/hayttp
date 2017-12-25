@@ -74,7 +74,7 @@ trait HasWithMethods
      *
      * @return self
      */
-    public function withInsecureSsl()
+    public function skipCertificateChecks()
     {
         return $this->with('secureSsl', false);
     }

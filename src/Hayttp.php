@@ -273,7 +273,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withInsecureSsl()
+    public function skipCertificateChecks()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
