@@ -179,7 +179,7 @@ class MockResponse extends BaseResponse
     public function withXmlBody($xml)
     {
         return $this->withBody(
-            $xml instanceof SimpleXmlElement ? $xml->asXml() : $xml
+            $xml instanceof SimpleXmlElement ? $xml->asXML() : $xml
         )->withContentType('application/xml');
     }
 
