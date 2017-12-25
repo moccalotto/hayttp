@@ -46,9 +46,9 @@ class Response
     /**
      * Constructor.
      *
-     * @param string          $body     response body
-     * @param array           $headers  response headers
-     * @param array           $metadata engine-specific metadata about the connection
+     * @param string  $body     response body
+     * @param array   $headers  response headers
+     * @param array   $metadata engine-specific metadata about the connection
      * @param Request $request  the request that yielded this response
      */
     public function __construct($body, array $headers, array $metadata, Request $request)

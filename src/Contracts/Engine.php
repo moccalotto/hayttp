@@ -16,9 +16,9 @@ use Hayttp\Response;
 interface Engine
 {
     /**
-     * Send a request
+     * Send a request.
      *
-     * @param Request  $request
+     * @param Request $request
      *
      * @return Response
      */

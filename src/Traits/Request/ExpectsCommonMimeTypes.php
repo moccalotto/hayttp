@@ -43,7 +43,6 @@ trait ExpectsCommonMimeTypes
         return $this->withHeader('Accept', implode(', ', $parts));
     }
 
-
     /**
      * Accept application/json.
      *
