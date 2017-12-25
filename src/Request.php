@@ -94,6 +94,11 @@ class Request implements RequestContract
     protected $mockedEndpoints = [];
 
     /**
+     * @var array
+     */
+    protected $events = [];
+
+    /**
      * Clone object with a new property value.
      *
      * @param string $property
