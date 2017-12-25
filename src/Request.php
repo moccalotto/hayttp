@@ -11,6 +11,7 @@
 namespace Hayttp;
 
 use LogicException;
+use Hayttp\Mock\Endpoint as MockedEndpoint;
 use Hayttp\Contracts\Engine as EngineContract;
 use Hayttp\Contracts\Payload as PayloadContract;
 use Hayttp\Contracts\Request as RequestContract;
@@ -89,7 +90,7 @@ class Request implements RequestContract
     protected $responseCalls = [];
 
     /**
-     * @var array
+     * @var MockedEndpoint[]
      */
     protected $mockedEndpoints = [];
 

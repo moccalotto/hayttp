@@ -24,11 +24,14 @@ trait SendsRequest
      */
     public function send() : ResponseContract
     {
-        $clone = $this->withEngine($this->engine ?: new NativeEngine());
+        $clone = clone $this;
+
+        $clone->mockedEndpoints = [];
+        $clone->engine = $clone->engine ?: new NativeEngine();
 
         foreach ($this->mockedEndpoints as $endpoint) {
             if ($endpoint->handles($clone)) {
-                return $endpoint->handle($clone->with('mockedEndpoints', []));
+                return $endpoint->handle($clone);
             }
         }
 

@@ -10,11 +10,12 @@
 
 namespace Hayttp\Traits;
 
-use SimpleXmlElement;
 use Hayttp\Util;
+use SimpleXmlElement;
 use UnexpectedValueException;
 use Hayttp\Payloads\RawPayload;
 use Hayttp\Payloads\JsonPayload;
+use Hayttp\Mock\Endpoint as MockedEndpoint;
 use Hayttp\Contracts\Engine as EngineContract;
 use Hayttp\Contracts\Payload as PayloadContract;
 use Hayttp\Contracts\Request as RequestContract;
@@ -314,7 +315,7 @@ trait HasWithMethods
     {
         $mockedEndpoints = $this->mockedEndpoints;
 
-        $mockedEndpoints[] = new Mock\Endpoint(
+        $mockedEndpoints[] = new MockedEndpoint(
             $methodPattern,
             $urlPattern,
             $handler
