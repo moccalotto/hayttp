@@ -10,6 +10,7 @@
 
 namespace Hayttp;
 
+use Exception;
 use LogicException;
 use SimpleXmlElement;
 use UnexpectedValueException;
