@@ -165,6 +165,15 @@ interface Request
     public function withFormDataPayload(array $data) : self;
 
     /**
+     * Set a custom payload
+     *
+     * @param Payload $payload
+     *
+     * @return Request
+     */
+    public function withPayload(Payload $payload) : self;
+
+    /**
      * Add Accept header.
      *
      * @param string $mimeType

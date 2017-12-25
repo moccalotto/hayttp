@@ -209,7 +209,7 @@ trait HasWithMethods
      *
      * @return RequestContract
      */
-    public function withPayload(PayloadContract $payload)
+    public function withPayload(PayloadContract $payload) : RequestContract
     {
         return $this->with('payload', $payload);
     }
@@ -280,7 +280,7 @@ trait HasWithMethods
     public function withXmlPayload($xml, $contentType = 'application/xml') : RequestContract
     {
         if ($xml instanceof SimpleXmlElement) {
-            $xml = $xml->asXml();
+            $xml = $xml->asXML();
         }
 
         return $this->withRawPayload($xml, $contentType);
