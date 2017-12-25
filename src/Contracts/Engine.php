@@ -10,10 +10,17 @@
 
 namespace Hayttp\Contracts;
 
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Request;
+use Hayttp\Response;
 
 interface Engine
 {
-    public function send(RequestContract $request) : ResponseContract;
+    /**
+     * Send a request
+     *
+     * @param Request  $request
+     *
+     * @return Response
+     */
+    public function send(Request $request);
 }

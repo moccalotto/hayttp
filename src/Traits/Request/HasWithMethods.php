@@ -8,41 +8,31 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Request;
 
 use Hayttp\Util;
+use Hayttp\Request;
+use Hayttp\Response;
 use SimpleXmlElement;
+use Hayttp\Contracts\Engine;
+use Hayttp\Contracts\Payload;
 use UnexpectedValueException;
 use Hayttp\Payloads\RawPayload;
 use Hayttp\Payloads\JsonPayload;
 use Hayttp\Mock\Endpoint as MockedEndpoint;
-use Hayttp\Contracts\Engine as EngineContract;
-use Hayttp\Contracts\Payload as PayloadContract;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
 
 trait HasWithMethods
 {
-    /**
-     * Clone object with a new property value.
-     *
-     * @param string $property
-     * @param mixed  $value
-     *
-     * @return RequestContract
-     */
-    abstract protected function with($property, $value) : RequestContract;
-
     /**
      * Set the timeout.
      *
      * @param float $seconds
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withTimeout(float $seconds) : RequestContract
+    public function withTimeout($seconds)
     {
-        return $this->with('timeout', $seconds);
+        return $this->with('timeout', (float) $seconds);
     }
 
     /**
@@ -50,11 +40,11 @@ trait HasWithMethods
      *
      * @param string $userAgent
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withUserAgent(string $userAgent) : RequestContract
+    public function withUserAgent($userAgent)
     {
-        return $this->with('userAgent', $userAgent);
+        return $this->with('userAgent', (string) $userAgent);
     }
 
     /**
@@ -62,29 +52,29 @@ trait HasWithMethods
      *
      * A Crypto method can be one of the CRYPTO_* constants
      *
-     * @param string
+     * @param string $cryptoMethod
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withCryptoMethod($cryptoMethod) : RequestContract
+    public function withCryptoMethod($cryptoMethod)
     {
-        if (!isset(RequestContract::CRYPTO_METHODS[$cryptoMethod])) {
-            throw new UnexpectedValueException(sprintf(
-                'Crypto methed "%s" is invalid. Must be one of [%s]',
-                $cryptoMethod,
-                implode(', ', array_keys(RequestContract::CRYPTO_METHODS))
-            ));
+        if (preg_match('/CRYPTO_/A', $cryptoMethod) && defined("static::$cryptoMethod")) {
+            return $this->with('cryptoMethod', $cryptoMethod);
         }
 
-        return $this->with('cryptoMethod', $cryptoMethod);
+        throw new UnexpectedValueException(sprintf(
+            'Crypto methed "%s" is invalid. Must be one of [%s]',
+            $cryptoMethod,
+            Request::CRYPTO_METHODS
+        ));
     }
 
     /**
      * Disable all SSL certificate checks.
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withInsecureSsl() : RequestContract
+    public function withInsecureSsl()
     {
         return $this->with('secureSsl', false);
     }
@@ -92,11 +82,11 @@ trait HasWithMethods
     /**
      * Set the transfer engine.
      *
-     * @param EngineContract $engine
+     * @param Engine $engine
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withEngine(EngineContract $engine) : RequestContract
+    public function withEngine(Engine $engine)
     {
         return $this->with('engine', $engine);
     }
@@ -106,9 +96,9 @@ trait HasWithMethods
      *
      * @param array $headers
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withHeaders(array $headers) : RequestContract
+    public function withHeaders(array $headers)
     {
         return $this->with('headers', Util::normalizeHeaders($headers));
     }
@@ -118,9 +108,9 @@ trait HasWithMethods
      *
      * @param array $headers
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withAdditionalHeaders(array $additionalHeaders) : RequestContract
+    public function withAdditionalHeaders(array $additionalHeaders)
     {
         $res = $this->headers;
         $additionalHeaders = Util::normalizeHeaders($additionalHeaders);
@@ -141,9 +131,9 @@ trait HasWithMethods
      *
      * @param string $proxy URI specifying address of proxy server. (e.g. tcp://proxy.example.com:5100).
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withProxy($proxy) : RequestContract
+    public function withProxy($proxy)
     {
         return $this->with('proxy', $proxy);
     }
@@ -154,9 +144,9 @@ trait HasWithMethods
      * @param string $name
      * @param string $value
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withHeader($name, $value) : RequestContract
+    public function withHeader($name, $value)
     {
         return $this->withAdditionalHeaders([$name => $value]);
     }
@@ -166,24 +156,24 @@ trait HasWithMethods
      *
      * @param string $version currently, 1.*, 1.0, 1.1 and 1.2 are supported
      *
-     * @return RequestContract
+     * @return self
      */
     public function withTls($version)
     {
         switch ($version) {
-        case '1.*':
-            return $this->withCryptoMethod(static::CRYPTO_TLS);
-        case '1.0':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_0);
-        case '1.1':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_1);
-        case '1.2':
-            return $this->withCryptoMethod(static::CRYPTO_TLS_1_2);
-        default:
-            throw new UnexpectedValueException(sprintf(
-                'TLS version "%s" is unavailable. Must be one of: [1.*, 1.0, 1.1, 1.2]',
-                $version
-            ));
+            case '1.*':
+                return $this->withCryptoMethod(static::CRYPTO_TLS);
+            case '1.0':
+                return $this->withCryptoMethod(static::CRYPTO_TLS_1_0);
+            case '1.1':
+                return $this->withCryptoMethod(static::CRYPTO_TLS_1_1);
+            case '1.2':
+                return $this->withCryptoMethod(static::CRYPTO_TLS_1_2);
+            default:
+                throw new UnexpectedValueException(sprintf(
+                    'TLS version "%s" is unavailable. Must be one of: [1.*, 1.0, 1.1, 1.2]',
+                    $version
+                ));
         }
     }
 
@@ -193,9 +183,9 @@ trait HasWithMethods
      * @param string $username
      * @param string $password
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withBasicAuth(string $username, string $password) : RequestContract
+    public function withBasicAuth($username, $password)
     {
         return $this->withHeader(
             'Authorization',
@@ -206,11 +196,11 @@ trait HasWithMethods
     /**
      * Set the payload of the request.
      *
-     * @param PayloadContract $payload
+     * @param Payload $payload
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withPayload(PayloadContract $payload) : RequestContract
+    public function withPayload(Payload $payload)
     {
         return $this->with('payload', $payload);
     }
@@ -221,15 +211,15 @@ trait HasWithMethods
      * @param string $methodName
      * @param array  $args
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withResponseCall(string $methodName, array $args = []) : RequestContract
+    public function withResponseCall($methodName, array $args = [])
     {
-        if (!method_exists(ResponseContract::class, $methodName)) {
+        if (!method_exists(Response::class, $methodName)) {
             throw new UnexpectedValueException(sprintf(
                 'Method »%s« does not exist on class %s',
                 $methodName,
-                ResponseContract::class
+                Response::class
             ));
         }
 
@@ -245,9 +235,9 @@ trait HasWithMethods
      * @param string $payload
      * @param string $contentType
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withRawPayload(string $payload, string $contentType = 'application/octet-stream') : RequestContract
+    public function withRawPayload($payload, $contentType = 'application/octet-stream')
     {
         return $this->withPayload(new RawPayload($payload, $contentType));
     }
@@ -263,9 +253,9 @@ trait HasWithMethods
      * @param array|object $payload     the payload to send - the payload will always be json encoded
      * @param string       $contentType
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withJsonPayload($payload, $contentType = 'application/json') : RequestContract
+    public function withJsonPayload($payload, $contentType = 'application/json')
     {
         return $this->withPayload(new JsonPayload($payload, $contentType));
     }
@@ -276,9 +266,9 @@ trait HasWithMethods
      * @param SimpleXmlElement|string $xml
      * @param string                  $contentType
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withXmlPayload($xml, $contentType = 'application/xml') : RequestContract
+    public function withXmlPayload($xml, $contentType = 'application/xml')
     {
         if ($xml instanceof SimpleXmlElement) {
             $xml = $xml->asXML();
@@ -292,9 +282,9 @@ trait HasWithMethods
      *
      * @param array $form key/value pairs to post as normal urlencoded fields
      *
-     * @return RequestContract
+     * @return self
      */
-    public function withFormDataPayload(array $form) : RequestContract
+    public function withFormDataPayload(array $form)
     {
         return $this->withRawPayload(
             http_build_query($form, '', '&', PHP_QUERY_RFC1738),
@@ -309,7 +299,7 @@ trait HasWithMethods
      * @param string   $urlPattern
      * @param callable $handler
      *
-     * @return RequestContract
+     * @return self
      */
     public function withMockedEndpoint($methodPattern, $urlPattern, $handler)
     {

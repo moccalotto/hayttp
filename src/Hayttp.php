@@ -12,20 +12,19 @@ namespace Hayttp;
 
 use Hayttp\Mock\Route;
 use BadMethodCallException;
+use Hayttp\Contracts\Engine;
 use Hayttp\Mock\MockResponse;
-use Hayttp\Contracts\Engine as EngineContract;
-use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Request creation facade.
  *
- * @method RequestContract get(string $url)     Create a GET request
- * @method RequestContract post(string $url)    Create a POST request
- * @method RequestContract put(string $url)     Create a PUT request
- * @method RequestContract patch(string $url)   Create a PATCH request
- * @method RequestContract head(string $url)    Create a HEAD request
- * @method RequestContract delete(string $url)  Create a DELETE request
- * @method RequestContract options(string $url) Create a OPTIONS request
+ * @method Request get(string $url)     Create a GET request
+ * @method Request post(string $url)    Create a POST request
+ * @method Request put(string $url)     Create a PUT request
+ * @method Request patch(string $url)   Create a PATCH request
+ * @method Request head(string $url)    Create a HEAD request
+ * @method Request delete(string $url)  Create a DELETE request
+ * @method Request options(string $url) Create a OPTIONS request
  * @method MockResponse    createMockResponse($request, $route) Create a mock response via a request and a route
  */
 class Hayttp
@@ -34,11 +33,6 @@ class Hayttp
      * @var Hayttp
      */
     protected static $defaultInstance = null;
-
-    /**
-     * @var string
-     */
-    protected $requestFqcn;
 
     /**
      * @var string
@@ -55,7 +49,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public static function instance() : self
+    public static function instance()
     {
         if (self::$defaultInstance === null) {
             self::$defaultInstance = new static(Request::class);
@@ -79,7 +73,7 @@ class Hayttp
      *
      * @param string   $methodPattern a regular expression to match the method(s) of the call
      * @param string   $urlPattern    A url "pattern". For instance {protocol}://example.{tld}/foo/{dir1}/{dir2}
-     * @param callable $handler       A callable that returns a ResponseContract object
+     * @param callable $handler       A callable that returns a Response object
      *
      * @return Hayttp
      */
@@ -88,16 +82,6 @@ class Hayttp
         return static::instance()
             ->withMockedEndpoint($methodPattern, $urlPattern, $handler)
             ->setAsGlobal();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param string $requestFqcn the fqcn of a class that implements the RequestContract interface
-     */
-    public function __construct(string $requestFqcn)
-    {
-        $this->requestFqcn = $requestFqcn;
     }
 
     /**
@@ -120,13 +104,11 @@ class Hayttp
      * @param string $method
      * @param string $url
      *
-     * @return RequestContract
+     * @return Request
      */
-    public function createRequest(string $method, string $url) : RequestContract
+    public function createRequest($method, $url)
     {
-        $class = $this->requestFqcn;
-
-        $request = new $class(
+        $request = new Request(
             strtoupper($method),
             Util::applyMountPoint($url, $this->mountPoint)
         );
@@ -177,12 +159,12 @@ class Hayttp
     /**
      * Create an empty mock response from a given request and route.
      *
-     * @param RequestContract $request The request made to the mocked end point.
-     * @param Route           $route   Routing of parameters passed to the handler
+     * @param Request $request the request made to the mocked end point
+     * @param Route   $route   Routing of parameters passed to the handler
      *
      * @return MockResponse
      */
-    public static function createMockResponse(RequestContract $request, Route $route)
+    public static function createMockResponse(Request $request, Route $route)
     {
         return MockResponse::new($request, $route);
     }
@@ -195,7 +177,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    protected function with(string $property, $value) : self
+    protected function with(string $property, $value)
     {
         $clone = clone $this;
         $clone->$property = $value;
@@ -211,7 +193,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withDeferredCall(string $methodName, array $args = []) : self
+    public function withDeferredCall(string $methodName, array $args = [])
     {
         $tmp = $this->deferredCalls;
         $tmp[] = [$methodName, $args];
@@ -240,7 +222,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withMountPoint(string $url) : self
+    public function withMountPoint(string $url)
     {
         return $this->with(
             'mountPoint',
@@ -255,7 +237,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withTimeout() : self
+    public function withTimeout()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -267,7 +249,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withUserAgent() : self
+    public function withUserAgent()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -281,7 +263,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withCryptoMethod() : self
+    public function withCryptoMethod()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -291,7 +273,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withInsecureSsl() : self
+    public function withInsecureSsl()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -299,11 +281,11 @@ class Hayttp
     /**
      * Set the transfer engine.
      *
-     * @param EngineContract $engine
+     * @param Engine $engine
      *
      * @return Hayttp
      */
-    public function withEngine() : self
+    public function withEngine()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -315,7 +297,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withHeaders() : self
+    public function withHeaders()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -327,7 +309,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withAdditionalHeaders() : self
+    public function withAdditionalHeaders()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -339,7 +321,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withProxy() : self
+    public function withProxy()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -352,7 +334,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withHeader() : self
+    public function withHeader()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -364,7 +346,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withTls() : self
+    public function withTls()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }
@@ -377,7 +359,7 @@ class Hayttp
      *
      * @return Hayttp
      */
-    public function withBasicAuth() : self
+    public function withBasicAuth()
     {
         return $this->withDeferredCall(__FUNCTION__, func_get_args());
     }

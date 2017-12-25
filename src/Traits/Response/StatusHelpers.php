@@ -8,18 +8,16 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Response;
 
-trait HasStatusHelpers
+trait StatusHelpers
 {
-    abstract public function statusCode() : string;
-
     /**
      * Is the status code 2xx ?
      *
      * @return bool
      */
-    public function is2xx() : bool
+    public function is2xx()
     {
         $statusCode = $this->statusCode();
 
@@ -31,7 +29,7 @@ trait HasStatusHelpers
      *
      * @return bool
      */
-    public function is3xx() : bool
+    public function is3xx()
     {
         $statusCode = $this->statusCode();
 
@@ -43,7 +41,7 @@ trait HasStatusHelpers
      *
      * @return bool
      */
-    public function is4xx() : bool
+    public function is4xx()
     {
         $statusCode = $this->statusCode();
 
@@ -55,7 +53,7 @@ trait HasStatusHelpers
      *
      * @return bool
      */
-    public function is5xx() : bool
+    public function is5xx()
     {
         $statusCode = $this->statusCode();
 
@@ -69,7 +67,7 @@ trait HasStatusHelpers
      *
      * @see is2xx
      */
-    public function isSuccess() : bool
+    public function isSuccess()
     {
         return $this->is2xx();
     }
@@ -79,7 +77,7 @@ trait HasStatusHelpers
      *
      * @return bool
      */
-    public function isRedirect() : bool
+    public function isRedirect()
     {
         return $this->is3xx();
     }
@@ -89,7 +87,7 @@ trait HasStatusHelpers
      *
      * @return bool
      */
-    public function isError() : bool
+    public function isError()
     {
         $statusCode = $this->statusCode();
 

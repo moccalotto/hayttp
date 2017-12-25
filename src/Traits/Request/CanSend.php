@@ -8,21 +8,21 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Request;
 
+use Hayttp\Response;
 use Hayttp\Engines\NativeEngine;
-use Hayttp\Contracts\Response as ResponseContract;
 
-trait SendsRequest
+trait CanSend
 {
     /**
      * Send/execute the request.
      *
-     * @return ResponseContract
+     * @return Response
      *
      * @throws ConnectionException if connection could not be established
      */
-    public function send() : ResponseContract
+    public function send()
     {
         $clone = clone $this;
 
@@ -44,9 +44,9 @@ trait SendsRequest
      * @param string $payload
      * @param string $contentType
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function sendRaw(string $payload, string $contentType = 'application/octet-stream') : ResponseContract
+    public function sendRaw($payload, $contentType = 'application/octet-stream')
     {
         return $this->withRawPayload($payload, $contentType)->send();
     }
@@ -56,9 +56,9 @@ trait SendsRequest
      *
      * @param array|object $payload the payload to send - the payload will always be json encoded
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function sendJson($json) : ResponseContract
+    public function sendJson($json)
     {
         return $this->withJsonPayload($json)->send();
     }
@@ -68,9 +68,9 @@ trait SendsRequest
      *
      * @param SimpleXmlElement|string $xml
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function sendXml($xml) : ResponseContract
+    public function sendXml($xml)
     {
         return $this->withXmlPayload($xml)->send();
     }
@@ -80,9 +80,9 @@ trait SendsRequest
      *
      * @param array $data key/value pairs to post as normal urlencoded fields
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function sendFormData(array $data) : ResponseContract
+    public function sendFormData(array $data)
     {
         return $this->withFormDataPayload($data)->send();
     }

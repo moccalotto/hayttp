@@ -11,9 +11,9 @@
 namespace Hayttp\Mock;
 
 use Hayttp\Util;
+use Hayttp\Request;
 use SimpleXmlElement;
 use Hayttp\Response as BaseResponse;
-use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Mock Request.
@@ -27,12 +27,12 @@ class MockResponse extends BaseResponse
      *
      * Create an empty response from a given request.
      *
-     * @param RequestContract $request
-     * @param Route           $route   Routing of parameters passed to the handler
+     * @param Request $request
+     * @param Route   $route   Routing of parameters passed to the handler
      *
      * @return self
      */
-    public static function new($request, $route)
+    public static function new(Request $request, Route $route)
     {
         $contentType = $request->header('accept') ?: 'application/octet-stream';
 
@@ -56,11 +56,12 @@ class MockResponse extends BaseResponse
      * @param string $property
      * @param mixed  $value
      *
-     * @return MockResponse
+     * @return self
      */
     protected function with($property, $value)
     {
         $clone = clone $this;
+        $property = (string) $property;
 
         $clone->$property = $value;
 
@@ -74,7 +75,7 @@ class MockResponse extends BaseResponse
      * @param string $reasonPhrase
      * @param string $httpVersion
      *
-     * @return MockResponse
+     * @return self
      */
     public function withStatus($statusCode, $reasonPhrase, $httpVersion = '1.0')
     {
@@ -89,7 +90,7 @@ class MockResponse extends BaseResponse
      *
      * @param array $headers
      *
-     * @return MockResponse
+     * @return self
      */
     public function withHeaders($headers)
     {
@@ -101,7 +102,7 @@ class MockResponse extends BaseResponse
      *
      * @param array $additionalHeaders
      *
-     * @return MockResponse
+     * @return self
      */
     public function withAdditionalHeaders($additionalHeaders)
     {
@@ -124,7 +125,7 @@ class MockResponse extends BaseResponse
      *
      * @param string $contentType
      *
-     * @return MockResponse
+     * @return self
      */
     public function withContentType($contentType)
     {
@@ -141,7 +142,7 @@ class MockResponse extends BaseResponse
      * @param string $name
      * @param string $value
      *
-     * @return MockResponse
+     * @return self
      */
     public function withHeader($name, $value)
     {
@@ -155,7 +156,7 @@ class MockResponse extends BaseResponse
      *
      * @param string $body
      *
-     * @return MockResponse
+     * @return self
      */
     public function withBody($body)
     {
@@ -167,7 +168,7 @@ class MockResponse extends BaseResponse
      *
      * @param array|object $payload
      *
-     * @return MockResponse
+     * @return self
      */
     public function withJsonBody($payload)
     {
@@ -180,7 +181,7 @@ class MockResponse extends BaseResponse
      *
      * @param string|SimpleXmlElement $payload
      *
-     * @return MockResponse
+     * @return self
      */
     public function withXmlBody($xml)
     {
@@ -194,7 +195,7 @@ class MockResponse extends BaseResponse
      *
      * @param Route $route
      *
-     * @return MockResponse
+     * @return self
      */
     public function withRoute($route)
     {

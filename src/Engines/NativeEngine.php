@@ -10,28 +10,27 @@
 
 namespace Hayttp\Engines;
 
-use Hayttp\Contracts\Engine as EngineContract;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
-use Hayttp\Exceptions\CouldNotConnectException;
-use Hayttp\Response as Response;
 use ErrorException;
+use Hayttp\Request;
+use Hayttp\Response;
+use Hayttp\Contracts\Engine;
+use Hayttp\Exceptions\CouldNotConnectException;
 
-class NativeEngine implements EngineContract
+class NativeEngine implements Engine
 {
     /**
      * @var array
      */
     protected $cryptoMap = [
-        RequestContract::CRYPTO_ANY => STREAM_CRYPTO_METHOD_ANY_CLIENT,
-        RequestContract::CRYPTO_SSLV3 => STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
-        RequestContract::CRYPTO_TLS => STREAM_CRYPTO_METHOD_TLS_CLIENT,
-        RequestContract::CRYPTO_TLS_1_0 => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
-        RequestContract::CRYPTO_TLS_1_1 => STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT,
-        RequestContract::CRYPTO_TLS_1_2 => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
+        Request::CRYPTO_ANY => STREAM_CRYPTO_METHOD_ANY_CLIENT,
+        Request::CRYPTO_SSLV3 => STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
+        Request::CRYPTO_TLS => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+        Request::CRYPTO_TLS_1_0 => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
+        Request::CRYPTO_TLS_1_1 => STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT,
+        Request::CRYPTO_TLS_1_2 => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
     ];
 
-    protected function buildContext(RequestContract $request)
+    protected function buildContext(Request $request)
     {
         $cryptoMethodFlag = $this->cryptoMap[$request->cryptoMethod()];
 
@@ -67,11 +66,11 @@ class NativeEngine implements EngineContract
     /**
      * Send/execute the request.
      *
-     * @return ResponseContract
+     * @return Response
      *
      * @throws CouldNotConnectException if connection could not be established
      */
-    public function send(RequestContract $request) : ResponseContract
+    public function send(Request $request)
     {
         try {
             set_error_handler(function ($errorNumber, $errorMessage, $file, $line) {

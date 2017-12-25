@@ -11,9 +11,9 @@
 namespace Hayttp\Exceptions;
 
 use Exception;
+use Hayttp\Request;
+use Hayttp\Response;
 use RuntimeException;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
 
 /**
  * Http connection exception.
@@ -23,14 +23,14 @@ use Hayttp\Contracts\Response as ResponseContract;
 class ResponseException extends RuntimeException
 {
     /**
-     * @var ResponseContract
+     * @var Response
      */
     protected $response;
 
     /**
      * Constructor.
      */
-    public function __construct(ResponseContract $response, $message, Exception $previous = null)
+    public function __construct(Response $response, $message, Exception $previous = null)
     {
         $this->response = $response;
         parent::__construct(sprintf('Bad response: %s', $message), 0, $previous);
@@ -39,9 +39,9 @@ class ResponseException extends RuntimeException
     /**
      * Get the request that caused the bad response.
      *
-     * @return RequestContract
+     * @return Request
      */
-    public function getRequest() : RequestContract
+    public function getRequest()
     {
         return $this->response->request();
     }
@@ -49,9 +49,9 @@ class ResponseException extends RuntimeException
     /**
      * Get the response that couldn't connect.
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function getResponse() : ResponseContract
+    public function getResponse()
     {
         return $this->response;
     }

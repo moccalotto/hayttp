@@ -8,19 +8,19 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Request;
 
 use Hayttp\Contracts\Engine as EngineContract;
 use Hayttp\Contracts\Payload as PayloadContract;
 
-trait HasRequestAccessors
+trait Accessors
 {
     /**
      * The http method.
      *
      * @return string
      */
-    public function method() : string
+    public function method()
     {
         return $this->method;
     }
@@ -30,7 +30,7 @@ trait HasRequestAccessors
      *
      * @return EngineContract
      */
-    public function engine() : EngineContract
+    public function engine()
     {
         return $this->engine;
     }
@@ -40,7 +40,7 @@ trait HasRequestAccessors
      *
      * @return array
      */
-    public function events() : array
+    public function events()
     {
         return $this->events;
     }
@@ -50,7 +50,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function userAgent() : string
+    public function userAgent()
     {
         return $this->userAgent;
     }
@@ -60,7 +60,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function url() : string
+    public function url()
     {
         return $this->url;
     }
@@ -68,7 +68,7 @@ trait HasRequestAccessors
     /**
      * @return array
      */
-    public function headers() : array
+    public function headers()
     {
         return $this->headers;
     }
@@ -82,9 +82,11 @@ trait HasRequestAccessors
      */
     public function header($headerName)
     {
-        return $this->headers[
-            strtolower(trim($headerName))
-        ] ?? null;
+        $headerName = strtolower(trim($headerName));
+
+        return isset($this->headers[$headerName])
+            ? $this->headers[$headerName]
+            : null;
     }
 
     /**
@@ -92,7 +94,7 @@ trait HasRequestAccessors
      *
      * @return PayloadContract
      */
-    public function payload() : PayloadContract
+    public function payload()
     {
         return $this->payload;
     }
@@ -112,7 +114,7 @@ trait HasRequestAccessors
      *
      * @return bool
      */
-    public function secureSsl() : bool
+    public function secureSsl()
     {
         return $this->secureSsl;
     }
@@ -122,7 +124,7 @@ trait HasRequestAccessors
      *
      * @return float
      */
-    public function timeout() : float
+    public function timeout()
     {
         return $this->timeout;
     }
@@ -132,7 +134,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function cryptoMethod() : string
+    public function cryptoMethod()
     {
         return $this->cryptoMethod;
     }
@@ -142,7 +144,7 @@ trait HasRequestAccessors
      *
      * @return string
      */
-    public function body() : string
+    public function body()
     {
         return (string) $this->payload;
     }

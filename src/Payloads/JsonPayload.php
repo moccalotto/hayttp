@@ -10,15 +10,15 @@
 
 namespace Hayttp\Payloads;
 
+use Hayttp\Traits\Common\DebugInfo;
 use Hayttp\Contracts\Payload as PayloadContract;
-use Hayttp\Traits\HasCompleteDebugInfo;
 
 /**
  * Raw (string) body Helper.
  */
 class JsonPayload implements PayloadContract
 {
-    use HasCompleteDebugInfo;
+    use DebugInfo;
 
     /**
      * @var array|object
@@ -36,10 +36,10 @@ class JsonPayload implements PayloadContract
      * @param array|object $contents
      * @param string       $contentType
      */
-    public function __construct($contents, string $contentType = 'application/json')
+    public function __construct($contents, $contentType = 'application/json')
     {
         $this->contents = $contents;
-        $this->contentType = $contentType;
+        $this->contentType = (string) $contentType;
     }
 
     /**
@@ -47,7 +47,7 @@ class JsonPayload implements PayloadContract
      *
      * @return string
      */
-    public function contentType() : string
+    public function contentType()
     {
         return $this->contentType;
     }
@@ -55,7 +55,7 @@ class JsonPayload implements PayloadContract
     /**
      * Render into a http request body.
      */
-    public function render() : string
+    public function render()
     {
         return json_encode($this->contents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
@@ -65,7 +65,7 @@ class JsonPayload implements PayloadContract
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString()
     {
         return $this->render();
     }

@@ -14,16 +14,14 @@ use Exception;
 use LogicException;
 use SimpleXmlElement;
 use UnexpectedValueException;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
 
-class Response implements ResponseContract
+class Response
 {
-    use Traits\Extendable;
-    use Traits\HasCallbacks;
-    use Traits\HasStatusHelpers;
-    use Traits\MakesResponseAssertions;
-    use Traits\HasCompleteDebugInfo;
+    use Traits\Common\Extendable;
+    use Traits\Common\DebugInfo;
+    use Traits\Response\Callbacks;
+    use Traits\Response\Assertions;
+    use Traits\Response\StatusHelpers;
 
     /**
      * @var string
@@ -41,7 +39,7 @@ class Response implements ResponseContract
     protected $metadata;
 
     /**
-     * @var RequestContract
+     * @var Request
      */
     protected $request;
 
@@ -51,11 +49,11 @@ class Response implements ResponseContract
      * @param string          $body     response body
      * @param array           $headers  response headers
      * @param array           $metadata engine-specific metadata about the connection
-     * @param RequestContract $request  the request that yielded this response
+     * @param Request $request  the request that yielded this response
      */
-    public function __construct(string $body, array $headers, array $metadata, RequestContract $request)
+    public function __construct($body, array $headers, array $metadata, Request $request)
     {
-        $this->body = $body;
+        $this->body = (string) $body;
         $this->headers = Util::normalizeHeaders($headers);
         $this->request = $request;
         $this->metadata = $metadata;
@@ -86,7 +84,7 @@ class Response implements ResponseContract
      *
      * @throws LogicException
      */
-    public function parseStatusLine() : array
+    public function parseStatusLine()
     {
         if (empty($this->headers[0])) {
             throw new LogicException(sprintf(
@@ -103,7 +101,7 @@ class Response implements ResponseContract
      *
      * @return array
      */
-    public function metadata() : array
+    public function metadata()
     {
         return $this->metadata;
     }
@@ -111,9 +109,9 @@ class Response implements ResponseContract
     /**
      * Get the request that produced this response.
      *
-     * @return RequestContract
+     * @return Request
      */
-    public function request() : RequestContract
+    public function request()
     {
         return $this->request;
     }
@@ -123,7 +121,7 @@ class Response implements ResponseContract
      *
      * @return string
      */
-    public function statusCode() : string
+    public function statusCode()
     {
         return $this->parseStatusLine()[1];
     }
@@ -133,7 +131,7 @@ class Response implements ResponseContract
      *
      * @return string
      */
-    public function reasonPhrase() : string
+    public function reasonPhrase()
     {
         return $this->parseStatusLine()[2];
     }
@@ -163,7 +161,7 @@ class Response implements ResponseContract
      *
      * @return array
      */
-    public function headers() : array
+    public function headers()
     {
         return $this->headers;
     }
@@ -185,7 +183,7 @@ class Response implements ResponseContract
      *
      * @return bool
      */
-    public function isJson() : bool
+    public function isJson()
     {
         return explode(';', $this->contentType())[0] === 'application/json';
     }
@@ -195,7 +193,7 @@ class Response implements ResponseContract
      *
      * @return bool
      */
-    public function isXml() : bool
+    public function isXml()
     {
         return $this->hasContentType([
             'application/xml',
@@ -208,7 +206,7 @@ class Response implements ResponseContract
      *
      * @return bool
      */
-    public function isPlainText() : bool
+    public function isPlainText()
     {
         return $this->hasContentType('text/plain');
     }
@@ -220,7 +218,7 @@ class Response implements ResponseContract
      *
      * @return bool
      */
-    public function isText() : bool
+    public function isText()
     {
         return strpos($this->contentType(), 'text/') === 0;
     }
@@ -230,7 +228,7 @@ class Response implements ResponseContract
      *
      * @return bool
      */
-    public function isUrlEncoded() : bool
+    public function isUrlEncoded()
     {
         return $this->hasContentType('application/x-www-form-urlencoded');
     }
@@ -271,7 +269,7 @@ class Response implements ResponseContract
      *
      * @return string
      */
-    public function body() : string
+    public function body()
     {
         return $this->body;
     }
@@ -325,7 +323,7 @@ class Response implements ResponseContract
      *
      * @return SimpleXmlElement
      */
-    public function xmlDecoded() : SimpleXmlElement
+    public function xmlDecoded()
     {
         try {
             return new SimpleXmlElement($this->body);
@@ -341,7 +339,7 @@ class Response implements ResponseContract
      *
      * @see parse_str
      */
-    public function urlDecoded() : array
+    public function urlDecoded()
     {
         parse_str($this->body, $result);
 
@@ -353,7 +351,7 @@ class Response implements ResponseContract
      *
      * @return string
      */
-    public function render() : string
+    public function render()
     {
         return $this->renderHeaders()
             . "\r\n"
@@ -362,6 +360,8 @@ class Response implements ResponseContract
 
     /**
      * Render headers in to a well-formatted string.
+     *
+     * @return string
      */
     protected function renderHeaders()
     {
@@ -380,6 +380,13 @@ class Response implements ResponseContract
         return $res;
     }
 
+    /**
+     * Get extra debug information.
+     *
+     * Used by the HasCompleteDebugInfo trait.
+     *
+     * @return array
+     */
     public function extraDebugInfo()
     {
         return [

@@ -57,14 +57,14 @@ class MultipartPayload implements PayloadContract
      *
      * @return MultipartPayload
      */
-    public function withField(string $name, string $data, $filename, $contentType) : self
+    public function withField($name, $data, $filename, $contentType)
     {
         $clone = clone $this;
         $clone->entries[] = [
-            'name' => $name,
-            'data' => $data,
-            'filename' => $filename,
-            'contentType' => $contentType,
+            'name' => (string) $name,
+            'data' => (string) $data,
+            'filename' => $filename ? (string) $filename : null,
+            'contentType' => $contentType ? (string) $contentType : null,
         ];
 
         return $clone;
@@ -75,7 +75,7 @@ class MultipartPayload implements PayloadContract
      *
      * @return string
      */
-    public function contentType() : string
+    public function contentType()
     {
         return sprintf('multipart/form-data; boundary=%s', $this->boundary);
     }
@@ -83,7 +83,7 @@ class MultipartPayload implements PayloadContract
     /**
      * Render into a http request body.
      */
-    public function render() : string
+    public function render()
     {
         foreach ($this->entries as $entry) {
             $lines[] = '--' . $this->boundary;
@@ -111,7 +111,7 @@ class MultipartPayload implements PayloadContract
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString()
     {
         return $this->render();
     }

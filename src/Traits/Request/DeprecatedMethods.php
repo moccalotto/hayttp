@@ -8,11 +8,9 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Request;
 
-use Hayttp\Contracts\Request as RequestContract;
-
-trait DeprecatedRequestMethods
+trait DeprecatedMethods
 {
     /**
      * Set the raw payload of the request.
@@ -20,11 +18,11 @@ trait DeprecatedRequestMethods
      * @param string $payload
      * @param string $contentType
      *
-     * @return RequestContract
+     * @return self
      *
      * @deprecated
      */
-    public function sendsRaw(string $payload, string $contentType = 'application/octet-stream') : RequestContract
+    public function sendsRaw($payload, $contentType = 'application/octet-stream')
     {
         return $this->withRawPayload($payload, $contentType);
     }
@@ -36,9 +34,9 @@ trait DeprecatedRequestMethods
      *
      * @param array|object $payload the payload to send - the payload will always be json encoded
      *
-     * @return RequestContract
+     * @return self
      */
-    public function sendsJson($payload) : RequestContract
+    public function sendsJson($payload)
     {
         return $this->withJsonPayload($payload);
     }
@@ -50,9 +48,9 @@ trait DeprecatedRequestMethods
      *
      * @param SimpleXmlElement|string $xml
      *
-     * @return RequestContract
+     * @return self
      */
-    public function sendsXml($xml) : RequestContract
+    public function sendsXml($xml)
     {
         return $this->withXmlPayload($xml);
     }
@@ -64,9 +62,9 @@ trait DeprecatedRequestMethods
      *
      * @param array $data key/value pairs to post as normal urlencoded fields
      *
-     * @return RequestContract
+     * @return self
      */
-    public function sends(array $data) : RequestContract
+    public function sends(array $data)
     {
         return $this->withFormDataPayload($data);
     }

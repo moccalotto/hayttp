@@ -8,9 +8,10 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Common;
 
 use Closure;
+use Hayttp\Util;
 use ReflectionObject;
 use ReflectionMethod;
 use BadMethodCallException;
@@ -32,7 +33,7 @@ trait Extendable
      *
      * @return bool
      */
-    public static function hasExtension($methodName) : bool
+    public static function hasExtension($methodName)
     {
         return isset(static::$extensions[$methodName]);
     }
@@ -42,12 +43,10 @@ trait Extendable
      *
      * @param string   $methodName
      * @param callable $callable
-     *
-     * @return $this
      */
-    public static function extend(string $methodName, callable $callable)
+    public static function extend($methodName, $callable)
     {
-        static::$extensions[$methodName] = $callable;
+        static::$extensions[$methodName] = Util::closureFromCallable($callable);
     }
 
     /**
@@ -73,35 +72,31 @@ trait Extendable
     /**
      * Execute a static call with the correct class scope.
      *
-     * @param callable $callable
-     * @param array    $args
+     * @param Closure $closure
+     * @param array   $args
      *
-     * @return mixed
+     * @return mixed Result of calling $callable(...$args)
      */
-    public function execDynamicCallable(callable $callable, array $args)
+    public function execDynamicClosure($closure, array $args)
     {
-        if ($callable instanceof Closure) {
-            return $callable->call($this, ...$args);
-        }
+        $clone = $closure->bindTo($this, $this);
 
-        return $callable(...$args);
+        return call_user_func_array($clone, $args);
     }
 
     /**
      * Execute a static call with the correct class scope.
      *
-     * @param callable $callable
-     * @param array    $args
+     * @param Closure $closure
+     * @param array   $args
      *
-     * @return mixed
+     * @return mixed Result of calling $callable(...$args)
      */
-    public static function execStaticCallable(callable $callable, array $args)
+    public static function execStaticCallable(Closure $closure, array $args)
     {
-        if ($callable instanceof Closure) {
-            Closure::bind($callable, null, static::class)->call(...$args);
-        }
+        $clone = $closure->bindTo(null, static::class);
 
-        return $callable(...$args);
+        return call_user_func_array($clone, $args);
     }
 
     /**
@@ -115,12 +110,14 @@ trait Extendable
     public function __call($methodName, array $args)
     {
         if (isset(static::$extensions[$methodName])) {
-            return $this->execDynamicCallable(static::$extensions[$methodName], $args);
+            return $this->execDynamicClosure(static::$extensions[$methodName], $args);
         }
 
         $parent = get_parent_class(static::class);
         if ($parent && method_exists($parent, '__call')) {
-            return parent::__call($methodName, $args);
+            $closure = Util::closureFromCallable([$parent, '__call'])->bindTo($this, $parent);
+
+            return $closure($methodName, $args);
         }
 
         throw new BadMethodCallException("Method $methodName does not exist.");

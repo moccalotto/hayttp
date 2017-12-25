@@ -8,9 +8,9 @@
  * @license MIT
  */
 use Hayttp\Hayttp;
-use Hayttp\Contracts\Payload as PayloadContract;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Request;
+use Hayttp\Response;
+use Hayttp\Contracts\Payload;
 
 if (!function_exists('hayttp')) {
     /**
@@ -31,7 +31,7 @@ if (!function_exists('hayttp_request')) {
      * @param string $method
      * @param string $url
      *
-     * @return RequestContract
+     * @return Request
      */
     function hayttp_request($method, $url)
     {
@@ -50,11 +50,11 @@ if (!function_exists('hayttp_do')) {
      *                       If $data is an array or StdClass, it will be sent as application/json payload
      *                       If $data is a scalar value, it will be sent as application/octet-stream
      *                       If $data is null, no body will be attached
-     *                       If $data implements the Hayttp\Contracts\Payload interface, it will
+     *                       If $data implements the Hayttp\s\Payload interface, it will
      *                       be attached to the the __toString() and contentType() methods on the object
      *                       dictate.
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_do($method, $url, $data = null)
     {
@@ -68,7 +68,7 @@ if (!function_exists('hayttp_do')) {
             return $request->sendJson($data);
         }
 
-        if (is_a($data, PayloadContract::class)) {
+        if (is_a($data, Payload::class)) {
             return $request->withPayload($data)->send();
         }
 
@@ -86,7 +86,7 @@ if (!function_exists('hayttp_get')) {
      *
      * @param string $url
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_get($url)
     {
@@ -105,7 +105,7 @@ if (!function_exists('hayttp_post')) {
      *                     If $data is a scalar value, it will be sent as application/octet-stream
      *                     If $data is null, no body will be attached
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_post($url, $data = null)
     {
@@ -124,7 +124,7 @@ if (!function_exists('hayttp_put')) {
      *                     If $data is a scalar value, it will be sent as application/octet-stream
      *                     If $data is null, no body will be attached
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_put($url, $data = null)
     {
@@ -143,7 +143,7 @@ if (!function_exists('hayttp_patch')) {
      *                     If $data is a scalar value, it will be sent as application/octet-stream
      *                     If $data is null, no body will be attached
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_patch($url, $data = null)
     {
@@ -162,7 +162,7 @@ if (!function_exists('hayttp_delete')) {
      *                     If $data is a scalar value, it will be sent as application/octet-stream
      *                     If $data is null, no body will be attached
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_delete($url, $data = null)
     {
@@ -176,7 +176,7 @@ if (!function_exists('hayttp_head')) {
      *
      * @param string $url
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_head($url)
     {
@@ -190,7 +190,7 @@ if (!function_exists('hayttp_options')) {
      *
      * @param string $url
      *
-     * @return ResponseContract
+     * @return Response
      */
     function hayttp_options($url)
     {

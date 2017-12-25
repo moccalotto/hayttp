@@ -10,13 +10,12 @@
 
 namespace spec\Hayttp;
 
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Engines\CurlEngine;
-use Hayttp\Engines\NativeEngine;
 use Hayttp\Request;
 use Hayttp\Response;
-use PhpSpec\ObjectBehavior;
 use SimpleXmlElement;
+use PhpSpec\ObjectBehavior;
+use Hayttp\Engines\CurlEngine;
+use Hayttp\Engines\NativeEngine;
 
 /**
  * Test.
@@ -34,7 +33,7 @@ class RequestSpec extends ObjectBehavior
     public function it_implements_contract()
     {
         $this->beConstructedWith('POST', 'https://example.org');
-        $this->shouldHaveType(RequestContract::class);
+        $this->shouldHaveType(Request::class);
     }
 
     public function it_renders_toString()
@@ -53,7 +52,7 @@ class RequestSpec extends ObjectBehavior
 
         $request = $this->withJsonPayload($data);
 
-        $request->shouldHaveType(RequestContract::class);
+        $request->shouldHaveType(Request::class);
 
         $request->render()->shouldContain(
             json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)

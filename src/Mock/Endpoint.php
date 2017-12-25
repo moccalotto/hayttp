@@ -11,9 +11,10 @@
 namespace Hayttp\Mock;
 
 use Closure;
+use Hayttp\Util;
 use LogicException;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
+use Hayttp\Request;
+use Hayttp\Response;
 
 /**
  * Mock Endpoint.
@@ -51,7 +52,7 @@ class Endpoint
 
         $this->methodRegex = "/^($methodPattern)$/i";
         $this->urlRegex = "#^{$urlRegex}$#i";
-        $this->handler = Closure::fromCallable($handler);
+        $this->handler = Util::closureFromCallable($handler);
     }
 
     /**
@@ -73,11 +74,11 @@ class Endpoint
     /**
      * Does this mock endpoint handle a given request ?
      *
-     * @param RequestContract $request
+     * @param Request $request
      *
      * @return bool
      */
-    public function handles(RequestContract $request) : bool
+    public function handles(Request $request)
     {
         return preg_match($this->methodRegex, $request->method())
             && preg_match($this->urlRegex, $request->url());
@@ -86,17 +87,17 @@ class Endpoint
     /**
      * Handle/mock a request.
      *
-     * @param RequestContract $request
+     * @param Request $request
      *
-     * @return ResponseContract
+     * @return Response
      */
-    public function handle(RequestContract $request) : ResponseContract
+    public function handle(Request $request)
     {
         preg_match($this->urlRegex, $request->url(), $matches);
 
         $response = call_user_func($this->handler, clone $request, new Route($matches));
 
-        if (!($response instanceof ResponseContract)) {
+        if (!($response instanceof Response)) {
             throw new LogicException(sprintf(
                 'The handler must return an instance of %s',
                 MockResponse::class

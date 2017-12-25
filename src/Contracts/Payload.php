@@ -17,12 +17,12 @@ interface Payload
      *
      * @return string
      */
-    public function __toString() : string;
+    public function __toString();
 
     /**
      * The Content-Type header to use when sending this payload.
      *
      * @return string
      */
-    public function contentType() : string;
+    public function contentType();
 }

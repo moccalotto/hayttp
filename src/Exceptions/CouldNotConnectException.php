@@ -11,8 +11,8 @@
 namespace Hayttp\Exceptions;
 
 use Exception;
+use Hayttp\Request;
 use RuntimeException;
-use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * Http connection exception.
@@ -22,7 +22,7 @@ use Hayttp\Contracts\Request as RequestContract;
 class CouldNotConnectException extends RuntimeException
 {
     /**
-     * @var RequestContract
+     * @var Request
      */
     protected $request;
 
@@ -34,7 +34,7 @@ class CouldNotConnectException extends RuntimeException
     /**
      * Constructor.
      */
-    public function __construct(RequestContract $request, array $metadata = [], Exception $previous = null)
+    public function __construct(Request $request, array $metadata = [], Exception $previous = null)
     {
         $this->request = $request;
         $this->metadata = $metadata;
@@ -47,9 +47,9 @@ class CouldNotConnectException extends RuntimeException
     /**
      * Get the request that couldn't connect.
      *
-     * @return RequestContract
+     * @return Request
      */
-    public function getRequest() : RequestContract
+    public function getRequest()
     {
         return $this->request;
     }
@@ -59,7 +59,7 @@ class CouldNotConnectException extends RuntimeException
      *
      * @return array
      */
-    public function metadata() : array
+    public function metadata()
     {
         return $this->metadata;
     }

@@ -10,15 +10,15 @@
 
 namespace Hayttp\Payloads;
 
+use Hayttp\Traits\Common\DebugInfo;
 use Hayttp\Contracts\Payload as PayloadContract;
-use Hayttp\Traits\HasCompleteDebugInfo;
 
 /**
  * Raw (string) body Helper.
  */
 class RawPayload implements PayloadContract
 {
-    use HasCompleteDebugInfo;
+    use DebugInfo;
 
     /**
      * @var string
@@ -36,10 +36,10 @@ class RawPayload implements PayloadContract
      * @param string $contents
      * @param string $contentType
      */
-    public function __construct(string $contents, string $contentType)
+    public function __construct($contents, $contentType)
     {
-        $this->contents = $contents;
-        $this->contentType = $contentType;
+        $this->contents = (string) $contents;
+        $this->contentType = (string) $contentType;
     }
 
     /**
@@ -47,7 +47,7 @@ class RawPayload implements PayloadContract
      *
      * @return string
      */
-    public function contentType() : string
+    public function contentType()
     {
         return $this->contentType;
     }
@@ -55,7 +55,7 @@ class RawPayload implements PayloadContract
     /**
      * Render into a http request body.
      */
-    public function render() : string
+    public function render()
     {
         return $this->contents;
     }
@@ -65,7 +65,7 @@ class RawPayload implements PayloadContract
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString()
     {
         return $this->render();
     }

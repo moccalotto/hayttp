@@ -11,28 +11,34 @@
 namespace Hayttp;
 
 use LogicException;
+use Hayttp\Contracts\Engine;
+use Hayttp\Contracts\Payload;
 use Hayttp\Mock\Endpoint as MockedEndpoint;
-use Hayttp\Contracts\Engine as EngineContract;
-use Hayttp\Contracts\Payload as PayloadContract;
-use Hayttp\Contracts\Request as RequestContract;
 
 /**
  * HTTP Request class.
  */
-class Request implements RequestContract
+class Request
 {
-    use Traits\Extendable {
+    use Traits\Common\Extendable {
         __call as callExtension;
         __callStatic as callStaticExtension;
     }
-    use Traits\SendsRequest;
-    use Traits\HasWithMethods;
-    use Traits\HasRequestAccessors;
-    use Traits\CreatesRequests;
-    use Traits\HasCompleteDebugInfo;
-    use Traits\ExpectsCommonMimeTypes;
-    use Traits\HandlesMultipartPayloads;
-    use Traits\DeprecatedRequestMethods;
+    use Traits\Common\DebugInfo;
+    use Traits\Request\CanSend;
+    use Traits\Request\HasWithMethods;
+    use Traits\Request\Accessors;
+    use Traits\Request\ExpectsCommonMimeTypes;
+    use Traits\Request\Multipart;
+    use Traits\Request\DeprecatedMethods;
+
+    const CRYPTO_ANY = 'CRYPTO_ANY';
+    const CRYPTO_SSLV3 = 'CRYPTO_SSLV3';
+    const CRYPTO_TLS = 'CRYPTO_TLS';
+    const CRYPTO_TLS_1_0 = 'CRYPTO_TLS_1_0';
+    const CRYPTO_TLS_1_1 = 'CRYPTO_TLS_1_1';
+    const CRYPTO_TLS_1_2 = 'CRYPTO_TLS_1_2';
+    const CRYPTO_METHODS = 'CRYPTO_ANY, CRYPTO_SSLV3, CRYPTO_TLS, CRYPTO_TLS_1_0, CRYPTO_TLS_1_1, CRYPTO_TLS_1_2';
 
     /**
      * @var string
@@ -40,7 +46,7 @@ class Request implements RequestContract
     protected $method = 'GET';
 
     /**
-     * @var EngineContract
+     * @var Engine
      */
     protected $engine;
 
@@ -60,7 +66,7 @@ class Request implements RequestContract
     protected $headers = [];
 
     /**
-     * @var PayloadContract
+     * @var Payload
      */
     protected $payload;
 
@@ -105,9 +111,9 @@ class Request implements RequestContract
      * @param string $property
      * @param mixed  $value
      *
-     * @return RequestContract
+     * @return self
      */
-    protected function with($property, $value) : RequestContract
+    protected function with($property, $value)
     {
         $clone = clone $this;
 
@@ -125,7 +131,7 @@ class Request implements RequestContract
      *
      * @return string[]
      */
-    public function preparedHeaders() : array
+    public function preparedHeaders()
     {
         $headers = $this->headers;
 
@@ -143,7 +149,7 @@ class Request implements RequestContract
             $preparedHeaders[] = sprintf('User-agent: %s', $this->userAgent);
         }
 
-        if (!isset($headers['Content-Type']) && $this->payload instanceof PayloadContract) {
+        if (!isset($headers['Content-Type']) && $this->payload instanceof Payload) {
             $preparedHeaders[] = sprintf('Content-Type: %s', $this->payload->contentType());
         }
 
@@ -161,10 +167,10 @@ class Request implements RequestContract
      * @param string $method
      * @param string $url
      */
-    public function __construct(string $method, string $url)
+    public function __construct($method, $url)
     {
-        $this->method = $method;
-        $this->url = $url;
+        $this->method = (string) $method;
+        $this->url = (string) $url;
     }
 
     /**
@@ -172,7 +178,7 @@ class Request implements RequestContract
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString()
     {
         return $this->render();
     }
@@ -198,7 +204,7 @@ class Request implements RequestContract
      *
      * @return string
      */
-    public function render() : string
+    public function render()
     {
         $headers = $this->preparedHeaders();
 
@@ -221,43 +227,12 @@ class Request implements RequestContract
     }
 
     /**
-     * Add Accept header.
-     *
-     * @param string $mimeType
-     *
-     * @return RequestContract
-     */
-    public function expects(string $mimeType) : RequestContract
-    {
-        return $this->withHeader('Accept', $mimeType);
-    }
-
-    /**
-     * Add Accept header with many types.
-     *
-     * @param array $types associative array of [mimeType => qualityFactor]
-     *
-     * @return RequestContract
-     */
-    public function expectsMany(array $types) : RequestContract
-    {
-        $parts = [];
-
-        foreach ($types as $mimeType => $qualityFactor) {
-            $qualityFactor = max(0, min(1, $qualityFactor));
-            $parts[] = sprintf('%s; q=%s', $mimeType, $qualityFactor);
-        }
-
-        return $this->withHeader('Accept', implode(', ', $parts));
-    }
-
-    /**
      * Get the calls that are to be executed on the response
      * as soon as we have one.
      *
      * @return array
      */
-    public function responseCalls() : array
+    public function responseCalls()
     {
         return $this->responseCalls;
     }
@@ -277,5 +252,103 @@ class Request implements RequestContract
         }
 
         return $this->withResponseCall($methodName, $args);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a DELETE request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function delete($url)
+    {
+        return new static('DELETE', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a GET request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function get($url)
+    {
+        return new static('GET', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a HEAD request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function head($url)
+    {
+        return new static('HEAD', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a OPTIONS request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function options($url)
+    {
+        return new static('OPTIONS', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a PATCH request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function patch($url)
+    {
+        return new static('PATCH', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a POST request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function post($url)
+    {
+        return new static('POST', $url);
+    }
+
+    /**
+     * Factory.
+     *
+     * Initialize a PUT request
+     *
+     * @param string $url
+     *
+     * @return self
+     */
+    public static function put($url)
+    {
+        return new static('PUT', $url);
     }
 }

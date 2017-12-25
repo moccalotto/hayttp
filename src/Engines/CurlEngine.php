@@ -10,42 +10,46 @@
 
 namespace Hayttp\Engines;
 
-use Hayttp\Contracts\Engine as EngineContract;
-use Hayttp\Contracts\Request as RequestContract;
-use Hayttp\Contracts\Response as ResponseContract;
-use Hayttp\Exceptions\CouldNotConnectException;
-use Hayttp\Response as Response;
+use Hayttp\Request;
+use Hayttp\Response;
+use Hayttp\Contracts\Engine;
 use UnexpectedValueException;
+use Hayttp\Exceptions\CouldNotConnectException;
 
-class CurlEngine implements EngineContract
+class CurlEngine implements Engine
 {
-    protected function curlCryptoMethod(string $cryptoMethod) : int
+    /**
+     * @param string $cryptoMethod
+     *
+     * @return int
+     */
+    protected function curlCryptoMethod($cryptoMethod)
     {
         switch ($cryptoMethod) {
-            case RequestContract::CRYPTO_ANY:
+            case Request::CRYPTO_ANY:
                 return CURL_SSLVERSION_DEFAULT;
-            case RequestContract::CRYPTO_SSLV3:
+            case Request::CRYPTO_SSLV3:
                 return CURL_SSLVERSION_SSLv3;
-            case RequestContract::CRYPTO_TLS:
+            case Request::CRYPTO_TLS:
                 return CURL_SSLVERSION_TLSv1;
-            case RequestContract::CRYPTO_TLS_1_0:
+            case Request::CRYPTO_TLS_1_0:
                 return defined(CURL_SSLVERSION_TLSv1_0)
                     ? CURL_SSLVERSION_TLSv1_0
                     : CURL_SSLVERSION_TLSv1;
-            case RequestContract::CRYPTO_TLS_1_1:
+            case Request::CRYPTO_TLS_1_1:
                 return defined(CURL_SSLVERSION_TLSv1_1)
                     ? CURL_SSLVERSION_TLSv1_1
                     : CURL_SSLVERSION_TLSv1;
-            case RequestContract::CRYPTO_TLS_1_2:
+            case Request::CRYPTO_TLS_1_2:
                 return defined(CURL_SSLVERSION_TLSv1_2)
                     ? CURL_SSLVERSION_TLSv1_2
                     : CURL_SSLVERSION_TLSv1;
-            default:
-                throw new UnexpectedValueException('Unknown cryptoMethod');
         }
+
+        throw new UnexpectedValueException('Unknown cryptoMethod');
     }
 
-    protected function buildHandle(RequestContract $request)
+    protected function buildHandle(Request $request)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request->url());
@@ -83,11 +87,13 @@ class CurlEngine implements EngineContract
     /**
      * Send/execute the request.
      *
-     * @param RequestContract $request
+     * @param Request $request
      *
-     * @return ResponseContract
+     * @return Response
+     *
+     * @throws CouldNotConnectException if connection could not be established
      */
-    public function send(RequestContract $request) : ResponseContract
+    public function send(Request $request)
     {
         $ch = $this->buildHandle($request);
 

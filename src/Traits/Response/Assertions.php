@@ -8,14 +8,13 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Response;
 
 use Hayttp\Util;
 use Hayttp\Exceptions\Response as R;
 use Hayttp\Exceptions\ResponseException;
-use Hayttp\Contracts\Response as ResponseContract;
 
-trait MakesResponseAssertions
+trait Assertions
 {
     /**
      * Throw a ResponseException if $success is false.
@@ -27,7 +26,7 @@ trait MakesResponseAssertions
      *
      * @throws ResponseException
      */
-    protected function ensure($success, ResponseException $exception) : ResponseContract
+    protected function ensure($success, ResponseException $exception)
     {
         if (!$success) {
             throw $exception;
@@ -46,7 +45,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensureStatusInRange($min, $max) : ResponseContract
+    public function ensureStatusInRange($min, $max)
     {
         $success = $this->statusCode() >= $min && $this->statusCode() <= $max;
 
@@ -73,7 +72,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensureStatusIn(array $validCodes) : ResponseContract
+    public function ensureStatusIn(array $validCodes)
     {
         return $this->ensure(
             in_array($this->statusCode(), $validCodes),
@@ -97,7 +96,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensureStatus($validCode) : ResponseContract
+    public function ensureStatus($validCode)
     {
         return $this->ensure(
             $this->statusCode() == $validCode,
@@ -119,7 +118,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure2xx() : ResponseContract
+    public function ensure2xx()
     {
         return $this->ensureStatusInRange(200, 299);
     }
@@ -131,7 +130,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure200() : ResponseContract
+    public function ensure200()
     {
         return $this->ensureStatus(200);
     }
@@ -143,7 +142,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure201() : ResponseContract
+    public function ensure201()
     {
         return $this->ensureStatus(201);
     }
@@ -155,7 +154,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure204() : ResponseContract
+    public function ensure204()
     {
         return $this->ensureStatus(204);
     }
@@ -167,7 +166,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure301() : ResponseContract
+    public function ensure301()
     {
         return $this->ensureStatus(301);
     }
@@ -179,7 +178,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensure302() : ResponseContract
+    public function ensure302()
     {
         return $this->ensureStatus(302);
     }
@@ -194,7 +193,7 @@ trait MakesResponseAssertions
      *
      * @throws R\ContentTypeException
      */
-    public function ensureJson($data = [], bool $strict = true) : ResponseContract
+    public function ensureJson($data = [], $strict = true)
     {
         $this->ensureContentType('application/json');
 
@@ -235,7 +234,7 @@ trait MakesResponseAssertions
      *
      * @throws R\ContentTypeException
      */
-    public function ensureXml() : ResponseContract
+    public function ensureXml()
     {
         return $this->ensureContentType(['application/xml', 'text/xml']);
     }
@@ -249,7 +248,7 @@ trait MakesResponseAssertions
      *
      * @throws R\ContentTypeException
      */
-    public function ensureContentType($contentType) : ResponseContract
+    public function ensureContentType($contentType)
     {
         if (is_string($contentType)) {
             $contentType = [$contentType];
@@ -275,7 +274,7 @@ trait MakesResponseAssertions
      *
      * @throws R\StatusCodeException
      */
-    public function ensureSuccess() : ResponseContract
+    public function ensureSuccess()
     {
         return $this->ensure2xx();
     }
@@ -287,7 +286,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function ensureRedirect($url = null) : ResponseContract
+    public function ensureRedirect($url = null)
     {
         return $this->ensureStatusIn([301, 302])
             ->ensureHasHeader('Location', $url);
@@ -301,7 +300,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function ensureHasHeader($headerName, $expectedValue = null) : ResponseContract
+    public function ensureHasHeader($headerName, $expectedValue = null)
     {
         $headerValue = $this->header($headerName);
 
@@ -335,7 +334,7 @@ trait MakesResponseAssertions
      *
      * @return $this
      */
-    public function ensureContains($value) : ResponseContract
+    public function ensureContains($value)
     {
         if (strpos($this->body(), $value) === false) {
             throw new R\ContentException(

@@ -32,7 +32,7 @@ class ResponseSpec extends ObjectBehavior
     {
         $request->responseCalls()->willReturn([]);
         $this->beConstructedWith('body', [], [], $request);
-        $this->shouldHaveType('Hayttp\Contracts\Response');
+        $this->shouldHaveType('Hayttp\Response');
     }
 
     public function it_has_accessors(Request $request)
@@ -130,8 +130,8 @@ class ResponseSpec extends ObjectBehavior
             return [$response, $request];
         });
 
-        $result[0]->shouldHaveType('Hayttp\Contracts\Response');
-        $result[1]->shouldHaveType('Hayttp\Contracts\Request');
+        $result[0]->shouldHaveType('Hayttp\Response');
+        $result[1]->shouldHaveType('Hayttp\Request');
 
         $result[0]->request()->shouldBe($result[1]);
     }

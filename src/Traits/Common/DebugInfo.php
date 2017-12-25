@@ -8,14 +8,14 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Common;
 
 /**
  * Add __debugInfo support.
  *
  * Returns ALL variables.
  */
-trait HasCompleteDebugInfo
+trait DebugInfo
 {
     /**
      * Public accessor for all instance variables.

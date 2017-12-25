@@ -77,7 +77,7 @@ class Route
      *
      * @return array
      */
-    public function params() : array
+    public function params()
     {
         return $this->params;
     }

@@ -8,13 +8,13 @@
  * @license MIT
  */
 
-namespace Hayttp\Traits;
+namespace Hayttp\Traits\Request;
 
 use LogicException;
-use Hayttp\Payloads;
-use Hayttp\Contracts\Request as RequestContract;
+use Hayttp\Contracts\Payload;
+use Hayttp\Payloads\MultipartPayload;
 
-trait HandlesMultipartPayloads
+trait Multipart
 {
     /**
      * Add a multipart entry.
@@ -24,19 +24,15 @@ trait HandlesMultipartPayloads
      * @param string|null $filename    The filename to use. If null, no filename is sent.
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
-     * @return RequestContract
+     * @return self
      */
-    public function addMultipartField(
-        string $name,
-        string $data,
-        string $filename = null,
-        string $contentType = null
-    ) : RequestContract {
-        if ($this->payload && !$this->payload instanceof Payloads\MultipartPayload) {
+    public function addMultipartField($name, $data, $filename = null, $contentType = null)
+    {
+        if ($this->payload && !$this->payload instanceof MultipartPayload) {
             throw new LogicException('The payload of this request has been locked. You cannot modify it further.');
         }
 
-        $payload = $this->payload ?: new Payloads\MultipartPayload();
+        $payload = $this->payload ?: new MultipartPayload();
 
         return $this->withPayload($payload->withField($name, $data, $filename, $contentType));
     }
@@ -50,14 +46,10 @@ trait HandlesMultipartPayloads
      * @param string $contentType The content type of the file.
      *                            If null, the content type will be inferred via mime_content_type()
      *
-     * @return RequestContract
+     * @return self
      */
-    public function addFile(
-        string $name,
-        string $file,
-        string $filename = null,
-        string $contentType = null
-    ) : RequestContract {
+    public function addFile($name, $file, $filename = null, $contentType = null)
+    {
         if ($filename === null) {
             $filename = basename($file);
         }
@@ -76,9 +68,9 @@ trait HandlesMultipartPayloads
      * @param string      $data        the data blob to add
      * @param string|null $contentType The content type to send. If null, no content-type will be sent.
      *
-     * @return RequestContract
+     * @return self
      */
-    public function addBlob(string $name, string $data, $contentType = null) : RequestContract
+    public function addBlob($name, $data, $contentType = null)
     {
         return $this->addMultipartField($name, $data, null, $contentType);
     }
