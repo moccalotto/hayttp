@@ -1,4 +1,10 @@
-MockResponse skal deles op således den nedarver fra en PHPUnitResponse, hvorpå alle assertions ligger.
-MockRequest skal deles op således den nedarver fra en PHPUnitRequest, hvorpå alle assertions ligger.
+Overall:
+========
+* Make stan3 happy
 
-Overvej integration med ditto
+Simplify:
+=========
+* Remove php hard type definitions
+* Rename Contracts\Request to Contracts\RequestContract
+* Rename Contracts\Response to Contracts\ResponseContract
+* Consider integrating with Ditto
