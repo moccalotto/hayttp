@@ -241,4 +241,58 @@ class Util
             return call_user_func_array($callable, func_get_args());
         };
     }
+
+    /**
+     * Remove the byte-order-mark from a string.
+     *
+     * @param string $str        the string to have the BOM trimmed
+     * @param string $outCharset Output arg: Will be set to one of ["UTF-8", "UTF-16", "UTF-32" or null]
+     * @param string $outEndian  Output arg: Will be set to one of ["little", "big" or null]
+     *
+     * @return string the string without byte-order-mark
+     */
+    public static function removeBom($str, &$outCharset = null, &$outEndian = null)
+    {
+        // assume unknown charset and endianness
+        $outEndian = $outCharset = null;
+
+        // UTF-8
+        if (substr($str, 0, 3) === "\xef\xbb\xbf") {
+            $outCharset = 'UTF-8';
+
+            return substr($str, 3);
+        }
+
+        // UTF-32
+        $str4 = substr($str, 0, 4);
+        if ($str4 === "\xff\xfe\x00\x00") {
+            $outCharset = 'UTF-32';
+            $outEndian = 'little';
+
+            return substr($str, 4);
+        }
+
+        if ($str4 === "\x00\x00\xfe\xff") {
+            $outCharset = 'UTF-32';
+            $outEndian = 'big';
+
+            return substr($str, 4);
+        }
+
+        // UTF-16
+        $str2 = substr($str, 0, 2);
+        if ($str2 === "\xff\xfe") {
+            $outCharset = 'UTF-16';
+            $outEndian = 'little';
+
+            return substr($str, 2);
+        }
+        if ($str2 === "\xfe\xff") {
+            $outEndian = 'big';
+
+            return substr($str, 2);
+        }
+
+        return $str;
+    }
 }

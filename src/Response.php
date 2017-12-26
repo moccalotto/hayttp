@@ -44,6 +44,16 @@ class Response
     protected $request;
 
     /**
+     * @var string
+     */
+    protected $bomCharset = null;
+
+    /**
+     * @var string
+     */
+    protected $bomEndian = null;
+
+    /**
      * Constructor.
      *
      * @param string  $body     response body
@@ -53,7 +63,8 @@ class Response
      */
     public function __construct($body, array $headers, array $metadata, Request $request)
     {
-        $this->body = (string) $body;
+        // $bomCharset and $bomEndian are passed by reference
+        $this->body = (string) Util::removeBom($body, $this->bomCharset, $this->bomEndian);
         $this->headers = Util::normalizeHeaders($headers);
         $this->request = $request;
         $this->metadata = $metadata;
@@ -272,6 +283,26 @@ class Response
     public function body()
     {
         return $this->body;
+    }
+
+    /**
+     * If a BOM was given in the response body, return the parsed charset.
+     *
+     * @return string|null One of ["UTF-8", "UTF-16", "UTF-32", null]
+     */
+    public function bomCharset()
+    {
+        return $this->bomCharset;
+    }
+
+    /**
+     * If a BOM was given in the response body, return the detected endianness.
+     *
+     * @return string|null One of ["little", "big", null]
+     */
+    public function bomEndian()
+    {
+        return $this->bomEndian;
     }
 
     /**
