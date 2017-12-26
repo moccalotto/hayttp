@@ -64,7 +64,7 @@ class Response
     public function __construct($body, array $headers, array $metadata, Request $request)
     {
         // $bomCharset and $bomEndian are passed by reference
-        $this->body = (string) Util::removeBom($body, $this->bomCharset, $this->bomEndian);
+        $this->body = Util::removeBom($body, $this->bomCharset, $this->bomEndian);
         $this->headers = Util::normalizeHeaders($headers);
         $this->request = $request;
         $this->metadata = $metadata;
