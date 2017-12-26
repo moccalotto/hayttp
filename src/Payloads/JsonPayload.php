@@ -10,6 +10,7 @@
 
 namespace Hayttp\Payloads;
 
+use InvalidArgumentException;
 use Hayttp\Traits\Common\DebugInfo;
 use Hayttp\Contracts\Payload as PayloadContract;
 
@@ -38,6 +39,10 @@ class JsonPayload implements PayloadContract
      */
     public function __construct($contents, $contentType = 'application/json')
     {
+        if (!(is_array($contents) || is_object($contents))) {
+            throw new InvalidArgumentException('Contents must be array or object');
+        }
+
         $this->contents = $contents;
         $this->contentType = (string) $contentType;
     }
@@ -54,10 +59,12 @@ class JsonPayload implements PayloadContract
 
     /**
      * Render into a http request body.
+     *
+     * @return string The json-encoded contents
      */
     public function render()
     {
-        return json_encode($this->contents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return json_encode($this->contents);
     }
 
     /**
