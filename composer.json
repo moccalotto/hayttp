@@ -26,6 +26,9 @@
         },
         "files": ["src/helpers.php"]
     },
+    "archive": {
+        "exclude": ["/demo.php", "/spec", "/examples"]
+    },
     "scripts": {
         "test-code-style": [
             "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
