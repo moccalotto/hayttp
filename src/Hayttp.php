@@ -18,14 +18,14 @@ use Hayttp\Mock\MockResponse;
 /**
  * Request creation facade.
  *
- * @method Request get(string $url)     Create a GET request
- * @method Request post(string $url)    Create a POST request
- * @method Request put(string $url)     Create a PUT request
- * @method Request patch(string $url)   Create a PATCH request
- * @method Request head(string $url)    Create a HEAD request
- * @method Request delete(string $url)  Create a DELETE request
- * @method Request options(string $url) Create a OPTIONS request
- * @method MockResponse    createMockResponse($request, $route) Create a mock response via a request and a route
+ * @method Request      get(string $url)                     Create a GET request
+ * @method Request      post(string $url)                    Create a POST request
+ * @method Request      put(string $url)                     Create a PUT request
+ * @method Request      patch(string $url)                   Create a PATCH request
+ * @method Request      head(string $url)                    Create a HEAD request
+ * @method Request      delete(string $url)                  Create a DELETE request
+ * @method Request      options(string $url)                 Create a OPTIONS request
+ * @method MockResponse createMockResponse($request, $route) Create a mock response via a request and a route
  */
 class Hayttp
 {
