@@ -39,6 +39,9 @@
         "test": [
             "@test-code-style",
             "@test-bdd"
+        ],
+        "csfix": [
+            "@php vendor/bin/php-cs-fixer fix"
         ]
     }
 }
