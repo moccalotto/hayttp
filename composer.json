@@ -31,7 +31,7 @@
     },
     "scripts": {
         "test-code-style": [
-            "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
+            "@php vendor/bin/php-cs-fixer fix --dry-run --diff --diff-format=udiff"
         ],
         "test-bdd": [
             "@php vendor/bin/phpspec run --format=pretty"
