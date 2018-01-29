@@ -72,28 +72,24 @@ class NativeEngine implements Engine
      */
     public function send(Request $request)
     {
-        try {
-            set_error_handler(function ($errorNumber, $errorMessage, $file, $line) {
-                throw new ErrorException(
-                    $errorMessage,
-                    $errorNumber,
-                    E_ERROR,
-                    $file,
-                    $line
-                );
-            });
+        $errorException = null;
 
-            $stream = fopen($request->url(), 'r', false, $this->buildContext($request));
+        set_error_handler(function ($errorNumber, $errorMessage, $file, $line) use (&$errorException) {
+            $errorException = new ErrorException(
+                $errorMessage,
+                $errorNumber,
+                E_ERROR,
+                $file,
+                $line
+            );
+        });
 
-            restore_error_handler();
+        $stream = fopen($request->url(), 'r', false, $this->buildContext($request));
 
-            if (!$stream) {
-                throw new CouldNotConnectException($request);
-            }
-        } catch (ErrorException $e) {
-            // Reached if fancy php error-exception handler is running
-            // and fopen fails
-            throw new CouldNotConnectException($request, [], $e);
+        restore_error_handler();
+
+        if (!$stream) {
+            throw new CouldNotConnectException($request, [], $errorException);
         }
 
         $body = stream_get_contents($stream);
