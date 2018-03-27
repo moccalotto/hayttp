@@ -287,6 +287,7 @@ class Util
 
             return substr($str, 2);
         }
+
         if ($str2 === "\xfe\xff") {
             $outEndian = 'big';
 
