@@ -414,7 +414,7 @@ class Response
     /**
      * Get extra debug information.
      *
-     * Used by the HasCompleteDebugInfo trait.
+     * Used by the DebugInfo trait.
      *
      * @return array
      */
