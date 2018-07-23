@@ -23,7 +23,7 @@ To add this package as a local, per-project dependency to your project, simply a
 ```json
 {
     "require": {
-        "moccalotto/hayttp": "~2.0"
+        "moccalotto/hayttp": "~1.0"
     }
 }
 ```
