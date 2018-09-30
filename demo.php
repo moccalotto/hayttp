@@ -18,7 +18,14 @@ Response::extend('printed', function () {
     return print_r($this, true);
 });
 // Create a "controller" for the given end point
-Hayttp::mockEndpoint('.*', '{scheme}://foo.bar/{path}', function ($request, $route) {
+// The first param is a regex pattern for the http method. In this case we match all methods.
+// The next param is a pseudo-regex that matches the URL. In this case we match all
+// requests to foo.bar, no matter what kind of schema or path we're using.
+// The $route will contain the path and the schema.
+// If we had had a "{foo}" entry in the pattern, then route would have contained a foo variable.
+// that would have been accessible via $route->get('foo')
+
+Hayttp::mockEndpoint('.*', '{scheme}://foo.bar/{path}', function (Request $request, \Hayttp\Mock\Route $route) {
     return Hayttp::createMockResponse($request, $route)
         ->withJsonBody(
             [
@@ -107,3 +114,5 @@ $friends = Hayttp::get('https://foo.bar/friends')
         // transform the response
         return $responseObj->decoded()->friends;
     });
+
+print_r($friends);
