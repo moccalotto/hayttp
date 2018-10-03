@@ -20,8 +20,8 @@ Response::extend('printed', function () {
 // Create a "controller" for the given end point
 // The first param is a regex pattern for the http method. In this case we match all methods.
 // The next param is a pseudo-regex that matches the URL. In this case we match all
-// requests to foo.bar, no matter what kind of schema or path we're using.
-// The $route will contain the path and the schema.
+// requests to foo.bar/{path}, no matter what kind of scheme or method used.
+// The $route will contain the path and the scheme.
 // If we had had a "{foo}" entry in the pattern, then route would have contained a foo variable.
 // that would have been accessible via $route->get('foo')
 
@@ -33,7 +33,7 @@ Hayttp::mockEndpoint('.*', '{scheme}://foo.bar/{path}', function (Request $reque
                 $route->get('path') => $route->params(),
             ]
         )
-        ->withRoute($route);
+        ->withRoute($route);    // add route information to the response metadata.
 });
 
 $printedResponse = Hayttp::get('http://foo.bar/foo')->send()
@@ -110,9 +110,6 @@ $friends = Hayttp::get('https://foo.bar/friends')
     ->ensure200()                   // Ensure that the response code is 200.
     ->ensureJson()                  // Throw exception if valid json data is not returned.
     ->send()
-    ->transform(function ($responseObj) {
-        // transform the response
-        return $responseObj->decoded()->friends;
-    });
+    ->decoded();
 
 print_r($friends);
